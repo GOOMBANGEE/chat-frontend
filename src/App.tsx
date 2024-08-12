@@ -1,10 +1,47 @@
+import { matchPath, Route, Routes, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useGlobalStore } from "./store/GlobalStore.tsx";
+import useFetchProfile from "./hook/useFetchProfile.tsx";
+import Register from "./page/user/Register.tsx";
+import Login from "./page/user/Login.tsx";
+import ErrorPage from "./page/ErrorPage.tsx";
+
 export default function App() {
-  return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <button className="bg-sky-700 px-4 py-2 text-white hover:bg-sky-800 sm:px-8 sm:py-3">
-        ...
-      </button>
-    </>
-  );
+  const { fetchProfile } = useFetchProfile();
+  const { globalState, setGlobalState } = useGlobalStore();
+  const location = useLocation();
+
+  const rootPath = "/";
+  const routePathList = ["", "register/*"];
+
+  useEffect(() => {
+    if (
+      !routePathList.some((path) =>
+        matchPath(rootPath + path, location.pathname),
+      )
+    ) {
+      setGlobalState({ pageInvalid: true });
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchProfile();
+  }, [location.pathname]);
+
+  const renderPage = () => {
+    if (globalState.pageInvalid) {
+      return <ErrorPage />;
+    }
+
+    return (
+      <div className={"h-full select-none"}>
+        <Routes>
+          <Route index element={<Login />} />
+          <Route path={"register/*"} element={<Register />} />
+        </Routes>
+      </div>
+    );
+  };
+
+  return renderPage();
 }
