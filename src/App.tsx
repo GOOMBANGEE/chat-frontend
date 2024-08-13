@@ -5,12 +5,18 @@ import useFetchProfile from "./hook/useFetchProfile.tsx";
 import Register from "./page/user/register/Register.tsx";
 import Login from "./page/user/Login.tsx";
 import ErrorPage from "./page/ErrorPage.tsx";
+import { getCookie } from "./Cookie.tsx";
+import { useTokenStore } from "./store/TokenStore.tsx";
+import useRefreshAccessToken from "./hook/useRefreshAccessToken.tsx";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
+  const { refreshAccessToken } = useRefreshAccessToken();
   const { globalState, setGlobalState } = useGlobalStore();
+  const { tokenState } = useTokenStore();
+
   const location = useLocation();
 
   const rootPath = "/";
@@ -26,9 +32,18 @@ export default function App() {
     }
   }, []);
 
+  const refreshToken = getCookie(tokenState.refreshTokenKey);
   useEffect(() => {
-    void fetchProfile();
-  }, [location.pathname]);
+    if (refreshToken) {
+      void refreshAccessToken(refreshToken);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (tokenState.accessToken) {
+      void fetchProfile();
+    }
+  }, [tokenState.accessToken]);
 
   const renderPage = () => {
     if (globalState.pageInvalid) {
