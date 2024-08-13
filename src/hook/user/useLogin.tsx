@@ -18,9 +18,6 @@ export default function useLogin() {
       setGlobalState({ loginExpire: false });
       return true;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setGlobalState({ errorMessage: error.response?.data.message });
-      }
       return false;
     }
   };

@@ -2,14 +2,17 @@ import { FormEvent, useEffect } from "react";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useNavigate } from "react-router-dom";
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
-import useLogin from "../../hook/home/useLogin.tsx";
+import useLogin from "../../hook/user/useLogin.tsx";
 
 export default function Login() {
   const { login } = useLogin();
   const { userState, setUserState, resetUserState } = useUserStore();
-  const { globalState, setGlobalState } = useGlobalStore();
+  const { resetGlobalState } = useGlobalStore();
 
   const navigate = useNavigate();
+  const serverUrl = "/server";
+  const recoverUrl = "/recover";
+  const registerUrl = "/register";
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -19,8 +22,10 @@ export default function Login() {
         userState.email ? userState.email : "",
       );
     if (!emailRegExp) {
-      setUserState({ emailVerified: false });
-      setGlobalState({ errorMessage: "- 유효하지 않은 이메일입니다." });
+      setUserState({
+        emailVerified: false,
+        emailErrorMessage: "- 유효하지 않은 이메일입니다.",
+      });
       return;
     }
 
@@ -29,29 +34,37 @@ export default function Login() {
         userState.password ? userState.password : "",
       );
     if (!passwordRegExp) {
-      setUserState({ passwordVerified: false });
-      setGlobalState({ errorMessage: "- 유효하지 않은 비밀번호입니다." });
+      setUserState({
+        passwordVerified: false,
+        passwordErrorMessage: "- 유효하지 않은 비밀번호입니다.",
+      });
       return;
     }
 
     if (await login()) {
-      navigate("/server");
+      navigate(serverUrl);
       return;
     }
-    setGlobalState({
-      errorMessage: "- 유효하지 않은 이메일 또는 비밀번호입니다.",
+    setUserState({
+      loginErrorMessage: "- 유효하지 않은 이메일 또는 비밀번호입니다.",
     });
+  };
+
+  const handleNavigateButton = (url: string) => {
+    navigate(url);
+    resetUserState();
+    resetGlobalState();
   };
 
   useEffect(() => {
     if (userState.login) {
-      navigate("/server");
+      navigate(serverUrl);
     }
   }, [userState.login]);
 
   return (
     <>
-      {globalState.fetchProfile && !userState.login ? (
+      {!userState.login ? (
         <div className={"flex h-full items-center justify-center"}>
           <div
             style={{ width: "480px" }}
@@ -69,16 +82,15 @@ export default function Login() {
               }
             >
               <div className={"w-full"}>
-                {globalState.errorMessage ? (
+                {userState.loginErrorMessage ? (
                   <div className={"mb-1 text-start text-xs text-red-400"}>
                     이메일{" "}
                     <span className={"font-light"}>
-                      {globalState.errorMessage}
+                      {userState.loginErrorMessage}
                     </span>
                   </div>
                 ) : (
                   <>
-                    {" "}
                     {userState.emailVerified ? (
                       <div className={"mb-1 text-start text-xs text-gray-300"}>
                         이메일
@@ -87,7 +99,7 @@ export default function Login() {
                       <div className={"mb-1 text-start text-xs text-red-400"}>
                         이메일{" "}
                         <span className={"font-light"}>
-                          {globalState.errorMessage}
+                          {userState.emailErrorMessage}
                         </span>
                       </div>
                     )}
@@ -99,25 +111,26 @@ export default function Login() {
                     setUserState({
                       email: e.target.value,
                       emailVerified: true,
+                      emailErrorMessage: undefined,
+                      loginErrorMessage: undefined,
                     });
-                    setGlobalState({ errorMessage: undefined });
                   }}
                   className={
                     "mb-2 w-full rounded bg-customDarkGray px-2 py-1 text-base font-medium hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
                   }
                 />
               </div>
+
               <div className={"w-full"}>
-                {globalState.errorMessage ? (
+                {userState.loginErrorMessage ? (
                   <div className={"mb-1 text-start text-xs text-red-400"}>
                     비밀번호{" "}
                     <span className={"font-light"}>
-                      {globalState.errorMessage}
+                      {userState.loginErrorMessage}
                     </span>
                   </div>
                 ) : (
                   <>
-                    {" "}
                     {userState.passwordVerified ? (
                       <div className={"mb-1 text-start text-xs text-gray-300"}>
                         비밀번호
@@ -126,32 +139,35 @@ export default function Login() {
                       <div className={"mb-1 text-start text-xs text-red-400"}>
                         비밀번호{" "}
                         <span className={"font-light"}>
-                          {globalState.errorMessage}
+                          {userState.passwordErrorMessage}
                         </span>
                       </div>
                     )}
                   </>
                 )}
+
                 <input
                   type={"password"}
                   onChange={(e) => {
                     setUserState({
                       password: e.target.value,
                       passwordVerified: true,
+                      passwordErrorMessage: undefined,
+                      loginErrorMessage: undefined,
                     });
-                    setGlobalState({ errorMessage: undefined });
                   }}
                   className={
                     "w-full rounded bg-customDarkGray px-2 py-1 text-base hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
                   }
                 />
+
                 <button
+                  type={"button"}
                   className={
                     "flex w-fit cursor-pointer text-sm font-medium text-customPurple hover:underline"
                   }
                   onClick={() => {
-                    navigate("/recover");
-                    resetUserState();
+                    handleNavigateButton(recoverUrl);
                   }}
                 >
                   비밀번호를 잊으셨나요?
@@ -175,8 +191,7 @@ export default function Login() {
                   "w-fit cursor-pointer text-sm font-medium text-customPurple hover:underline"
                 }
                 onClick={() => {
-                  navigate("/register");
-                  resetUserState();
+                  handleNavigateButton(registerUrl);
                 }}
               >
                 가입하기

@@ -14,6 +14,10 @@ interface UserState {
   emailVerified: boolean;
   usernameVerified: boolean;
   passwordVerified: boolean;
+  emailErrorMessage: string | undefined;
+  usernameErrorMessage: string | undefined;
+  passwordErrorMessage: string | undefined;
+  loginErrorMessage: string | undefined;
   login: boolean;
 }
 
@@ -25,6 +29,10 @@ const initialUserState = {
   emailVerified: true,
   usernameVerified: true,
   passwordVerified: true,
+  emailErrorMessage: undefined,
+  usernameErrorMessage: undefined,
+  passwordErrorMessage: undefined,
+  loginErrorMessage: undefined,
   login: false,
 };
 export const useUserStore = create<UserStore>((set) => ({
