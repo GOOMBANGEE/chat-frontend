@@ -10,6 +10,7 @@ import { useTokenStore } from "./store/TokenStore.tsx";
 import useRefreshAccessToken from "./hook/useRefreshAccessToken.tsx";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Server from "./page/server/Server.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
@@ -20,7 +21,7 @@ export default function App() {
   const location = useLocation();
 
   const rootPath = "/";
-  const routePathList = ["", "register/*"];
+  const routePathList = ["", "register/*", "server/*"];
 
   useEffect(() => {
     if (
@@ -55,6 +56,7 @@ export default function App() {
         <Routes>
           <Route index element={<Login />} />
           <Route path={"register/*"} element={<Register />} />
+          <Route path={"server/*"} element={<Server />} />
         </Routes>
 
         <ToastContainer
