@@ -1,4 +1,4 @@
-import { matchPath, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import { useGlobalStore } from "./store/GlobalStore.tsx";
 import useFetchProfile from "./hook/useFetchProfile.tsx";
@@ -11,26 +11,20 @@ import useRefreshAccessToken from "./hook/useRefreshAccessToken.tsx";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Server from "./page/server/Server.tsx";
+import useCheckPath from "./hook/useCheckPath.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
   const { refreshAccessToken } = useRefreshAccessToken();
-  const { globalState, setGlobalState } = useGlobalStore();
+  const { checkPath } = useCheckPath();
+
+  const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
 
-  const location = useLocation();
-
-  const rootPath = "/";
   const routePathList = ["", "register/*", "server/*"];
 
   useEffect(() => {
-    if (
-      !routePathList.some((path) =>
-        matchPath(rootPath + path, location.pathname),
-      )
-    ) {
-      setGlobalState({ pageInvalid: true });
-    }
+    checkPath({ routePathList: routePathList });
   }, []);
 
   const refreshToken = getCookie(tokenState.refreshTokenKey);

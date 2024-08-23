@@ -1,26 +1,21 @@
-import { useEffect } from "react";
-import { matchPath, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useGlobalStore } from "../../../store/GlobalStore.tsx";
 import RegisterForm from "./RegisterForm.tsx";
 import RegisterConfirm from "./RegisterConfirm.tsx";
 import ErrorPage from "../../ErrorPage.tsx";
 import RegisterEmail from "./RegisterEmail.tsx";
+import useCheckPath from "../../../hook/useCheckPath.tsx";
+import { useEffect } from "react";
 
 export default function Register() {
-  const { globalState, setGlobalState } = useGlobalStore();
-  const location = useLocation();
+  const { checkPath } = useCheckPath();
+  const { globalState } = useGlobalStore();
 
   const rootPath = "/register";
   const routePathList = ["", "/email", "/confirm/:token", "/success"];
 
   useEffect(() => {
-    if (
-      !routePathList.some((path) =>
-        matchPath(rootPath + path, location.pathname),
-      )
-    ) {
-      setGlobalState({ pageInvalid: true });
-    }
+    checkPath({ rootPath, routePathList });
   }, []);
 
   const renderPage = () => {

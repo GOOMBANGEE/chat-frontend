@@ -1,6 +1,6 @@
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import { useEffect } from "react";
-import { matchPath, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ErrorPage from "../ErrorPage.tsx";
 import ServerList from "./ServerList.tsx";
 import ServerIndex from "./serverIndex/ServerIndex.tsx";
@@ -12,17 +12,18 @@ import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { Client, IMessage } from "@stomp/stompjs";
 import { useEnvStore } from "../../store/EnvStore.tsx";
 import { useStompStore } from "../../store/StompStore.tsx";
+import useCheckPath from "../../hook/useCheckPath.tsx";
 
 export default function Server() {
   const { fetchServerList } = useFetchServerList();
+  const { checkPath } = useCheckPath();
 
   const { userState } = useUserStore();
   const { serverAddState } = useServerAddStore();
   const { envState } = useEnvStore();
   const { setStompState } = useStompStore();
-  const { globalState, setGlobalState } = useGlobalStore();
+  const { globalState } = useGlobalStore();
 
-  const rootPath = "/";
   const routePathList = ["", ":serverId"];
 
   const subscribeToServer = async (stompClient: Client) => {
@@ -37,13 +38,7 @@ export default function Server() {
   };
 
   useEffect(() => {
-    if (
-      !routePathList.some((path) =>
-        matchPath(rootPath + path, location.pathname),
-      )
-    ) {
-      setGlobalState({ pageInvalid: true });
-    }
+    checkPath({ routePathList: routePathList });
 
     // todo
     // 메세지 갱신
