@@ -1,11 +1,11 @@
-import { Server } from "../../index";
+import { ServerInfo } from "../../index";
 import { create } from "zustand";
 
 interface ServerStore {
   serverState: ServerState;
   setServerState: (state: Partial<ServerState>) => void;
-  serverListState: Server[];
-  setServerListState: (state: Server[]) => void;
+  serverListState: ServerInfo[];
+  setServerListState: (state: ServerInfo[]) => void;
   resetServerState: () => void;
 }
 

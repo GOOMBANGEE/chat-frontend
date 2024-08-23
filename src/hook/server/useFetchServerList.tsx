@@ -9,6 +9,7 @@ export default function useFetchServerList() {
   const fetchServerList = async () => {
     const response = await axios.get(`${envState.serverUrl}/list`);
     setServerListState(response.data.serverList);
+    return response.data.serverList;
   };
 
   return { fetchServerList };
