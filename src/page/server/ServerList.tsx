@@ -1,11 +1,16 @@
 import { useServerStore } from "../../store/ServerStore.tsx";
-import { Server } from "../../../index";
+import { ServerInfo } from "../../../index";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
+import { useChatStore } from "../../store/ChatStore.tsx";
+import useFetchChatList from "../../hook/chat/useFetchChatList.tsx";
 
 export default function ServerList() {
+  const { fetchChatList } = useFetchChatList();
+
+  const { resetChatListState } = useChatStore();
   const { setServerState } = useServerStore();
   const { setServerAddState } = useServerAddStore();
   const { serverListState } = useServerStore();
@@ -15,8 +20,12 @@ export default function ServerList() {
 
   const [isHover, setIsHover] = useState(false);
 
-  const handleServerIconClick = (server: Server) => {
+  const handleServerIconClick = (server: ServerInfo) => {
     setServerState({ id: server.id, name: server.name });
+    resetChatListState();
+
+    // fetch chat log limit 50
+    fetchChatList({ serverId: server.id });
     navigate(`/server/${server.id}`);
   };
 
@@ -26,7 +35,7 @@ export default function ServerList() {
         "mx-auto flex h-full flex-col items-center gap-2 bg-serverListSidebar px-1 py-2"
       }
     >
-      {serverListState.map((server: Server) => (
+      {serverListState.map((server: ServerInfo) => (
         <button
           key={server.id}
           onClick={() => handleServerIconClick(server)}
