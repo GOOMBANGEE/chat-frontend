@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 interface ServerChatDropdownStore {
   serverChatDropdownState: ServerChatDropdownState;
-  setServerDropdownState: (state: Partial<ServerChatDropdownState>) => void;
+  setServerChatDropdownState: (state: Partial<ServerChatDropdownState>) => void;
   resetServerDropdownState: () => void;
 }
 
@@ -17,7 +17,7 @@ const initialServerChatDropdownState: ServerChatDropdownState = {
 export const useServerChatDropdownStore = create<ServerChatDropdownStore>(
   (set) => ({
     serverChatDropdownState: initialServerChatDropdownState,
-    setServerDropdownState: (state) =>
+    setServerChatDropdownState: (state) =>
       set((prev) => ({
         serverChatDropdownState: { ...prev.serverChatDropdownState, ...state },
       })),

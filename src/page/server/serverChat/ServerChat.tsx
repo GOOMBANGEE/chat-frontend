@@ -9,7 +9,7 @@ export default function ServerChat() {
 
   return (
     <div className={"flex h-full w-full"}>
-      <div className={"bg-serverChatSidebar w-80"}>
+      <div className={"w-72 bg-serverChatSidebar"}>
         <ServerChatDropdown />
         {/*<ServerChatChannelList/>*/}
       </div>

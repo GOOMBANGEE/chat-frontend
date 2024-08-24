@@ -5,40 +5,103 @@ import { useEffect } from "react";
 export default function ServerChatDropdown() {
   const {
     serverChatDropdownState,
-    setServerDropdownState,
+    setServerChatDropdownState,
     resetServerDropdownState,
   } = useServerChatDropdownStore();
   const { serverState } = useServerStore();
+
+  const handleClickOpenButton = () => {
+    if (serverChatDropdownState.open) {
+      setServerChatDropdownState({ open: false });
+    } else {
+      setServerChatDropdownState({ open: true });
+    }
+  };
 
   // dropdown 바깥쪽 클릭시 modal close
   const handleClickOutside = (e: MouseEvent) => {
     if (
       serverChatDropdownState.open &&
-      !(e.target as HTMLElement).closest(".server-chat-dropdown")
+      !(e.target as HTMLElement).closest(".server-chat-dropdown") &&
+      !(e.target as HTMLElement).closest(".server-chat-open-button")
     ) {
       resetServerDropdownState();
     }
   };
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mouseup", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mouseup", handleClickOutside);
     };
-  }, [serverChatDropdownState, setServerDropdownState]);
+  }, [serverChatDropdownState, setServerChatDropdownState]);
 
   return (
     <div className={"relative flex flex-col"}>
       <button
-        onClick={() => setServerDropdownState({ open: true })}
-        className={"w-full px-6 py-4 text-start font-semibold shadow-md"}
+        onClick={() => handleClickOpenButton()}
+        className={
+          "server-chat-open-button flex w-full items-center px-6 py-3 text-start font-semibold shadow-md hover:bg-customGray"
+        }
       >
         {serverState.name}
+
+        {serverChatDropdownState.open ? (
+          <svg
+            className={"ml-auto"}
+            width="20px"
+            height="20px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <path
+                d="M6 6L18 18M18 6L6 18"
+                stroke="#9ca3af"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></path>
+            </g>
+          </svg>
+        ) : (
+          <svg
+            className={"ml-auto"}
+            width="20px"
+            height="20px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <path
+                d="M6 9L12 15L18 9"
+                stroke="#9ca3af"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></path>
+            </g>
+          </svg>
+        )}
       </button>
 
       {serverChatDropdownState.open ? (
         <div
           className={
-            "server-chat-dropdown absolute left-2 top-16 w-52 rounded bg-black px-2 py-4 text-gray-400"
+            "server-chat-dropdown absolute left-2 top-14 w-48 rounded bg-black px-2 py-4 text-gray-400"
           }
         >
           <div className={"flex flex-col"}>
