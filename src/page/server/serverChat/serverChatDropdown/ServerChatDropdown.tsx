@@ -1,5 +1,5 @@
-import { useServerStore } from "../../../store/ServerStore.tsx";
-import { useServerChatDropdownStore } from "../../../store/ServerChatDropdownStore.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
+import { useServerChatDropdownStore } from "../../../../store/ServerChatDropdownStore.tsx";
 import { useEffect } from "react";
 
 export default function ServerChatDropdown() {
@@ -9,6 +9,7 @@ export default function ServerChatDropdown() {
     resetServerDropdownState,
   } = useServerChatDropdownStore();
   const { serverState } = useServerStore();
+  const { setServerState } = useServerStore();
 
   const handleClickOpenButton = () => {
     if (serverChatDropdownState.open) {
@@ -18,12 +19,17 @@ export default function ServerChatDropdown() {
     }
   };
 
+  const handleClickInviteButton = () => {
+    setServerChatDropdownState({ open: false });
+    setServerState({ inviteModalOpen: true });
+  };
+
   // dropdown 바깥쪽 클릭시 modal close
   const handleClickOutside = (e: MouseEvent) => {
     if (
       serverChatDropdownState.open &&
-      !(e.target as HTMLElement).closest(".server-chat-dropdown") &&
-      !(e.target as HTMLElement).closest(".server-chat-open-button")
+      !(e.target as HTMLElement).closest(".server-serverChat-dropdown") &&
+      !(e.target as HTMLElement).closest(".server-serverChat-open-button")
     ) {
       resetServerDropdownState();
     }
@@ -40,7 +46,7 @@ export default function ServerChatDropdown() {
       <button
         onClick={() => handleClickOpenButton()}
         className={
-          "server-chat-open-button flex w-full items-center px-6 py-3 text-start font-semibold shadow-md hover:bg-customGray"
+          "server-serverChat-open-button flex w-full items-center px-6 py-3 text-start font-semibold shadow-md hover:bg-customGray"
         }
       >
         {serverState.name}
@@ -101,11 +107,12 @@ export default function ServerChatDropdown() {
       {serverChatDropdownState.open ? (
         <div
           className={
-            "server-chat-dropdown absolute left-2 top-14 w-48 rounded bg-black px-2 py-4 text-gray-400"
+            "server-serverChat-dropdown absolute left-2 top-14 w-48 rounded bg-black px-2 py-4 text-gray-400"
           }
         >
           <div className={"flex flex-col"}>
             <button
+              onClick={() => handleClickInviteButton()}
               className={
                 "w-full rounded px-2 py-1 text-start text-indigo-400 hover:bg-indigo-500 hover:text-white"
               }

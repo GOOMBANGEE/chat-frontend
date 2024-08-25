@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useChatStore } from "../../store/ChatStore.tsx";
-import useFetchChatList from "../../hook/chat/useFetchChatList.tsx";
+import useFetchChatList from "../../hook/server/serverChat/useFetchChatList.tsx";
 
 export default function ServerList() {
   const { fetchChatList } = useFetchChatList();
@@ -24,7 +24,7 @@ export default function ServerList() {
     setServerState({ id: server.id, name: server.name });
     resetChatListState();
 
-    // fetch chat log limit 50
+    // fetch serverChat log limit 50
     fetchChatList({ serverId: server.id });
     navigate(`/server/${server.id}`);
   };

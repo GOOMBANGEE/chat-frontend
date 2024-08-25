@@ -2,7 +2,7 @@ import ServerChatHeader from "./ServerChatHeader.tsx";
 import ChatComponent from "./ChatComponent.tsx";
 import ChatInput from "./ChatInput.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
-import ServerChatDropdown from "./ServerChatDropdown.tsx";
+import ServerChatDropdown from "./serverChatDropdown/ServerChatDropdown.tsx";
 
 export default function ServerChat() {
   const { chatListState } = useChatStore();

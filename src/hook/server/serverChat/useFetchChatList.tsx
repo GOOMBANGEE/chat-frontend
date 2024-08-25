@@ -1,7 +1,7 @@
-import { useEnvStore } from "../../store/EnvStore.tsx";
+import { useEnvStore } from "../../../store/EnvStore.tsx";
 import axios from "axios";
-import { useChatStore } from "../../store/ChatStore.tsx";
-import { Chat } from "../../../index";
+import { useChatStore } from "../../../store/ChatStore.tsx";
+import { Chat } from "../../../../index";
 
 interface Props {
   serverId: number;

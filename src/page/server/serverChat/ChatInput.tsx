@@ -1,4 +1,4 @@
-import useSendChatMessage from "../../../hook/chat/useSendChatMessage.tsx";
+import useSendChatMessage from "../../../hook/server/serverChat/useSendChatMessage.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import { useServerStore } from "../../../store/ServerStore.tsx";
