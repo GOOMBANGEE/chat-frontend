@@ -15,8 +15,10 @@ import { useStompStore } from "../../store/StompStore.tsx";
 import useCheckPath from "../../hook/useCheckPath.tsx";
 import { useServerStore } from "../../store/ServerStore.tsx";
 import ServerInviteModal from "./serverChat/serverChatDropdown/ServerInviteModal.tsx";
+import useReceiveStompMessageHandler from "../../hook/useReceiveStompMessageHandler.tsx";
 
 export default function Server() {
+  const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
   const { checkPath } = useCheckPath();
 
@@ -24,7 +26,7 @@ export default function Server() {
   const { serverAddState } = useServerAddStore();
   const { serverState } = useServerStore();
   const { envState } = useEnvStore();
-  const { setStompState } = useStompStore();
+  const { stompState, setStompState } = useStompStore();
   const { globalState } = useGlobalStore();
 
   const routePathList = ["", ":serverId"];
@@ -43,9 +45,6 @@ export default function Server() {
   useEffect(() => {
     checkPath({ routePathList: routePathList });
 
-    // todo
-    // 메세지 갱신
-
     const stompUrl = envState.stompUrl;
     const stompClient = new Client({
       brokerURL: stompUrl,
@@ -62,6 +61,11 @@ export default function Server() {
       void stompClient.deactivate();
     };
   }, []);
+
+  useEffect(() => {
+    if (stompState.chatMessage)
+      receiveStompMessageHandler(stompState.chatMessage);
+  }, [stompState.chatMessage]);
 
   useEffect(() => {
     if (userState.username) {

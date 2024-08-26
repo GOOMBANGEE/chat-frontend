@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Chat } from "../../index";
+import { StompChatMessage } from "../../index";
 
 interface StompStore {
   stompState: StompState;
@@ -9,7 +9,7 @@ interface StompStore {
 
 interface StompState {
   message: string | undefined;
-  chatMessage: Chat | undefined;
+  chatMessage: StompChatMessage | undefined;
 }
 
 const initialStompState: StompState = {

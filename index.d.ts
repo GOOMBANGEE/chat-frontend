@@ -10,3 +10,11 @@ export interface Chat {
   message: string;
   error?: boolean;
 }
+
+export interface StompChatMessage {
+  messageType: string;
+  serveId: string;
+  chatId: number;
+  username: string;
+  message: string;
+}
