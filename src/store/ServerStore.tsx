@@ -12,11 +12,27 @@ interface ServerStore {
 interface ServerState {
   id: number | undefined;
   name: string | undefined;
+
+  inviteModalOpen: boolean;
+  inviteLink: string | undefined;
+  inviteLinkCopy: boolean;
+  inviteUsername: string | undefined;
+
+  fetchServerInfo: boolean;
+  userCount: number | undefined;
 }
 
 const initialServerState: ServerState = {
   id: undefined,
   name: undefined,
+
+  inviteModalOpen: false,
+  inviteLink: undefined,
+  inviteLinkCopy: false,
+
+  fetchServerInfo: false,
+  inviteUsername: undefined,
+  userCount: undefined,
 };
 
 export const useServerStore = create<ServerStore>((set) => ({

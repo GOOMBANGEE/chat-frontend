@@ -12,6 +12,7 @@ import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Server from "./page/server/Server.tsx";
 import useCheckPath from "./hook/useCheckPath.tsx";
+import Invite from "./page/server/Invite.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
@@ -21,7 +22,7 @@ export default function App() {
   const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
 
-  const routePathList = ["", "register/*", "server/*"];
+  const routePathList = ["", "register/*", "server/*", "invite/*"];
 
   useEffect(() => {
     checkPath({ routePathList: routePathList });
@@ -51,6 +52,7 @@ export default function App() {
           <Route index element={<Login />} />
           <Route path={"register/*"} element={<Register />} />
           <Route path={"server/*"} element={<Server />} />
+          <Route path={"invite/:code"} element={<Invite />} />
         </Routes>
 
         <ToastContainer

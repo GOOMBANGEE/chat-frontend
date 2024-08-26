@@ -13,6 +13,8 @@ import { Client, IMessage } from "@stomp/stompjs";
 import { useEnvStore } from "../../store/EnvStore.tsx";
 import { useStompStore } from "../../store/StompStore.tsx";
 import useCheckPath from "../../hook/useCheckPath.tsx";
+import { useServerStore } from "../../store/ServerStore.tsx";
+import ServerInviteModal from "./serverChat/serverChatDropdown/ServerInviteModal.tsx";
 
 export default function Server() {
   const { fetchServerList } = useFetchServerList();
@@ -20,6 +22,7 @@ export default function Server() {
 
   const { userState } = useUserStore();
   const { serverAddState } = useServerAddStore();
+  const { serverState } = useServerStore();
   const { envState } = useEnvStore();
   const { setStompState } = useStompStore();
   const { globalState } = useGlobalStore();
@@ -84,6 +87,7 @@ export default function Server() {
         </div>
 
         {serverAddState.open ? <ServerAddModal /> : null}
+        {serverState.inviteModalOpen ? <ServerInviteModal /> : null}
       </div>
     );
   };
