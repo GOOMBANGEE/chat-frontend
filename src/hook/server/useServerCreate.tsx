@@ -2,9 +2,11 @@ import { useEnvStore } from "../../store/EnvStore.tsx";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import axios from "axios";
 import { useUserStore } from "../../store/UserStore.tsx";
+import { useServerStore } from "../../store/ServerStore.tsx";
 
 export default function useServerCreate() {
   const { serverAddState, resetServerAddState } = useServerAddStore();
+  const { serverListState, setServerListState } = useServerStore();
   const { userState } = useUserStore();
   const { envState } = useEnvStore();
 
@@ -15,7 +17,15 @@ export default function useServerCreate() {
       name: serverAddState.name,
     });
 
+    const newServer = {
+      id: response.data.id,
+      name: response.data.name,
+      icon: "",
+    };
+    const newServerList = [...serverListState, newServer];
+    setServerListState(newServerList);
     resetServerAddState();
+
     return response.data.id;
   };
 

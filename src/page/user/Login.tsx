@@ -24,7 +24,7 @@ export default function Login() {
     if (!emailRegExp) {
       setUserState({
         emailVerified: false,
-        emailErrorMessage: "- 유효하지 않은 이메일입니다.",
+        emailErrorMessage: "유효하지 않은 이메일입니다.",
       });
       return;
     }
@@ -36,7 +36,7 @@ export default function Login() {
     if (!passwordRegExp) {
       setUserState({
         passwordVerified: false,
-        passwordErrorMessage: "- 유효하지 않은 비밀번호입니다.",
+        passwordErrorMessage: "유효하지 않은 비밀번호입니다.",
       });
       return;
     }
@@ -46,7 +46,7 @@ export default function Login() {
       return;
     }
     setUserState({
-      loginErrorMessage: "- 유효하지 않은 이메일 또는 비밀번호입니다.",
+      loginErrorMessage: "유효하지 않은 이메일 또는 비밀번호입니다.",
     });
   };
 
@@ -86,7 +86,7 @@ export default function Login() {
                   <div className={"mb-1 text-start text-xs text-red-400"}>
                     이메일{" "}
                     <span className={"font-light"}>
-                      {userState.loginErrorMessage}
+                      - {userState.loginErrorMessage}
                     </span>
                   </div>
                 ) : (
@@ -99,7 +99,7 @@ export default function Login() {
                       <div className={"mb-1 text-start text-xs text-red-400"}>
                         이메일{" "}
                         <span className={"font-light"}>
-                          {userState.emailErrorMessage}
+                          - {userState.emailErrorMessage}
                         </span>
                       </div>
                     )}
@@ -126,7 +126,7 @@ export default function Login() {
                   <div className={"mb-1 text-start text-xs text-red-400"}>
                     비밀번호{" "}
                     <span className={"font-light"}>
-                      {userState.loginErrorMessage}
+                      - {userState.loginErrorMessage}
                     </span>
                   </div>
                 ) : (
@@ -139,7 +139,7 @@ export default function Login() {
                       <div className={"mb-1 text-start text-xs text-red-400"}>
                         비밀번호{" "}
                         <span className={"font-light"}>
-                          {userState.passwordErrorMessage}
+                          - {userState.passwordErrorMessage}
                         </span>
                       </div>
                     )}

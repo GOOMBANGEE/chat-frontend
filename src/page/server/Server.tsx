@@ -1,7 +1,6 @@
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import ErrorPage from "../ErrorPage.tsx";
+import { Route, Routes, useLocation } from "react-router-dom";
 import ServerList from "./ServerList.tsx";
 import ServerIndex from "./serverIndex/ServerIndex.tsx";
 import ServerChat from "./serverChat/ServerChat.tsx";
@@ -16,23 +15,33 @@ import useCheckPath from "../../hook/useCheckPath.tsx";
 import { useServerStore } from "../../store/ServerStore.tsx";
 import ServerInviteModal from "./serverChat/serverChatDropdown/ServerInviteModal.tsx";
 import useReceiveStompMessageHandler from "../../hook/useReceiveStompMessageHandler.tsx";
+import ErrorPage from "../ErrorPage.tsx";
+import useFetchChatList from "../../hook/server/serverChat/useFetchChatList.tsx";
+import { ServerInfo } from "../../../index";
 
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
   const { checkPath } = useCheckPath();
+  const { fetchChatList } = useFetchChatList();
 
   const { userState } = useUserStore();
   const { serverAddState } = useServerAddStore();
-  const { serverState } = useServerStore();
+  const { serverState, setServerState, serverListState } = useServerStore();
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
   const { globalState } = useGlobalStore();
 
-  const routePathList = ["", ":serverId"];
+  const location = useLocation();
+  const serverId = Number(location.pathname.split("/").pop());
 
-  const subscribeToServer = async (stompClient: Client) => {
-    const serverList = await fetchServerList();
+  const rootPath = "/server";
+  const routePathList = ["/", "/:serverId"];
+
+  const subscribeToServer = async (
+    serverList: ServerInfo[],
+    stompClient: Client,
+  ) => {
     for (const server of serverList) {
       const subscriptionUrl = `/sub/server/${server.id}`;
       stompClient.subscribe(subscriptionUrl, (message: IMessage) => {
@@ -43,13 +52,24 @@ export default function Server() {
   };
 
   useEffect(() => {
-    checkPath({ routePathList: routePathList });
+    if (userState.username) fetchServerList();
+  }, [userState.username]);
+
+  useEffect(() => {
+    checkPath({ rootPath, routePathList });
+
+    if (serverId && userState.username) {
+      const server = serverListState.find((server) => server.id === serverId);
+      setServerState({ id: server?.id, name: server?.name });
+
+      fetchChatList({ serverId: Number(serverId) });
+    }
 
     const stompUrl = envState.stompUrl;
     const stompClient = new Client({
       brokerURL: stompUrl,
       onConnect: () => {
-        subscribeToServer(stompClient);
+        subscribeToServer(serverListState, stompClient);
       },
       onStompError: (frame) => {
         console.error("Stomp Error" + frame.body);
@@ -60,31 +80,28 @@ export default function Server() {
     return () => {
       void stompClient.deactivate();
     };
-  }, []);
+  }, [serverListState, location.pathname]);
 
   useEffect(() => {
     if (stompState.chatMessage)
       receiveStompMessageHandler(stompState.chatMessage);
   }, [stompState.chatMessage]);
 
-  useEffect(() => {
-    if (userState.username) {
-      fetchServerList();
-    }
-  }, [userState.username]);
-
   const renderPage = () => {
     if (globalState.pageInvalid) {
       return <ErrorPage />;
     }
 
-    if (!userState.login) {
+    if (!userState.login && globalState.fetchProfile) {
       return <ErrorPage />;
     }
 
     return (
       <div className={"flex h-full w-full text-white"}>
-        <div className={"w-20"}>
+        <div
+          // style={{ height: `calc(100% - 28px` }}
+          className={"w-20"}
+        >
           <ServerList />
         </div>
         <div className={"w-full"}>
