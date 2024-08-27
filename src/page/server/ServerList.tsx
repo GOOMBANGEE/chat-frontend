@@ -32,90 +32,96 @@ export default function ServerList() {
   return (
     <div
       className={
-        "mx-auto flex h-full flex-col items-center gap-2 bg-serverListSidebar px-1 py-2"
+        "flex h-full max-h-full w-20 flex-col items-center justify-center gap-2 bg-serverListSidebar px-1 py-2"
       }
     >
-      {serverListState.map((server: ServerInfo) => (
-        <button
-          key={server.id}
-          onClick={() => handleServerIconClick(server)}
-          className={
-            "flex h-12 w-12 items-center justify-center rounded-full bg-customGray"
-          }
-        >
-          {server.id}
-        </button>
-      ))}
+      <div
+        className={
+          "custom-scrollbar mx-auto flex h-full max-h-full flex-col items-center gap-2 overflow-y-auto px-1 py-2"
+        }
+      >
+        {serverListState.map((server: ServerInfo) => (
+          <button
+            key={server.id}
+            onClick={() => handleServerIconClick(server)}
+            className={
+              "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-customGray"
+            }
+          >
+            {server.id}
+          </button>
+        ))}
 
-      {isHover ? (
-        <button
-          onMouseLeave={() => setIsHover(false)}
-          onClick={() =>
-            setServerAddState({
-              name: `${userState.username}의 서버`,
-              open: true,
-            })
-          }
-          className={
-            "flex h-12 w-12 items-center justify-center rounded-2xl bg-green-600 transition duration-100"
-          }
-        >
-          <svg
-            width="32px"
-            height="32px"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+        {isHover ? (
+          <button
+            onMouseLeave={() => setIsHover(false)}
+            onClick={() =>
+              setServerAddState({
+                name: `${userState.username}의 서버`,
+                open: true,
+              })
+            }
+            className={
+              "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-green-600 transition duration-100"
+            }
           >
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              <path
-                d="M6 12H18M12 6V18"
-                stroke="#ffffff"
-                strokeWidth="2"
+            <svg
+              width="32px"
+              height="32px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              ></path>{" "}
-            </g>
-          </svg>
-        </button>
-      ) : (
-        <button
-          onMouseOver={() => setIsHover(true)}
-          className={
-            "flex h-12 w-12 items-center justify-center rounded-full bg-customGray transition duration-100"
-          }
-        >
-          <svg
-            width="32px"
-            height="32px"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M6 12H18M12 6V18"
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>{" "}
+              </g>
+            </svg>
+          </button>
+        ) : (
+          <button
+            onMouseOver={() => setIsHover(true)}
+            className={
+              "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-customGray transition duration-100"
+            }
           >
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              <path
-                d="M6 12H18M12 6V18"
-                stroke="#16a34a"
-                strokeWidth="2"
+            <svg
+              width="32px"
+              height="32px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              ></path>{" "}
-            </g>
-          </svg>
-        </button>
-      )}
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M6 12H18M12 6V18"
+                  stroke="#16a34a"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>{" "}
+              </g>
+            </svg>
+          </button>
+        )}
+      </div>
     </div>
   );
 }

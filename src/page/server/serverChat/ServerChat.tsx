@@ -19,7 +19,10 @@ export default function ServerChat() {
       <div className={"flex h-full w-full flex-col"}>
         <ServerChatHeader />
 
-        <div style={{ height: "calc(100% - 110px)" }} className={"px-6 py-2"}>
+        <div
+          style={{ height: "calc(100% - 110px)" }}
+          className={"custom-scrollbar overflow-y-auto px-6 py-2"}
+        >
           {chatListState.map((chat) => (
             <ChatComponent key={chat.id} chat={chat} />
           ))}
