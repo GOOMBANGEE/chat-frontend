@@ -10,7 +10,7 @@ export default function useServerCreate() {
 
   const serverCreate = async () => {
     const serverUrl = envState.serverUrl;
-    const response = await axios.post(`${serverUrl}/`, {
+    const response = await axios.post(`${serverUrl}/create`, {
       username: userState.username,
       name: serverAddState.name,
     });

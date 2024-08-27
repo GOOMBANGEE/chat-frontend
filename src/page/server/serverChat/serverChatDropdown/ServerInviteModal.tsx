@@ -19,6 +19,22 @@ export default function ServerInviteModal() {
     fetchServerInviteCode();
   }, []);
 
+  // modal 바깥쪽 클릭시 modal close
+  const handleClickOutside = (e: MouseEvent) => {
+    if (
+      serverState.inviteModalOpen &&
+      !(e.target as HTMLElement).closest(".server-invite-modal")
+    ) {
+      setServerState({ inviteModalOpen: false });
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("mouseup", handleClickOutside);
+    return () => {
+      document.removeEventListener("mouseup", handleClickOutside);
+    };
+  }, [serverState, setServerState]);
+
   return (
     <div
       className={
@@ -26,7 +42,7 @@ export default function ServerInviteModal() {
       }
     >
       <div className={"fixed inset-0 bg-gray-700 opacity-50"}></div>
-      <div className={"server-add-modal flex items-center justify-center"}>
+      <div className={"server-invite-modal flex items-center justify-center"}>
         <div
           style={{ width: "450px" }}
           className={
@@ -74,9 +90,7 @@ export default function ServerInviteModal() {
 
           <div
             style={{ backgroundColor: "#1D2125" }}
-            className={
-              "flex w-full flex-col rounded-b bg-customDarkGray px-4 py-4"
-            }
+            className={"flex w-full flex-col rounded-b px-4 py-4"}
           >
             <div
               className={"mb-2 text-start text-xs font-semibold text-gray-400"}
