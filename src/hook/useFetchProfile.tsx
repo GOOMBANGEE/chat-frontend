@@ -11,7 +11,11 @@ export default function useFetchProfile() {
   const fetchProfile = async () => {
     try {
       const response = await axios.get(`${envState.userUrl}/profile`);
-      setUserState({ username: response.data.username, login: true });
+      setUserState({
+        email: response.data.email,
+        username: response.data.username,
+        login: true,
+      });
     } catch (error) {
       setGlobalState({ loginExpire: true });
     } finally {

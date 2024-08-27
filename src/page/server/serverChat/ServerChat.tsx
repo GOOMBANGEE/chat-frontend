@@ -3,15 +3,17 @@ import ChatComponent from "./ChatComponent.tsx";
 import ChatInput from "./ChatInput.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import ServerChatDropdown from "./serverChatDropdown/ServerChatDropdown.tsx";
+import ServerChatUserInfo from "./ServerChatUserInfo.tsx";
 
 export default function ServerChat() {
   const { chatListState } = useChatStore();
 
   return (
     <div className={"flex h-full w-full"}>
-      <div className={"w-72 bg-serverChatSidebar"}>
+      <div className={"relative w-72 bg-serverChatSidebar"}>
         <ServerChatDropdown />
         {/*<ServerChatChannelList/>*/}
+        <ServerChatUserInfo />
       </div>
 
       <div className={"flex h-full w-full flex-col"}>

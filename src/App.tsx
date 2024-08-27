@@ -13,12 +13,15 @@ import "react-toastify/dist/ReactToastify.css";
 import Server from "./page/server/Server.tsx";
 import useCheckPath from "./hook/useCheckPath.tsx";
 import Invite from "./page/server/Invite.tsx";
+import UserSetting from "./page/user/userSetting/UserSetting.tsx";
+import { useUserStore } from "./store/UserStore.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
   const { refreshAccessToken } = useRefreshAccessToken();
   const { checkPath } = useCheckPath();
 
+  const { userState } = useUserStore();
   const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
 
@@ -54,6 +57,8 @@ export default function App() {
           <Route path={"server/*"} element={<Server />} />
           <Route path={"invite/:code"} element={<Invite />} />
         </Routes>
+
+        {userState.userSettingOpen ? <UserSetting /> : null}
 
         <ToastContainer
           position="bottom-right"

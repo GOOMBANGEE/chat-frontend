@@ -78,6 +78,10 @@ export default function Server() {
       return <ErrorPage />;
     }
 
+    if (!userState.login) {
+      return <ErrorPage />;
+    }
+
     return (
       <div className={"flex h-full w-full text-white"}>
         <div className={"w-20"}>
