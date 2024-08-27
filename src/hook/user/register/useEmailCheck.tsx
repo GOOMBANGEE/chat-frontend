@@ -18,12 +18,12 @@ export default function useEmailCheck() {
         switch (error.response?.data.id) {
           case "VALID:EMAIL_FORM_ERROR":
             setUserState({
-              emailErrorMessage: "- 유효하지 않은 이메일입니다.",
+              emailErrorMessage: "유효하지 않은 이메일입니다.",
             });
             break;
           case "USER:EMAIL_EXIST":
             setUserState({
-              emailErrorMessage: "- 이미 존재하는 이메일입니다.",
+              emailErrorMessage: "이미 존재하는 이메일입니다.",
             });
             break;
           default:

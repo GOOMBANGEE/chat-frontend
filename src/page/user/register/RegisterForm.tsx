@@ -51,7 +51,7 @@ export default function RegisterForm() {
     if (!emailRegExp) {
       setUserState({
         emailVerified: false,
-        emailErrorMessage: "- 유효하지 않은 이메일입니다.",
+        emailErrorMessage: "유효하지 않은 이메일입니다.",
       });
       return;
     }
@@ -62,7 +62,7 @@ export default function RegisterForm() {
     if (!usernameRegExp) {
       setUserState({
         usernameVerified: false,
-        usernameErrorMessage: "- 사용자명은 2~20자로 설정해주세요.",
+        usernameErrorMessage: "사용자명은 2~20자로 설정해주세요.",
       });
       return;
     }
@@ -75,7 +75,7 @@ export default function RegisterForm() {
       setUserState({
         passwordVerified: false,
         passwordErrorMessage:
-          "- 비밀번호는 특수문자를 포함하여 8~20자로 설정해주세요.",
+          "비밀번호는 특수문자를 포함하여 8~20자로 설정해주세요.",
       });
       return;
     }
@@ -83,7 +83,7 @@ export default function RegisterForm() {
     if (userState.password !== userState.confirmPassword) {
       setUserState({
         passwordVerified: false,
-        passwordErrorMessage: "- 비밀번호가 일치하지 않습니다.",
+        passwordErrorMessage: "비밀번호가 일치하지 않습니다.",
       });
       return;
     }
@@ -120,7 +120,7 @@ export default function RegisterForm() {
             <div className={"text-start text-xs text-red-400"}>
               이메일{" "}
               <span className={"font-light"}>
-                {userState.emailErrorMessage}
+                - {userState.emailErrorMessage}
               </span>
             </div>
           )}
@@ -144,7 +144,7 @@ export default function RegisterForm() {
             <div className={"text-start text-xs text-red-400"}>
               사용자명{" "}
               <span className={"font-light"}>
-                {userState.usernameErrorMessage}
+                - {userState.usernameErrorMessage}
               </span>
             </div>
           )}
@@ -168,7 +168,7 @@ export default function RegisterForm() {
             <div className={"text-start text-xs text-red-400"}>
               비밀번호{" "}
               <span className={"font-light"}>
-                {userState.passwordErrorMessage}
+                - {userState.passwordErrorMessage}
               </span>
             </div>
           )}
@@ -195,7 +195,7 @@ export default function RegisterForm() {
             <div className={"text-start text-xs text-red-400"}>
               비밀번호확인{" "}
               <span className={"font-light"}>
-                {userState.passwordErrorMessage}
+                - {userState.passwordErrorMessage}
               </span>
             </div>
           )}

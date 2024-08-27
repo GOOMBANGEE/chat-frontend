@@ -4,6 +4,7 @@ import UserSettingProfile from "./UserSettingProfile.tsx";
 import UserSettingAccount from "./UserSettingAccount.tsx";
 import UserSettingLogoutModal from "./UserSettingLogoutModal.tsx";
 import UserSettingDeleteUserModal from "./UserSettingDeleteUserModal.tsx";
+import UserSettingPasswordChangeModal from "./UserSettingPasswordChangeModal.tsx";
 
 export default function UserSetting() {
   const { userState, setUserState } = useUserStore();
@@ -14,16 +15,20 @@ export default function UserSetting() {
         "fixed left-0 top-0 flex h-full w-full items-center justify-center"
       }
     >
-      <div className={"bg-defaultBackground fixed inset-0"}></div>
+      <div className={"fixed inset-0 bg-defaultBackground"}></div>
 
       <div className={"z-10 flex h-full w-full text-white"}>
         <UserSettingSidebar />
         {userState.userSettingAccount ? <UserSettingAccount /> : null}
         {userState.userSettingProfile ? <UserSettingProfile /> : null}
+        {userState.userSettingPasswordChangeModal ? (
+          <UserSettingPasswordChangeModal />
+        ) : null}
         {userState.userSettingLogoutModal ? <UserSettingLogoutModal /> : null}
         {userState.userSettingDeleteUserModal ? (
           <UserSettingDeleteUserModal />
         ) : null}
+
         <button
           className={"absolute right-20 top-10 z-10 ml-auto"}
           onClick={() => {

@@ -18,12 +18,12 @@ export default function useUsernameCheck() {
         switch (error.response?.data.id) {
           case "VALID:USERNAME_FORM_ERROR":
             setUserState({
-              usernameErrorMessage: "- 사용자명은 2~20자로 설정해주세요.",
+              usernameErrorMessage: "사용자명은 2~20자로 설정해주세요.",
             });
             break;
           case "USER:USERNAME_EXIST":
             setUserState({
-              usernameErrorMessage: "- 이미 존재하는 사용자명입니다.",
+              usernameErrorMessage: "이미 존재하는 사용자명입니다.",
             });
             break;
           default:
