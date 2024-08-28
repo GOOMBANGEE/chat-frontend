@@ -18,11 +18,11 @@ export default function ChatInput() {
   const handleKeyEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (userState.username && chatState.message) {
+      if (userState.username && chatState.chatMessage) {
         const chat: Chat = {
           id: Date.now(),
           username: userState.username,
-          message: chatState.message,
+          message: chatState.chatMessage,
         };
         const newChatList = [...chatListState, chat];
         setChatListState(newChatList);
@@ -41,7 +41,7 @@ export default function ChatInput() {
     <div className={"flex px-6"}>
       <input
         ref={inputRef}
-        onChange={(e) => setChatState({ message: e.target.value })}
+        onChange={(e) => setChatState({ chatMessage: e.target.value })}
         onKeyDown={(e) => handleKeyEnter(e)}
         placeholder={`${serverState.name}에 메시지 보내기`}
         className={"w-full rounded bg-customGray px-4 py-2"}

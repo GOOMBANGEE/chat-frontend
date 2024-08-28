@@ -15,28 +15,46 @@ export default function useReceiveStompMessageHandler() {
     let newChat: Chat;
     // 들어온 메세지가 현재 들어가있는 serverId와 같은경우 chatList 갱신
     if (
+      message.messageType === "SEND" &&
       message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
-      if (message.messageType === "SEND") {
-        newChat = {
-          id: message.chatId,
-          username: message.username,
-          message: message.message,
-        };
-        newChatList = [...chatListState, newChat];
-        setChatListState(newChatList);
-        return;
-      }
-
-      if (message.messageType === "DELETE_CHAT") {
-        newChatList = chatListState.filter(
-          (chat: Chat) => chat.id !== message.chatId,
-        );
-        setChatListState(newChatList);
-        return;
-      }
+      newChat = {
+        id: message.chatId,
+        username: message.username,
+        message: message.message,
+      };
+      newChatList = [...chatListState, newChat];
+      setChatListState(newChatList);
+      return;
     }
+
+    if (
+      message.messageType === "DELETE_CHAT" &&
+      message.serverId === serverState.id
+    ) {
+      newChatList = chatListState.filter(
+        (chat: Chat) => chat.id !== message.chatId,
+      );
+      setChatListState(newChatList);
+      return;
+    }
+
+    if (
+      message.messageType === "UPDATE_CHAT" &&
+      message.serverId === serverState.id &&
+      message.username !== userState.username
+    ) {
+      newChatList = chatListState.map((chat: Chat) => {
+        if (chat.id === message.chatId) {
+          return { ...chat, message: message.message };
+        }
+        return chat;
+      });
+      setChatListState(newChatList);
+      return;
+    }
+
     // 들어온 메세지가 현재 들어가있는 serverId와 다른경우 무시 -> 알림만 남김
 
     let newServerList: ServerInfo[] = [];

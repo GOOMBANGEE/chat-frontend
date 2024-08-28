@@ -4,9 +4,11 @@ import ChatInput from "./ChatInput.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import ServerChatDropdown from "./serverChatDropdown/ServerChatDropdown.tsx";
 import ServerChatUserInfo from "./ServerChatUserInfo.tsx";
+import ChatContextMenu from "./ChatContextMenu.tsx";
+import ChatDeleteModal from "./ChatDeleteModal.tsx";
 
 export default function ServerChat() {
-  const { chatListState } = useChatStore();
+  const { chatState, chatListState } = useChatStore();
 
   return (
     <div className={"flex h-full w-full"}>
@@ -28,6 +30,9 @@ export default function ServerChat() {
           ))}
         </div>
         <ChatInput />
+
+        {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
+        {chatState.chatDeleteModalOpen ? <ChatDeleteModal /> : null}
       </div>
     </div>
   );
