@@ -13,7 +13,7 @@ export interface Chat {
 
 export interface StompChatMessage {
   messageType: string;
-  serveId: string;
+  serverId: number;
   chatId: number;
   username: string;
   message: string;

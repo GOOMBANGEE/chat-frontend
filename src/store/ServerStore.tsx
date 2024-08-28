@@ -18,6 +18,16 @@ interface ServerState {
   inviteLinkCopy: boolean;
   inviteUsername: string | undefined;
 
+  settingModalOpen: boolean;
+  settingDefault: boolean;
+  newServerName: string | undefined;
+  settingRole: boolean;
+  settingMember: boolean;
+
+  settingServerDeleteModal: boolean;
+  checkServerName: string | undefined;
+  serverNameVerified: boolean;
+
   fetchServerInfo: boolean;
   userCount: number | undefined;
 }
@@ -29,6 +39,16 @@ const initialServerState: ServerState = {
   inviteModalOpen: false,
   inviteLink: undefined,
   inviteLinkCopy: false,
+
+  settingModalOpen: false,
+  settingDefault: false,
+  newServerName: undefined,
+  settingRole: false,
+  settingMember: false,
+
+  settingServerDeleteModal: false,
+  checkServerName: undefined,
+  serverNameVerified: true,
 
   fetchServerInfo: false,
   inviteUsername: undefined,

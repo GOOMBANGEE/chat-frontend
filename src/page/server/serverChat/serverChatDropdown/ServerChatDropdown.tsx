@@ -24,6 +24,10 @@ export default function ServerChatDropdown() {
     setServerState({ inviteModalOpen: true });
   };
 
+  const handleClickSettingButton = () => {
+    setServerState({ settingModalOpen: true, settingDefault: true });
+  };
+
   // dropdown 바깥쪽 클릭시 modal close
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -120,6 +124,7 @@ export default function ServerChatDropdown() {
               초대하기
             </button>
             <button
+              onClick={() => handleClickSettingButton()}
               className={
                 "w-full rounded px-2 py-1 text-start hover:bg-indigo-500 hover:text-white"
               }

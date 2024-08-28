@@ -15,6 +15,8 @@ import useCheckPath from "./hook/useCheckPath.tsx";
 import Invite from "./page/server/Invite.tsx";
 import UserSetting from "./page/user/userSetting/UserSetting.tsx";
 import { useUserStore } from "./store/UserStore.tsx";
+import { useServerStore } from "./store/ServerStore.tsx";
+import ServerSetting from "./page/server/serverChat/serverSetting/ServerSetting.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
@@ -22,6 +24,7 @@ export default function App() {
   const { checkPath } = useCheckPath();
 
   const { userState } = useUserStore();
+  const { serverState } = useServerStore();
   const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
 
@@ -59,6 +62,7 @@ export default function App() {
         </Routes>
 
         {userState.userSettingOpen ? <UserSetting /> : null}
+        {serverState.settingModalOpen ? <ServerSetting /> : null}
 
         <ToastContainer
           position="bottom-right"
