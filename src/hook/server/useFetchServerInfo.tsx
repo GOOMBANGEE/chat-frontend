@@ -13,7 +13,7 @@ export default function useFetchServerInfo() {
   const fetchServerInfo = async () => {
     const serverUrl = envState.serverUrl;
     try {
-      const response = await axios.get(`${serverUrl}/invite/${code}`);
+      const response = await axios.get(`${serverUrl}/${code}/invite`);
 
       setServerState({
         name: response.data.name,

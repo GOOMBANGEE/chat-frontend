@@ -12,7 +12,7 @@ export default function useRegisterTokenCheck() {
 
   const registerTokenCheck = async () => {
     try {
-      const response = await axios.get(`${envState.userUrl}/register/${token}`);
+      const response = await axios.get(`${envState.userUrl}/${token}/register`);
       setUserState({
         email: response.data.email,
       });

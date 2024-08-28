@@ -9,7 +9,7 @@ export default function useServerJoin() {
   const serverJoin = async () => {
     const serverUrl = envState.serverUrl;
 
-    const response = await axios.post(`${serverUrl}/join/${code}`);
+    const response = await axios.post(`${serverUrl}/${code}/join`);
     return response.data.serverId;
   };
 

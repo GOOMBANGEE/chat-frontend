@@ -10,7 +10,7 @@ export default function useServerDelete() {
   const serverDelete = async () => {
     const serverUrl = envState.serverUrl;
 
-    await axios.post(`${serverUrl}/delete/${serverState.id}`, {
+    await axios.post(`${serverUrl}/${serverState.id}/delete`, {
       name: serverState.checkServerName,
     });
     resetServerState();

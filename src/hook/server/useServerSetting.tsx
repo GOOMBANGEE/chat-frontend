@@ -9,7 +9,7 @@ export default function useServerSetting() {
   const serverSetting = async () => {
     const serverUrl = envState.serverUrl;
 
-    await axios.post(`${serverUrl}/setting/${serverState.id}`, {
+    await axios.post(`${serverUrl}/${serverState.id}/setting`, {
       name: serverState.newServerName,
     });
   };

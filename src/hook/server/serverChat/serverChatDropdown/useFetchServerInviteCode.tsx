@@ -11,7 +11,7 @@ export default function useFetchServerInviteCode() {
 
     try {
       const response = await axios.post(
-        `${serverUrl}/invite/${serverState.id}`,
+        `${serverUrl}/${serverState.id}/invite`,
       );
       setServerState({ inviteLink: response.data.link });
       return response.data.link;
