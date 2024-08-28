@@ -6,7 +6,9 @@ export default function ServerSettingDefault() {
   const { serverState, setServerState } = useServerStore();
 
   const handleClickSettingButton = () => {
-    serverSetting();
+    if (serverState.newServerName) {
+      serverSetting();
+    }
   };
 
   return (

@@ -10,7 +10,6 @@ export default function UserSettingDeleteUserModal() {
 
   const handleClickCancelButton = () => {
     setUserState({ userSettingDeleteUserModal: false });
-    navigate("/");
   };
 
   const handleClickDeleteButton = async () => {
