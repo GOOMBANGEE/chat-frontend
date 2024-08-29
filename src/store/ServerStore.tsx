@@ -34,6 +34,12 @@ interface ServerState {
   userCount: number | undefined;
 
   serverUserList: boolean;
+  serverSearchbar: boolean;
+  serverSearchOption: boolean;
+  serverSearchOptionUser: boolean;
+  serverSearchOptionMessage: boolean;
+  searchKeyword: string | undefined;
+  serverSearchList: boolean;
 }
 
 const initialServerState: ServerState = {
@@ -59,6 +65,12 @@ const initialServerState: ServerState = {
   userCount: undefined,
 
   serverUserList: false,
+  serverSearchbar: false,
+  serverSearchOption: false,
+  serverSearchOptionUser: false,
+  serverSearchOptionMessage: false,
+  searchKeyword: undefined,
+  serverSearchList: false,
 };
 
 export const useServerStore = create<ServerStore>((set) => ({

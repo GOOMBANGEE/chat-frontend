@@ -6,6 +6,8 @@ interface ChatStore {
   setChatState: (state: Partial<ChatState>) => void;
   chatListState: Chat[];
   setChatListState: (state: Chat[]) => void;
+  chatSearchListState: Chat[];
+  setChatSearchListState: (state: Chat[]) => void;
   resetChatState: () => void;
   resetChatListState: () => void;
 }
@@ -38,6 +40,8 @@ export const useChatStore = create<ChatStore>((set) => ({
     set((prev) => ({ chatState: { ...prev.chatState, ...state } })),
   chatListState: [],
   setChatListState: (state) => set({ chatListState: state }),
+  chatSearchListState: [],
+  setChatSearchListState: (state) => set({ chatSearchListState: state }),
   resetChatState: () => set({ chatState: initialChatState }),
   resetChatListState: () => set({ chatListState: [] }),
 }));

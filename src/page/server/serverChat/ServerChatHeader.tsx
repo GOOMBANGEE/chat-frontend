@@ -1,4 +1,5 @@
 import { useServerStore } from "../../../store/ServerStore.tsx";
+import ChatSearchbar from "./ChatSearchbar.tsx";
 
 export default function ServerChatHeader() {
   const { serverState, setServerState } = useServerStore();
@@ -9,7 +10,9 @@ export default function ServerChatHeader() {
 
   return (
     <div
-      className={"flex w-full items-center px-6 py-3 font-semibold shadow-md"}
+      className={
+        "flex w-full items-center gap-x-2 px-6 py-3 font-semibold shadow-md"
+      }
     >
       <div>{serverState.name}</div>
       <button
@@ -40,6 +43,8 @@ export default function ServerChatHeader() {
           </g>
         </svg>
       </button>
+
+      <ChatSearchbar />
     </div>
   );
 }

@@ -8,6 +8,8 @@ import ChatContextMenu from "./ChatContextMenu.tsx";
 import ChatDeleteModal from "./ChatDeleteModal.tsx";
 import { useServerStore } from "../../../store/ServerStore.tsx";
 import ServerChatUserList from "./ServerChatUserList.tsx";
+import ChatSearchOption from "./ChatSearchOption.tsx";
+import ServerChatSearchList from "./ServerChatSearchList.tsx";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
@@ -23,7 +25,7 @@ export default function ServerChat() {
 
       <div className={"flex h-full w-full flex-col"}>
         <ServerChatHeader />
-
+        {serverState.serverSearchOption ? <ChatSearchOption /> : null}
         <div className={"flex h-full w-full"}>
           <div className={"flex h-full w-full flex-col"}>
             <div className={"custom-scrollbar overflow-y-auto px-6 py-2"}>
@@ -37,6 +39,7 @@ export default function ServerChat() {
           </div>
 
           {serverState.serverUserList ? <ServerChatUserList /> : null}
+          {serverState.serverSearchList ? <ServerChatSearchList /> : null}
         </div>
       </div>
       {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
