@@ -22,7 +22,7 @@ interface ServerState {
   settingDefault: boolean;
   newServerName: string | undefined;
   settingRole: boolean;
-  settingMember: boolean;
+  settingUser: boolean;
 
   settingServerDeleteModal: boolean;
   checkServerName: string | undefined;
@@ -44,7 +44,7 @@ const initialServerState: ServerState = {
   settingDefault: false,
   newServerName: undefined,
   settingRole: false,
-  settingMember: false,
+  settingUser: false,
 
   settingServerDeleteModal: false,
   checkServerName: undefined,

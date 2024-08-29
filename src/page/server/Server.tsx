@@ -98,10 +98,7 @@ export default function Server() {
 
     return (
       <div className={"flex h-full w-full text-white"}>
-        <div
-          // style={{ height: `calc(100% - 28px` }}
-          className={"w-20"}
-        >
+        <div className={"w-20"}>
           <ServerList />
         </div>
         <div className={"w-full"}>

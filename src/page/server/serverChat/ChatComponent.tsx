@@ -82,7 +82,7 @@ export default function ChatComponent(props: Readonly<Props>) {
             defaultValue={chatState.message}
             className={"w-full rounded bg-customGray px-4 py-2"}
           />
-          <div className={"flex items-center text-xs"}>
+          <div className={"mt-1 flex items-center text-xs"}>
             <div>
               Esc 키로{" "}
               <button

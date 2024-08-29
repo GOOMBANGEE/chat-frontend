@@ -29,7 +29,7 @@ export default function ServerSetting() {
               settingModalOpen: false,
               settingDefault: false,
               settingRole: false,
-              settingMember: false,
+              settingUser: false,
               settingServerDeleteModal: false,
             });
           }}

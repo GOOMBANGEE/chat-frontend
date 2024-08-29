@@ -19,7 +19,7 @@ export default function ServerSettingSidebar() {
             setServerState({
               settingDefault: true,
               settingRole: false,
-              settingMember: false,
+              settingUser: false,
             });
           }}
           className={`rounded px-2 py-1 text-start hover:bg-customDarkGray hover:text-gray-300 ${serverState.settingDefault ? "bg-customGray text-white" : ""}`}
@@ -31,7 +31,7 @@ export default function ServerSettingSidebar() {
             setServerState({
               settingRole: true,
               settingDefault: false,
-              settingMember: false,
+              settingUser: false,
             });
           }}
           className={`rounded px-2 py-1 text-start hover:bg-customDarkGray hover:text-gray-300 ${serverState.settingRole ? "bg-customGray text-white" : ""}`}
@@ -41,12 +41,12 @@ export default function ServerSettingSidebar() {
         <button
           onClick={() => {
             setServerState({
-              settingMember: true,
+              settingUser: true,
               settingDefault: false,
               settingRole: false,
             });
           }}
-          className={`rounded px-2 py-1 text-start hover:bg-customDarkGray hover:text-gray-300 ${serverState.settingMember ? "bg-customGray text-white" : ""}`}
+          className={`rounded px-2 py-1 text-start hover:bg-customDarkGray hover:text-gray-300 ${serverState.settingUser ? "bg-customGray text-white" : ""}`}
         >
           멤버
         </button>
