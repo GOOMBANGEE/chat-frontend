@@ -21,7 +21,7 @@ export default function ServerList() {
   const [isHover, setIsHover] = useState(false);
 
   const handleServerIconClick = (server: ServerInfo) => {
-    setServerState({ id: server.id, name: server.name });
+    setServerState({ id: server.id, name: server.name, serverUserList: false });
     resetChatListState();
 
     // fetch serverChat log limit 50

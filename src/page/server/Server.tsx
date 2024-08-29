@@ -18,10 +18,12 @@ import useReceiveStompMessageHandler from "../../hook/useReceiveStompMessageHand
 import ErrorPage from "../ErrorPage.tsx";
 import useFetchChatList from "../../hook/server/serverChat/useFetchChatList.tsx";
 import { ServerInfo } from "../../../index";
+import useFetchServerUserList from "../../hook/server/useFetchServerUserList.tsx";
 
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
+  const { fetchServerUserList } = useFetchServerUserList();
   const { checkPath } = useCheckPath();
   const { fetchChatList } = useFetchChatList();
 
@@ -63,6 +65,7 @@ export default function Server() {
       setServerState({ id: server?.id, name: server?.name });
 
       fetchChatList({ serverId: Number(serverId) });
+      fetchServerUserList({ serverId: Number(serverId) });
     }
 
     const stompUrl = envState.stompUrl;

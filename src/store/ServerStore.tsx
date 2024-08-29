@@ -1,4 +1,4 @@
-import { ServerInfo } from "../../index";
+import { ServerInfo, ServerUserInfo } from "../../index";
 import { create } from "zustand";
 
 interface ServerStore {
@@ -6,6 +6,8 @@ interface ServerStore {
   setServerState: (state: Partial<ServerState>) => void;
   serverListState: ServerInfo[];
   setServerListState: (state: ServerInfo[]) => void;
+  serverUserListState: ServerUserInfo[];
+  setServerUserListState: (state: ServerUserInfo[]) => void;
   resetServerState: () => void;
 }
 
@@ -30,6 +32,8 @@ interface ServerState {
 
   fetchServerInfo: boolean;
   userCount: number | undefined;
+
+  serverUserList: boolean;
 }
 
 const initialServerState: ServerState = {
@@ -53,6 +57,8 @@ const initialServerState: ServerState = {
   fetchServerInfo: false,
   inviteUsername: undefined,
   userCount: undefined,
+
+  serverUserList: false,
 };
 
 export const useServerStore = create<ServerStore>((set) => ({
@@ -61,5 +67,7 @@ export const useServerStore = create<ServerStore>((set) => ({
     set((prev) => ({ serverState: { ...prev.serverState, ...state } })),
   serverListState: [],
   setServerListState: (state) => set({ serverListState: state }),
+  serverUserListState: [],
+  setServerUserListState: (state) => set({ serverUserListState: state }),
   resetServerState: () => set({ serverState: initialServerState }),
 }));

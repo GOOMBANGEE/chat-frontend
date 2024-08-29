@@ -6,9 +6,12 @@ import ServerChatDropdown from "./serverChatDropdown/ServerChatDropdown.tsx";
 import ServerChatUserInfo from "./ServerChatUserInfo.tsx";
 import ChatContextMenu from "./ChatContextMenu.tsx";
 import ChatDeleteModal from "./ChatDeleteModal.tsx";
+import { useServerStore } from "../../../store/ServerStore.tsx";
+import ServerChatUserList from "./ServerChatUserList.tsx";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
+  const { serverState } = useServerStore();
 
   return (
     <div className={"flex h-full w-full"}>
@@ -21,19 +24,23 @@ export default function ServerChat() {
       <div className={"flex h-full w-full flex-col"}>
         <ServerChatHeader />
 
-        <div
-          style={{ height: "calc(100% - 110px)" }}
-          className={"custom-scrollbar overflow-y-auto px-6 py-2"}
-        >
-          {chatListState.map((chat) => (
-            <ChatComponent key={chat.id} chat={chat} />
-          ))}
-        </div>
-        <ChatInput />
+        <div className={"flex h-full w-full"}>
+          <div className={"flex h-full w-full flex-col"}>
+            <div className={"custom-scrollbar overflow-y-auto px-6 py-2"}>
+              {chatListState.map((chat) => (
+                <ChatComponent key={chat.id} chat={chat} />
+              ))}
+            </div>
+            <div className={"mb-3 mt-auto"}>
+              <ChatInput />
+            </div>
+          </div>
 
-        {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
-        {chatState.chatDeleteModalOpen ? <ChatDeleteModal /> : null}
+          {serverState.serverUserList ? <ServerChatUserList /> : null}
+        </div>
       </div>
+      {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
+      {chatState.chatDeleteModalOpen ? <ChatDeleteModal /> : null}
     </div>
   );
 }

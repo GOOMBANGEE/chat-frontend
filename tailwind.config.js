@@ -9,6 +9,7 @@ export default {
         menuBlue: "#1C2B41",
         serverListSidebar: "#1D2125",
         serverChatSidebar: "#252728",
+        serverChatUserList: "#252728",
         serverChatUserInfo: "#1D2125",
         inputBackground: "#1D2125",
         customGray: "#A6C5E229",

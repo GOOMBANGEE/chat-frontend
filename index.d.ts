@@ -4,6 +4,11 @@ export interface ServerInfo {
   icon: string;
 }
 
+export interface ServerUserInfo {
+  id: number;
+  username: string;
+}
+
 export interface Chat {
   id: number;
   username: string;
