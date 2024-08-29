@@ -20,6 +20,10 @@ interface UserState {
   loginErrorMessage: string | undefined;
   login: boolean;
 
+  userRecoverEmailSendModal: boolean;
+  userRecoverTokenCheck: boolean;
+  userRecoverTokenVerified: boolean;
+
   userSettingOpen: boolean;
   userSettingAccount: boolean;
   userSettingProfile: boolean;
@@ -45,6 +49,10 @@ const initialUserState = {
   passwordErrorMessage: undefined,
   loginErrorMessage: undefined,
   login: false,
+
+  userRecoverEmailSendModal: false,
+  userRecoverTokenCheck: false,
+  userRecoverTokenVerified: false,
 
   userSettingOpen: false,
   userSettingAccount: false,

@@ -3,20 +3,23 @@ import { useUserStore } from "../../store/UserStore.tsx";
 import { useNavigate } from "react-router-dom";
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import useLogin from "../../hook/user/useLogin.tsx";
+import useRecover from "../../hook/user/useRecover.tsx";
+import RecoverEmailSendModal from "./recover/RecoverEmailSendModal.tsx";
 
 export default function Login() {
   const { login } = useLogin();
+  const { recover } = useRecover();
   const { userState, setUserState, resetUserState } = useUserStore();
   const { resetGlobalState } = useGlobalStore();
 
   const navigate = useNavigate();
   const serverUrl = "/server";
-  const recoverUrl = "/recover";
   const registerUrl = "/register";
 
+  // 로그인
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+    // 유효성 검사
     const emailRegExp =
       /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/.test(
         userState.email ? userState.email : "",
@@ -28,7 +31,6 @@ export default function Login() {
       });
       return;
     }
-
     const passwordRegExp =
       /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*\d).{8,20}$/.test(
         userState.password ? userState.password : "",
@@ -50,17 +52,36 @@ export default function Login() {
     });
   };
 
+  // navigate -> state reset
   const handleNavigateButton = (url: string) => {
     navigate(url);
     resetUserState();
     resetGlobalState();
   };
 
+  // 로그인 상태라면 server로 리다이렉트
   useEffect(() => {
     if (userState.login) {
       navigate(serverUrl);
     }
   }, [userState.login]);
+
+  const handleClickRecoverButton = async () => {
+    // 유효성 검사
+    const emailRegExp =
+      /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/.test(
+        userState.email ? userState.email : "",
+      );
+    if (!emailRegExp) {
+      setUserState({
+        emailVerified: false,
+        emailErrorMessage: "유효하지 않은 이메일입니다.",
+      });
+      return;
+    }
+
+    recover();
+  };
 
   return (
     <>
@@ -167,7 +188,7 @@ export default function Login() {
                     "flex w-fit cursor-pointer text-sm font-medium text-customPurple hover:underline"
                   }
                   onClick={() => {
-                    handleNavigateButton(recoverUrl);
+                    handleClickRecoverButton();
                   }}
                 >
                   비밀번호를 잊으셨나요?
@@ -200,6 +221,7 @@ export default function Login() {
           </div>
         </div>
       ) : null}
+      {userState.userRecoverEmailSendModal ? <RecoverEmailSendModal /> : null}
     </>
   );
 }

@@ -17,6 +17,7 @@ import UserSetting from "./page/user/userSetting/UserSetting.tsx";
 import { useUserStore } from "./store/UserStore.tsx";
 import { useServerStore } from "./store/ServerStore.tsx";
 import ServerSetting from "./page/server/serverChat/serverSetting/ServerSetting.tsx";
+import Recover from "./page/user/recover/Recover.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
@@ -28,7 +29,13 @@ export default function App() {
   const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
 
-  const routePathList = ["", "register/*", "server/*", "invite/*"];
+  const routePathList = [
+    "/",
+    "register/*",
+    "recover/*",
+    "server/*",
+    "invite/*",
+  ];
 
   useEffect(() => {
     checkPath({ routePathList: routePathList });
@@ -57,6 +64,7 @@ export default function App() {
         <Routes>
           <Route index element={<Login />} />
           <Route path={"register/*"} element={<Register />} />
+          <Route path={"recover/:token"} element={<Recover />} />
           <Route path={"server/*"} element={<Server />} />
           <Route path={"invite/:code"} element={<Invite />} />
         </Routes>
