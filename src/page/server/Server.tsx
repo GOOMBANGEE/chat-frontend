@@ -19,10 +19,14 @@ import ErrorPage from "../ErrorPage.tsx";
 import useFetchChatList from "../../hook/server/serverChat/useFetchChatList.tsx";
 import { ServerInfo } from "../../../index";
 import useFetchServerUserList from "../../hook/server/useFetchServerUserList.tsx";
+import useFetchFriendList from "../../hook/user/useFetchFriendList.tsx";
+import useFetchFriendWaitingList from "../../hook/user/useFetchFriendWaitingList.tsx";
 
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
+  const { fetchFriendList } = useFetchFriendList();
+  const { fetchFriendWaitingList } = useFetchFriendWaitingList();
   const { fetchServerUserList } = useFetchServerUserList();
   const { checkPath } = useCheckPath();
   const { fetchChatList } = useFetchChatList();
@@ -54,7 +58,11 @@ export default function Server() {
   };
 
   useEffect(() => {
-    if (userState.username) fetchServerList();
+    if (userState.username) {
+      fetchServerList();
+      fetchFriendList();
+      fetchFriendWaitingList();
+    }
   }, [userState.username]);
 
   useEffect(() => {
@@ -73,6 +81,11 @@ export default function Server() {
       brokerURL: stompUrl,
       onConnect: () => {
         subscribeToServer(serverListState, stompClient);
+        const subscriptionUserUrl = `/sub/user/${userState.id}`;
+        stompClient.subscribe(subscriptionUserUrl, (message: IMessage) => {
+          const receiveMessage = JSON.parse(message.body);
+          setStompState({ chatMessage: receiveMessage });
+        });
       },
       onStompError: (frame) => {
         console.error("Stomp Error" + frame.body);

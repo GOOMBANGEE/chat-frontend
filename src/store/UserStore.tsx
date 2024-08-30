@@ -4,6 +4,12 @@ import { UserInfo } from "../../index";
 interface UserStore {
   userState: UserState;
   setUserState: (state: Partial<UserState>) => void;
+  userFriendListState: UserInfo[];
+  setUserFriendListState: (state: UserInfo[]) => void;
+  userFriendWaitingListState: UserInfo[];
+  setUserFriendWaitingListState: (state: UserInfo[]) => void;
+  userFriendSearchListState: UserInfo[];
+  setUserFriendSearchListState: (state: UserInfo[]) => void;
   resetUserState: () => void;
 }
 
@@ -40,6 +46,10 @@ interface UserState {
   serverChatUserListContextMenu: boolean;
   focusUserId: number | undefined;
   focusUsername: string | undefined;
+
+  indexPageFriendList: boolean;
+  indexPageFriendRequestList: boolean;
+  searchUsername: string | undefined;
 }
 
 const initialUserState = {
@@ -75,10 +85,22 @@ const initialUserState = {
   serverChatUserListContextMenu: false,
   focusUserId: undefined,
   focusUsername: undefined,
+
+  indexPageFriendList: true,
+  indexPageFriendRequestList: false,
+  searchUsername: undefined,
 };
 export const useUserStore = create<UserStore>((set) => ({
   userState: initialUserState,
   setUserState: (state) =>
     set((prev) => ({ userState: { ...prev.userState, ...state } })),
+  userFriendListState: [],
+  setUserFriendListState: (state) => set({ userFriendListState: state }),
+  userFriendWaitingListState: [],
+  setUserFriendWaitingListState: (state) =>
+    set({ userFriendWaitingListState: state }),
+  userFriendSearchListState: [],
+  setUserFriendSearchListState: (state) =>
+    set({ userFriendSearchListState: state }),
   resetUserState: () => set({ userState: initialUserState }),
 }));
