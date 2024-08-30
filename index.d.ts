@@ -4,7 +4,7 @@ export interface ServerInfo {
   icon: string;
 }
 
-export interface ServerUserInfo {
+export interface UserInfo {
   id: number;
   username: string;
 }
@@ -27,4 +27,5 @@ export interface StompChatMessage {
   message: string;
   enter: boolean;
   leave: boolean;
+  friendRequest: boolean;
 }

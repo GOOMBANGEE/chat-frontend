@@ -1,9 +1,4 @@
-import {
-  Chat,
-  ServerInfo,
-  ServerUserInfo,
-  StompChatMessage,
-} from "../../index";
+import { Chat, ServerInfo, StompChatMessage, UserInfo } from "../../index";
 import { useChatStore } from "../store/ChatStore.tsx";
 import { useUserStore } from "../store/UserStore.tsx";
 import { useServerStore } from "../store/ServerStore.tsx";
@@ -67,7 +62,7 @@ export default function useReceiveStompMessageHandler() {
     }
 
     let newUserList = [];
-    let newUser: ServerUserInfo;
+    let newUser: UserInfo;
     if (message.enter && message.serverId === serverState.id) {
       newChat = {
         id: message.chatId,

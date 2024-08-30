@@ -123,7 +123,7 @@ export default function ChatSearchbar() {
             onKeyDown={(e) => handleKeyDown(e)}
             onInput={handleInput}
             className={
-              "server-search-bar relative flex h-full w-52 items-center rounded bg-serverSearchbar px-2 py-1 text-sm font-light"
+              "server-search-bar bg-searchbar relative flex h-full w-52 items-center rounded px-2 py-1 text-sm font-light"
             }
           >
             {serverState.serverSearchOptionUser ? (
@@ -205,7 +205,7 @@ export default function ChatSearchbar() {
         <button
           onClick={() => handleClickSearchButton()}
           className={
-            "flex w-44 cursor-text rounded bg-serverSearchbar px-2 py-1 text-sm text-gray-500"
+            "bg-searchbar flex w-44 cursor-text rounded px-2 py-1 text-sm text-gray-500"
           }
         >
           검색하기
