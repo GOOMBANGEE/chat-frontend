@@ -14,12 +14,17 @@ export interface Chat {
   username: string;
   message: string;
   error?: boolean;
+  enter?: boolean;
+  leave?: boolean;
 }
 
 export interface StompChatMessage {
   messageType: string;
   serverId: number;
   chatId: number;
+  userId: number;
   username: string;
   message: string;
+  enter: boolean;
+  leave: boolean;
 }

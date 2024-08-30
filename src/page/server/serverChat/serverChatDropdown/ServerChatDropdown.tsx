@@ -1,8 +1,11 @@
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import { useServerChatDropdownStore } from "../../../../store/ServerChatDropdownStore.tsx";
 import { useEffect } from "react";
+import useServerLeave from "../../../../hook/server/useServerLeave.tsx";
+import { useNavigate } from "react-router-dom";
 
 export default function ServerChatDropdown() {
+  const { serverLeave } = useServerLeave();
   const {
     serverChatDropdownState,
     setServerChatDropdownState,
@@ -10,6 +13,7 @@ export default function ServerChatDropdown() {
   } = useServerChatDropdownStore();
   const { serverState } = useServerStore();
   const { setServerState } = useServerStore();
+  const navigate = useNavigate();
 
   const handleClickOpenButton = () => {
     if (serverChatDropdownState.open) {
@@ -26,6 +30,13 @@ export default function ServerChatDropdown() {
 
   const handleClickSettingButton = () => {
     setServerState({ settingModalOpen: true, settingDefault: true });
+  };
+
+  const handleClickLeaveButton = async () => {
+    if (await serverLeave()) {
+      navigate("/server", { replace: true });
+    }
+    setServerChatDropdownState({ open: false });
   };
 
   // dropdown 바깥쪽 클릭시 modal close
@@ -133,6 +144,7 @@ export default function ServerChatDropdown() {
             </button>
             <div className={"my-1 border border-gray-900"}></div>
             <button
+              onClick={() => handleClickLeaveButton()}
               className={
                 "w-full rounded px-2 py-1 text-start text-red-600 hover:bg-red-500 hover:text-white"
               }

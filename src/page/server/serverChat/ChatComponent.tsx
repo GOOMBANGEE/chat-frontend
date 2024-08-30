@@ -108,12 +108,21 @@ export default function ChatComponent(props: Readonly<Props>) {
           onContextMenu={(e) => handleContextMenu(e)}
           className={"flex gap-2 rounded hover:bg-customDarkGray"}
         >
-          <div className={"font-semibold"}>{props.chat.username} :</div>
-          <div
-            className={`${props.chat.error ? "text-red-600" : "text-white"}`}
-          >
-            {props.chat.message}
-          </div>
+          {props.chat.enter ? (
+            <>
+              <div className={"font-semibold"}>{props.chat.username}</div>
+              <div className={"text-white"}>님이 입장하였습니다.</div>
+            </>
+          ) : (
+            <>
+              <div className={"font-semibold"}>{props.chat.username} :</div>
+              <div
+                className={`${props.chat.error ? "text-red-600" : "text-white"}`}
+              >
+                {props.chat.message}
+              </div>
+            </>
+          )}
         </div>
       )}
     </>
