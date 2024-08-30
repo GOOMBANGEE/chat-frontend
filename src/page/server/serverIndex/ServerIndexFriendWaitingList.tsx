@@ -1,7 +1,11 @@
 import { useUserStore } from "../../../store/UserStore.tsx";
 import { useEffect } from "react";
+import useFriendRequestAccept from "../../../hook/user/useFriendRequestAccept.tsx";
+import useFriendRequestReject from "../../../hook/user/useFriendRequestReject.tsx";
 
 export default function ServerIndexFriendWaitingList() {
+  const { friendRequestAccept } = useFriendRequestAccept();
+  const { friendRequestReject } = useFriendRequestReject();
   const {
     userState,
     setUserState,
@@ -11,7 +15,7 @@ export default function ServerIndexFriendWaitingList() {
   } = useUserStore();
 
   // 목록 검색
-  const displayFriendList = userState.searchUsername
+  const displayFriendWaitingList = userState.searchUsername
     ? userFriendSearchListState
     : userFriendWaitingListState;
   useEffect(() => {
@@ -24,6 +28,13 @@ export default function ServerIndexFriendWaitingList() {
     });
     setUserFriendSearchListState(searchFriendList);
   }, [userState.searchUsername]);
+
+  const handleClickAccept = async (id: number, username: string) => {
+    await friendRequestAccept({ id, username });
+  };
+  const handleClickReject = async (id: number, username: string) => {
+    await friendRequestReject({ id, username });
+  };
 
   return (
     <div className={"h-full w-full px-6 py-4"}>
@@ -65,7 +76,7 @@ export default function ServerIndexFriendWaitingList() {
             </div>
           </div>
           <div className={"w-full"}>
-            {displayFriendList.map((user) => (
+            {displayFriendWaitingList.map((user) => (
               <div
                 key={user.id}
                 className={
@@ -73,8 +84,12 @@ export default function ServerIndexFriendWaitingList() {
                 }
               >
                 <div>{user.username}</div>
+                {user.id}
                 <div className={"ml-auto flex gap-x-2"}>
-                  <button className={"group"}>
+                  <button
+                    onClick={() => handleClickAccept(user.id, user.username)}
+                    className={"group"}
+                  >
                     <svg
                       className={"bg-buttonDark h-8 w-8 rounded-full p-1"}
                       width="24px"
@@ -101,7 +116,10 @@ export default function ServerIndexFriendWaitingList() {
                       </g>
                     </svg>
                   </button>
-                  <button className={"group"}>
+                  <button
+                    onClick={() => handleClickReject(user.id, user.username)}
+                    className={"group"}
+                  >
                     <svg
                       className={"bg-buttonDark h-8 w-8 rounded-full p-1"}
                       width="24px"

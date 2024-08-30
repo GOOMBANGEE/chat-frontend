@@ -13,7 +13,11 @@ export default function useReceiveStompMessageHandler() {
     serverUserListState,
     setServerUserListState,
   } = useServerStore();
-  const { userState } = useUserStore();
+  const {
+    userState,
+    userFriendWaitingListState,
+    setUserFriendWaitingListState,
+  } = useUserStore();
   const navigate = useNavigate();
 
   const receiveStompMessageHandler = (message: StompChatMessage) => {
@@ -114,6 +118,19 @@ export default function useReceiveStompMessageHandler() {
       setServerListState(newServerList);
       navigate("/server", { replace: true });
       return;
+    }
+
+    // 친구요청을 받은 경우
+    if (message.friendRequest) {
+      const newFriendRequest = {
+        id: message.userId,
+        username: message.username,
+      };
+      const newFriendRequestList = [
+        ...userFriendWaitingListState,
+        newFriendRequest,
+      ];
+      setUserFriendWaitingListState(newFriendRequestList);
     }
   };
 
