@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { UserInfo } from "../../index";
 
 interface UserStore {
   userState: UserState;
@@ -7,6 +8,7 @@ interface UserStore {
 }
 
 interface UserState {
+  id: number | undefined;
   email: string | undefined;
   username: string | undefined;
   password: string | undefined;
@@ -34,9 +36,14 @@ interface UserState {
   newUsername: string | undefined;
   newPassword: string | undefined;
   newConfirmPassword: string | undefined;
+
+  serverChatUserListContextMenu: boolean;
+  focusUserId: number | undefined;
+  focusUsername: string | undefined;
 }
 
 const initialUserState = {
+  id: undefined,
   email: undefined,
   username: undefined,
   password: undefined,
@@ -64,6 +71,10 @@ const initialUserState = {
   newUsername: undefined,
   newPassword: undefined,
   newConfirmPassword: undefined,
+
+  serverChatUserListContextMenu: false,
+  focusUserId: undefined,
+  focusUsername: undefined,
 };
 export const useUserStore = create<UserStore>((set) => ({
   userState: initialUserState,

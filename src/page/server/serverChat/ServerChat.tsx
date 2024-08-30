@@ -10,10 +10,13 @@ import { useServerStore } from "../../../store/ServerStore.tsx";
 import ServerChatUserList from "./ServerChatUserList.tsx";
 import ChatSearchOption from "./ChatSearchOption.tsx";
 import ServerChatSearchList from "./ServerChatSearchList.tsx";
+import { useUserStore } from "../../../store/UserStore.tsx";
+import ServerChatUserListContextMenu from "./ServerChatUserListContextMenu.tsx";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
   const { serverState } = useServerStore();
+  const { userState } = useUserStore();
 
   return (
     <div className={"flex h-full w-full"}>
@@ -44,6 +47,9 @@ export default function ServerChat() {
       </div>
       {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
       {chatState.chatDeleteModalOpen ? <ChatDeleteModal /> : null}
+      {userState.serverChatUserListContextMenu ? (
+        <ServerChatUserListContextMenu />
+      ) : null}
     </div>
   );
 }
