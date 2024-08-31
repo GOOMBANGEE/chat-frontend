@@ -23,7 +23,7 @@ export default function useFriendRequest() {
       }
     } finally {
       setUserState({
-        serverChatUserListContextMenu: false,
+        userContextMenu: false,
         focusUserId: undefined,
         focusUsername: undefined,
       });

@@ -144,6 +144,14 @@ export default function useReceiveStompMessageHandler() {
       const newFriendList = [...userFriendListState, newFriend];
       setUserFriendListState(newFriendList);
     }
+
+    // 친구삭제 요청이 들어온 경우
+    if (message.friendDelete) {
+      const newFriendList = userFriendListState.filter(
+        (user) => user.id !== message.userId,
+      );
+      setUserFriendListState(newFriendList);
+    }
   };
 
   return { receiveStompMessageHandler };

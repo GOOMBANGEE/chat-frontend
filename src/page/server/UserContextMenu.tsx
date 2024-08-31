@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useUserStore } from "../../../store/UserStore.tsx";
-import useFriendRequest from "../../../hook/user/useFriendRequest.tsx";
-import useFriendDelete from "../../../hook/user/useFriendDelete.tsx";
+import { useUserStore } from "../../store/UserStore.tsx";
+import useFriendRequest from "../../hook/user/useFriendRequest.tsx";
+import useFriendDelete from "../../hook/user/useFriendDelete.tsx";
 
-export default function ServerChatUserListContextMenu() {
+export default function UserContextMenu() {
   const { friendRequest } = useFriendRequest();
   const { friendDelete } = useFriendDelete();
   const { userState, setUserState, userFriendListState } = useUserStore();
@@ -20,7 +20,7 @@ export default function ServerChatUserListContextMenu() {
   const handleClickFriendDeleteButton = async () => {
     await friendDelete();
     setUserState({
-      serverChatUserListContextMenu: false,
+      userContextMenu: false,
       focusUserId: undefined,
       focusUsername: undefined,
     });
@@ -30,13 +30,13 @@ export default function ServerChatUserListContextMenu() {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
-        userState.serverChatUserListContextMenu &&
+        userState.userContextMenu &&
         !(e.target as HTMLElement).closest(
           ".server-chat-user-list-context-menu",
         )
       ) {
         setUserState({
-          serverChatUserListContextMenu: false,
+          userContextMenu: false,
           focusUserId: undefined,
           focusUsername: undefined,
         });

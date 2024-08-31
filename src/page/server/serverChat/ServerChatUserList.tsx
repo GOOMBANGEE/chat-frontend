@@ -11,7 +11,7 @@ export default function ServerChatUserList() {
     e.preventDefault();
     if (userInfo.id !== userState.id) {
       setUserState({
-        serverChatUserListContextMenu: true,
+        userContextMenu: true,
         focusUserId: userInfo.id,
         focusUsername: userInfo.username,
       });

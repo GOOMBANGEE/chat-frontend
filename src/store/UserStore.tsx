@@ -43,7 +43,7 @@ interface UserState {
   newPassword: string | undefined;
   newConfirmPassword: string | undefined;
 
-  serverChatUserListContextMenu: boolean;
+  userContextMenu: boolean;
   focusUserId: number | undefined;
   focusUsername: string | undefined;
 
@@ -82,7 +82,7 @@ const initialUserState = {
   newPassword: undefined,
   newConfirmPassword: undefined,
 
-  serverChatUserListContextMenu: false,
+  userContextMenu: false,
   focusUserId: undefined,
   focusUsername: undefined,
 

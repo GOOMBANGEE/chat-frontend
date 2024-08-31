@@ -1,5 +1,6 @@
 import { useUserStore } from "../../../store/UserStore.tsx";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { UserInfo } from "../../../../index";
 
 export default function ServerIndexFriendList() {
   const {
@@ -25,17 +26,28 @@ export default function ServerIndexFriendList() {
     setUserFriendSearchListState(searchFriendList);
   }, [userState.searchUsername]);
 
+  const handleContextMenu = (e: React.MouseEvent, userInfo: UserInfo) => {
+    e.preventDefault();
+    if (userInfo.id !== userState.id) {
+      setUserState({
+        userContextMenu: true,
+        focusUserId: userInfo.id,
+        focusUsername: userInfo.username,
+      });
+    }
+  };
+
   return (
     <div className={"h-full w-full px-6 py-4"}>
       {userFriendListState.length > 0 ? (
         <>
           <div
-            className={"bg-searchbar relative mb-4 w-full rounded px-2 py-1"}
+            className={"relative mb-4 w-full rounded bg-searchbar px-2 py-1"}
           >
             <input
               onChange={(e) => setUserState({ searchUsername: e.target.value })}
               placeholder={"검색하기"}
-              className={"bg-searchbar w-full px-2 py-1 outline-none"}
+              className={"w-full bg-searchbar px-2 py-1 outline-none"}
             />
             <div className={"absolute right-3 top-2.5"}>
               <svg
@@ -66,6 +78,7 @@ export default function ServerIndexFriendList() {
           </div>
           {displayFriendList.map((user) => (
             <div
+              onContextMenu={(e) => handleContextMenu(e, user)}
               key={user.id}
               className={
                 "flex w-full items-center rounded px-4 py-2 hover:bg-customGray"

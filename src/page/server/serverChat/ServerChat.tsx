@@ -11,7 +11,7 @@ import ServerChatUserList from "./ServerChatUserList.tsx";
 import ChatSearchOption from "./ChatSearchOption.tsx";
 import ServerChatSearchList from "./ServerChatSearchList.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
-import ServerChatUserListContextMenu from "./ServerChatUserListContextMenu.tsx";
+import UserContextMenu from "../UserContextMenu.tsx";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
@@ -47,9 +47,7 @@ export default function ServerChat() {
       </div>
       {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
       {chatState.chatDeleteModalOpen ? <ChatDeleteModal /> : null}
-      {userState.serverChatUserListContextMenu ? (
-        <ServerChatUserListContextMenu />
-      ) : null}
+      {userState.userContextMenu ? <UserContextMenu /> : null}
     </div>
   );
 }

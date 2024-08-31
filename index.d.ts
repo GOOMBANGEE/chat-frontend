@@ -29,4 +29,5 @@ export interface StompChatMessage {
   leave: boolean;
   friendRequest: boolean;
   friendAccept: boolean;
+  friendDelete: boolean;
 }
