@@ -28,6 +28,12 @@ export default function Recover() {
     navigate("/", { replace: true });
   };
 
+  const handleKeyEnter = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleClickButton();
+    }
+  };
+
   const renderPage = () => {
     if (globalState.pageInvalid) {
       return <ErrorPage />;
@@ -53,6 +59,7 @@ export default function Recover() {
             </div>
             <input
               type={"password"}
+              onKeyDown={(e) => handleKeyEnter(e)}
               onChange={(e) => setUserState({ password: e.target.value })}
               className={"mx-auto mb-4 w-full rounded bg-customGray px-2 py-2"}
             />

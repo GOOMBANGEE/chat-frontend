@@ -3,7 +3,7 @@ import ChatComponent from "./ChatComponent.tsx";
 import ChatInput from "./ChatInput.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import ServerChatDropdown from "./serverChatDropdown/ServerChatDropdown.tsx";
-import ServerChatUserInfo from "./ServerChatUserInfo.tsx";
+import UserInfoMenu from "../UserInfoMenu.tsx";
 import ChatContextMenu from "./ChatContextMenu.tsx";
 import ChatDeleteModal from "./ChatDeleteModal.tsx";
 import { useServerStore } from "../../../store/ServerStore.tsx";
@@ -20,10 +20,10 @@ export default function ServerChat() {
 
   return (
     <div className={"flex h-full w-full"}>
-      <div className={"relative w-72 bg-serverChatSidebar"}>
+      <div className={"bg-serverSidebar relative w-72"}>
         <ServerChatDropdown />
         {/*<ServerChatChannelList/>*/}
-        <ServerChatUserInfo />
+        <UserInfoMenu />
       </div>
 
       <div className={"flex h-full w-full flex-col"}>

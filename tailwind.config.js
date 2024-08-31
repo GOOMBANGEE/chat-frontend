@@ -8,7 +8,7 @@ export default {
         customBlue: "#579DFF",
         menuBlue: "#1C2B41",
         serverListSidebar: "#1D2125",
-        serverChatSidebar: "#252728",
+        serverSidebar: "#252728",
         serverChatUserList: "#252728",
         serverChatUserInfo: "#1D2125",
         searchbar: "#1D2125",

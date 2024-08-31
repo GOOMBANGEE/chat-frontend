@@ -1,7 +1,7 @@
-import { useUserStore } from "../../../store/UserStore.tsx";
+import { useUserStore } from "../../store/UserStore.tsx";
 import { useState } from "react";
 
-export default function ServerChatUserInfo() {
+export default function UserInfoMenu() {
   const { userState, setUserState } = useUserStore();
 
   const [isHover, setIsHover] = useState(false);
@@ -9,7 +9,7 @@ export default function ServerChatUserInfo() {
   return (
     <div
       className={
-        "bg-serverChatUserInfo absolute bottom-0 mt-auto flex h-14 w-full items-center px-2 py-2"
+        "absolute bottom-0 mt-auto flex h-14 w-full items-center bg-serverChatUserInfo px-2 py-2"
       }
     >
       <div className={"text-sm font-semibold"}>{userState.username}</div>
