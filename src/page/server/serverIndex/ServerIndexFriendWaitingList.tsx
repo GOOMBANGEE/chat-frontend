@@ -29,11 +29,20 @@ export default function ServerIndexFriendWaitingList() {
     setUserFriendSearchListState(searchFriendList);
   }, [userState.searchUsername]);
 
-  const handleClickAccept = async (id: number, username: string) => {
-    await friendRequestAccept({ id, username });
+  const handleClickAccept = async (
+    friendId: number,
+    friendUsername: string,
+  ) => {
+    if (userState.id && userState.username)
+      await friendRequestAccept({
+        id: userState.id,
+        username: userState.username,
+        friendId,
+        friendUsername,
+      });
   };
-  const handleClickReject = async (id: number, username: string) => {
-    await friendRequestReject({ id, username });
+  const handleClickReject = async (id: number) => {
+    await friendRequestReject({ id });
   };
 
   return (
@@ -41,12 +50,12 @@ export default function ServerIndexFriendWaitingList() {
       {userFriendWaitingListState.length > 0 ? (
         <>
           <div
-            className={"bg-searchbar relative mb-4 w-full rounded px-2 py-1"}
+            className={"relative mb-4 w-full rounded bg-searchbar px-2 py-1"}
           >
             <input
               onChange={(e) => setUserState({ searchUsername: e.target.value })}
               placeholder={"검색하기"}
-              className={"bg-searchbar w-full px-2 py-1 outline-none"}
+              className={"w-full bg-searchbar px-2 py-1 outline-none"}
             />
             <div className={"absolute right-3 top-2.5"}>
               <svg
@@ -84,14 +93,13 @@ export default function ServerIndexFriendWaitingList() {
                 }
               >
                 <div>{user.username}</div>
-                {user.id}
                 <div className={"ml-auto flex gap-x-2"}>
                   <button
                     onClick={() => handleClickAccept(user.id, user.username)}
                     className={"group"}
                   >
                     <svg
-                      className={"bg-buttonDark h-8 w-8 rounded-full p-1"}
+                      className={"h-8 w-8 rounded-full bg-buttonDark p-1"}
                       width="24px"
                       height="24px"
                       viewBox="0 0 24 24"
@@ -117,11 +125,11 @@ export default function ServerIndexFriendWaitingList() {
                     </svg>
                   </button>
                   <button
-                    onClick={() => handleClickReject(user.id, user.username)}
+                    onClick={() => handleClickReject(user.id)}
                     className={"group"}
                   >
                     <svg
-                      className={"bg-buttonDark h-8 w-8 rounded-full p-1"}
+                      className={"h-8 w-8 rounded-full bg-buttonDark p-1"}
                       width="24px"
                       height="24px"
                       viewBox="0 0 24 24"

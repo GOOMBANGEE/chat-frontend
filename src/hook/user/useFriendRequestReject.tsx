@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 
 interface Props {
   id: number;
-  username: string;
 }
 
 export default function useFriendRequestReject() {
@@ -19,7 +18,6 @@ export default function useFriendRequestReject() {
     try {
       await axios.post(`${userUrl}/friend/reject`, {
         id: props.id,
-        username: props.username,
       });
 
       const newWaitingList = userFriendWaitingListState.filter(

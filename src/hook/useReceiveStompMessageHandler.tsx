@@ -15,6 +15,8 @@ export default function useReceiveStompMessageHandler() {
   } = useServerStore();
   const {
     userState,
+    userFriendListState,
+    setUserFriendListState,
     userFriendWaitingListState,
     setUserFriendWaitingListState,
   } = useUserStore();
@@ -131,6 +133,16 @@ export default function useReceiveStompMessageHandler() {
         newFriendRequest,
       ];
       setUserFriendWaitingListState(newFriendRequestList);
+    }
+
+    // 친구요청이 수락된 경우
+    if (message.friendAccept) {
+      const newFriend = {
+        id: message.userId,
+        username: message.username,
+      };
+      const newFriendList = [...userFriendListState, newFriend];
+      setUserFriendListState(newFriendList);
     }
   };
 
