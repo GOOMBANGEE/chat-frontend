@@ -21,6 +21,8 @@ interface ChatState {
   chatContextMenuOpen: boolean;
   chatEdit: boolean;
   chatDeleteModalOpen: boolean;
+
+  enter: boolean;
 }
 
 const initialChatState: ChatState = {
@@ -32,6 +34,8 @@ const initialChatState: ChatState = {
   chatContextMenuOpen: false,
   chatEdit: false,
   chatDeleteModalOpen: false,
+
+  enter: false,
 };
 
 export const useChatStore = create<ChatStore>((set) => ({

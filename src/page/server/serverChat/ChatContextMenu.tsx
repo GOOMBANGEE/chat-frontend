@@ -67,7 +67,7 @@ export default function ChatContextMenu() {
         "server-chat-context-menu flex flex-col gap-2 rounded bg-black px-2 py-2 text-gray-300"
       }
     >
-      {chatState.username === userState.username ? (
+      {chatState.username === userState.username && !chatState.enter ? (
         <button
           onClick={() => handleClickEditButton()}
           className={
@@ -93,7 +93,7 @@ export default function ChatContextMenu() {
       >
         텍스트 복사하기
       </button>
-      {chatState.username === userState.username ? (
+      {chatState.username === userState.username && !chatState.enter ? (
         <button
           onClick={() => handleClickDeleteButton()}
           className={

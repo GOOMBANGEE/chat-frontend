@@ -29,6 +29,8 @@ export default function ChatComponent(props: Readonly<Props>) {
       username: props.chat.username,
       message: props.chat.message,
       chatContextMenuOpen: true,
+      chatEdit: false,
+      enter: props.chat.enter,
     });
   };
 
