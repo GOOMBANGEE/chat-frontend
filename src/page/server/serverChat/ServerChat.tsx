@@ -12,15 +12,25 @@ import ChatSearchOption from "./ChatSearchOption.tsx";
 import ServerChatSearchList from "./ServerChatSearchList.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
 import UserContextMenu from "../UserContextMenu.tsx";
+import { useEffect, useRef } from "react";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
   const { serverState } = useServerStore();
   const { userState } = useUserStore();
 
+  // 채팅 갱신시 스크롤 아래로 이동
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [chatListState]);
+
   return (
     <div className={"flex h-full w-full"}>
-      <div className={"bg-serverSidebar relative w-72"}>
+      <div className={"relative w-72 bg-serverSidebar"}>
         <ServerChatDropdown />
         {/*<ServerChatChannelList/>*/}
         <UserInfoMenu />
@@ -31,7 +41,11 @@ export default function ServerChat() {
         {serverState.serverSearchOption ? <ChatSearchOption /> : null}
         <div className={"flex h-full w-full"}>
           <div className={"flex h-full w-full flex-col"}>
-            <div className={"custom-scrollbar overflow-y-auto px-6 py-2"}>
+            <div
+              ref={chatContainerRef}
+              style={{ maxHeight: `calc(100vh - 120px)` }}
+              className={"custom-scrollbar overflow-y-auto px-6 py-2"}
+            >
               {chatListState.map((chat) => (
                 <ChatComponent key={chat.id} chat={chat} />
               ))}

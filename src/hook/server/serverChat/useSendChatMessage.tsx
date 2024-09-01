@@ -28,7 +28,12 @@ export default function useSendChatMessage() {
       // response 들어오면 해당 id를 찾아서 서버의 serverChat id 부여
       const newChatList = props.chatList.map((chat: Chat) => {
         if (chat.id === props.chat.id) {
-          return { ...chat, id: response.data.id };
+          return {
+            ...chat,
+            id: response.data.id,
+            createTime: response.data.createTime,
+            updateTime: response.data.createTime,
+          };
         }
         return chat;
       });

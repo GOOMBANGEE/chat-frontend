@@ -35,6 +35,8 @@ export default function useReceiveStompMessageHandler() {
         id: message.chatId,
         username: message.username,
         message: message.message,
+        createTime: message.createTime,
+        updateTime: message.createTime,
       };
       newChatList = [...chatListState, newChat];
       setChatListState(newChatList);
@@ -59,7 +61,11 @@ export default function useReceiveStompMessageHandler() {
     ) {
       newChatList = chatListState.map((chat: Chat) => {
         if (chat.id === message.chatId) {
-          return { ...chat, message: message.message };
+          return {
+            ...chat,
+            message: message.message,
+            updateTime: message.updateTime,
+          };
         }
         return chat;
       });
@@ -75,6 +81,8 @@ export default function useReceiveStompMessageHandler() {
         username: message.username,
         message: message.message,
         enter: true,
+        createTime: message.createTime,
+        updateTime: message.createTime,
       };
       newChatList = [...chatListState, newChat];
       setChatListState(newChatList);

@@ -30,7 +30,6 @@ export default function useChatEdit() {
         // 해당 id를 찾아서 발송문제를 표시
         const newChatList = props.chatList.map((chat: Chat) => {
           if (chat.id === props.chat.id) {
-            console.log(chat);
             return { ...chat, error: true };
           }
           return chat;

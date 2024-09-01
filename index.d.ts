@@ -16,6 +16,8 @@ export interface Chat {
   error?: boolean;
   enter?: boolean;
   leave?: boolean;
+  createTime?: number;
+  updateTime?: number;
 }
 
 export interface StompChatMessage {
@@ -30,4 +32,6 @@ export interface StompChatMessage {
   friendRequest: boolean;
   friendAccept: boolean;
   friendDelete: boolean;
+  createTime?: number;
+  updateTime?: number;
 }

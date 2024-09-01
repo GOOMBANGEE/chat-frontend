@@ -14,6 +14,14 @@ export default function ChatComponent(props: Readonly<Props>) {
     useChatStore();
   const { userState } = useUserStore();
 
+  // 시간 편집
+  const createTimeToString = props.chat.createTime?.toLocaleString();
+  const year = createTimeToString?.slice(0, 4);
+  const month = createTimeToString?.slice(5, 7);
+  const day = createTimeToString?.slice(8, 10);
+  const hour = Number(createTimeToString?.slice(11, 13));
+  const minute = createTimeToString?.slice(14, 16);
+
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     setChatState({
@@ -24,8 +32,8 @@ export default function ChatComponent(props: Readonly<Props>) {
     });
   };
 
+  // 채팅 수정
   const inputRef = useRef<HTMLInputElement>(null);
-
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -49,7 +57,11 @@ export default function ChatComponent(props: Readonly<Props>) {
       };
       const newChatList = chatListState.map((chat) => {
         if (chat.id === chatState.id && chatState.chatMessage) {
-          return { ...chat, message: chatState.chatMessage };
+          return {
+            ...chat,
+            message: chatState.chatMessage,
+            updateTime: Date.now(),
+          };
         }
         return chat;
       });
@@ -74,7 +86,7 @@ export default function ChatComponent(props: Readonly<Props>) {
   return (
     <>
       {chatState.chatEdit && chatState.id === props.chat.id ? (
-        <div className={"mb-1 mt-1 flex flex-col"}>
+        <div className={"mb-2 mt-2 flex flex-col"}>
           <input
             ref={inputRef}
             onChange={(e) => setChatState({ chatMessage: e.target.value })}
@@ -106,22 +118,49 @@ export default function ChatComponent(props: Readonly<Props>) {
       ) : (
         <div
           onContextMenu={(e) => handleContextMenu(e)}
-          className={"flex gap-2 rounded hover:bg-customDarkGray"}
+          className={
+            "mb-2 flex gap-2 rounded text-gray-100 hover:bg-customDarkGray"
+          }
         >
           {props.chat.enter ? (
-            <>
+            <div className={"flex items-end"}>
               <div className={"font-semibold"}>{props.chat.username}</div>
-              <div className={"text-white"}>님이 입장하였습니다.</div>
-            </>
+              <div className={"mr-2"}>님이 입장하였습니다.</div>
+              {props.chat.createTime ? (
+                <div className={"text-xs text-gray-400"}>
+                  {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
+                  {minute}
+                </div>
+              ) : null}
+            </div>
           ) : (
-            <>
-              <div className={"font-semibold"}>{props.chat.username} :</div>
-              <div
-                className={`${props.chat.error ? "text-red-600" : "text-white"}`}
-              >
-                {props.chat.message}
+            <div className={"flex flex-col"}>
+              <div className={"mb-0.5 flex items-end"}>
+                <div className={"mr-2 font-semibold"}>
+                  {props.chat.username}
+                </div>
+                {props.chat.createTime ? (
+                  <div className={"text-xs text-gray-400"}>
+                    {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
+                    {minute}
+                  </div>
+                ) : null}
               </div>
-            </>
+
+              <div className={"flex items-end"}>
+                <div
+                  className={`${props.chat.error ? "text-red-600" : ""} mr-2`}
+                >
+                  {props.chat.message}
+                </div>
+
+                <div className={"text-xs text-gray-400"}>
+                  {props.chat.createTime !== props.chat.updateTime
+                    ? "(수정됨)"
+                    : null}
+                </div>
+              </div>
+            </div>
           )}
         </div>
       )}
