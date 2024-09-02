@@ -16,6 +16,8 @@ interface ChatState {
   id: number | undefined;
   username: string | undefined;
   message: string | undefined;
+
+  focusInput: boolean;
   chatMessage: string | undefined;
 
   chatContextMenuOpen: boolean;
@@ -29,6 +31,8 @@ const initialChatState: ChatState = {
   id: undefined,
   username: undefined,
   message: undefined,
+
+  focusInput: false,
   chatMessage: undefined,
 
   chatContextMenuOpen: false,
