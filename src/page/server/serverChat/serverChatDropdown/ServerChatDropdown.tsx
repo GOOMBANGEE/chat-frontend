@@ -40,16 +40,16 @@ export default function ServerChatDropdown() {
   };
 
   // dropdown 바깥쪽 클릭시 modal close
-  const handleClickOutside = (e: MouseEvent) => {
-    if (
-      serverChatDropdownState.open &&
-      !(e.target as HTMLElement).closest(".server-serverChat-dropdown") &&
-      !(e.target as HTMLElement).closest(".server-serverChat-open-button")
-    ) {
-      resetServerDropdownState();
-    }
-  };
   useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        serverChatDropdownState.open &&
+        !(e.target as HTMLElement).closest(".server-serverChat-dropdown") &&
+        !(e.target as HTMLElement).closest(".server-serverChat-open-button")
+      ) {
+        resetServerDropdownState();
+      }
+    };
     document.addEventListener("mouseup", handleClickOutside);
     return () => {
       document.removeEventListener("mouseup", handleClickOutside);
@@ -57,11 +57,11 @@ export default function ServerChatDropdown() {
   }, [serverChatDropdownState, setServerChatDropdownState]);
 
   return (
-    <div className={"relative flex flex-col"}>
+    <div className={"relative flex flex-col text-customText"}>
       <button
         onClick={() => handleClickOpenButton()}
         className={
-          "server-serverChat-open-button flex w-full items-center px-6 py-3 text-start font-semibold shadow-md hover:bg-customGray"
+          "server-serverChat-open-button flex w-full items-center px-6 py-3 text-start font-semibold shadow-md hover:bg-customDark_5"
         }
       >
         {serverState.name}
@@ -83,8 +83,8 @@ export default function ServerChatDropdown() {
             ></g>
             <g id="SVGRepo_iconCarrier">
               <path
+                className={"stroke-customGray_4"}
                 d="M6 6L18 18M18 6L6 18"
-                stroke="#9ca3af"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -108,8 +108,8 @@ export default function ServerChatDropdown() {
             ></g>
             <g id="SVGRepo_iconCarrier">
               <path
+                className={"stroke-customGray_4"}
                 d="M6 9L12 15L18 9"
-                stroke="#9ca3af"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -122,14 +122,14 @@ export default function ServerChatDropdown() {
       {serverChatDropdownState.open ? (
         <div
           className={
-            "server-serverChat-dropdown absolute left-2 top-14 w-48 rounded bg-black px-2 py-4 text-gray-400"
+            "server-serverChat-dropdown absolute left-2 top-14 w-48 rounded bg-black px-2 py-4 text-gray-300"
           }
         >
           <div className={"flex flex-col"}>
             <button
               onClick={() => handleClickInviteButton()}
               className={
-                "w-full rounded px-2 py-1 text-start text-indigo-400 hover:bg-indigo-500 hover:text-white"
+                "w-full rounded px-2 py-1 text-start hover:bg-indigo-600 hover:text-white"
               }
             >
               초대하기
@@ -137,7 +137,7 @@ export default function ServerChatDropdown() {
             <button
               onClick={() => handleClickSettingButton()}
               className={
-                "w-full rounded px-2 py-1 text-start hover:bg-indigo-500 hover:text-white"
+                "w-full rounded px-2 py-1 text-start hover:bg-indigo-600 hover:text-white"
               }
             >
               서버 설정

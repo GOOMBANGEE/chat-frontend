@@ -51,22 +51,6 @@ export default function ChatInput() {
       setChatState({
         chatMessage: inputRef.current.innerText,
       });
-
-      setTimeout(() => {
-        setCursorToEnd();
-      }, 0);
-    }
-  };
-  // 텍스트 끝에 커서 포커스 설정
-  const setCursorToEnd = () => {
-    if (inputRef.current) {
-      const range = document.createRange();
-      const selection = window.getSelection();
-
-      range.selectNodeContents(inputRef.current);
-      range.collapse(false);
-      selection?.removeAllRanges();
-      selection?.addRange(range);
     }
   };
 
@@ -95,26 +79,28 @@ export default function ChatInput() {
             onKeyDown={(e) => handleKeyDown(e)}
             onInput={handleInput}
             className={
-              "w-full overflow-hidden rounded bg-customGray px-4 py-2 outline-none"
+              "w-full overflow-hidden rounded bg-customDark_5 px-4 py-2 outline-none"
             }
           ></div>
         ) : (
           <input
             onFocus={() => handleFocusInput()}
             placeholder={`${serverState.name}에 메시지 보내기`}
-            className={"w-full overflow-hidden rounded bg-customGray px-4 py-2"}
+            className={
+              "w-full overflow-hidden rounded bg-customDark_5 px-4 py-2"
+            }
           />
         )}
 
         <button
-          className={"absolute right-2 top-1 rounded-full bg-indigo-500 p-1"}
+          className={"absolute right-2 top-1.5 rounded-full bg-indigo-500 p-1"}
           onClick={() => {
             handleClickSendButton();
           }}
         >
           <svg
-            width="24px"
-            height="24px"
+            width="20px"
+            height="20px"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

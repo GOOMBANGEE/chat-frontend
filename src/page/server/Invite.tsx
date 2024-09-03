@@ -48,12 +48,12 @@ export default function Invite() {
             <div
               style={{ width: "450px" }}
               className={
-                "absolute mx-4 flex flex-col rounded bg-modalGray px-2 text-center"
+                "absolute mx-4 flex flex-col rounded bg-customDark_1 px-2 text-center text-customText"
               }
             >
               <div
                 className={
-                  "relative flex flex-col items-center px-4 py-4 text-start font-semibold text-white"
+                  "relative flex flex-col items-center px-4 py-4 text-start font-semibold"
                 }
               >
                 <div className={"mb-4 text-center"}>
@@ -67,7 +67,7 @@ export default function Invite() {
                     handleClickJoinButton();
                   }}
                   className={
-                    "w-full rounded bg-indigo-500 py-2 text-center hover:bg-indigo-400"
+                    "w-full rounded bg-indigo-500 py-2 text-center hover:bg-indigo-600"
                   }
                 >
                   참가하기

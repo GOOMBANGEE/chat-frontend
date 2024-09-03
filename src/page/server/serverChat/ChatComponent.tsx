@@ -31,6 +31,8 @@ export default function ChatComponent(props: Readonly<Props>) {
       chatContextMenuOpen: true,
       chatEdit: false,
       enter: props.chat.enter,
+      createTime: props.chat.createTime,
+      updateTime: props.chat.updateTime,
     });
   };
 
@@ -85,16 +87,29 @@ export default function ChatComponent(props: Readonly<Props>) {
     }
   }, [chatState.chatEdit]);
 
-  return (
-    <>
-      {chatState.chatEdit && chatState.id === props.chat.id ? (
-        <div className={"mb-2 mt-2 flex flex-col"}>
+  const renderPage = () => {
+    if (chatState.chatEdit && chatState.id === props.chat.id) {
+      return (
+        <div
+          className={
+            "mb-2 mt-2 flex flex-col rounded bg-customDark_1 px-4 py-2 text-customText"
+          }
+        >
+          <div className={"mb-0.5 flex items-end"}>
+            <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
+            {props.chat.createTime ? (
+              <div className={"text-xs text-gray-400"}>
+                {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
+                {minute}
+              </div>
+            ) : null}
+          </div>
           <input
             ref={inputRef}
             onChange={(e) => setChatState({ chatMessage: e.target.value })}
             onKeyDown={(e) => handleKey(e)}
             defaultValue={chatState.message}
-            className={"w-full rounded bg-customGray px-4 py-2"}
+            className={"w-full rounded bg-customDark_5 px-3 py-2 outline-none"}
           />
           <div className={"mt-1 flex items-center text-xs"}>
             <div>
@@ -117,55 +132,64 @@ export default function ChatComponent(props: Readonly<Props>) {
             </div>
           </div>
         </div>
-      ) : (
+      );
+    }
+
+    if (props.chat.enter) {
+      return (
         <div
           onContextMenu={(e) => handleContextMenu(e)}
           className={
-            "mb-2 flex gap-2 rounded text-gray-100 hover:bg-customDarkGray"
+            "mb-2 flex gap-2 rounded px-4 text-customText hover:bg-customDark_1"
           }
         >
-          {props.chat.enter ? (
-            <div className={"flex items-end"}>
-              <div className={"font-semibold"}>{props.chat.username}</div>
-              <div className={"mr-2"}>님이 입장하였습니다.</div>
-              {props.chat.createTime ? (
-                <div className={"text-xs text-gray-400"}>
-                  {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
-                  {minute}
-                </div>
-              ) : null}
-            </div>
-          ) : (
-            <div className={"flex flex-col"}>
-              <div className={"mb-0.5 flex items-end"}>
-                <div className={"mr-2 font-semibold"}>
-                  {props.chat.username}
-                </div>
-                {props.chat.createTime ? (
-                  <div className={"text-xs text-gray-400"}>
-                    {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
-                    {minute}
-                  </div>
-                ) : null}
+          <div className={"flex items-end"}>
+            <div className={"font-semibold"}>{props.chat.username}</div>
+            <div className={"mr-2"}>님이 입장하였습니다.</div>
+            {props.chat.createTime ? (
+              <div className={"text-xs text-gray-400"}>
+                {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
+                {minute}
               </div>
-
-              <div className={"flex items-end"}>
-                <div
-                  className={`${props.chat.error ? "text-red-600" : ""} mr-2`}
-                >
-                  {props.chat.message}
-                </div>
-
-                <div className={"text-xs text-gray-400"}>
-                  {props.chat.createTime !== props.chat.updateTime
-                    ? "(수정됨)"
-                    : null}
-                </div>
-              </div>
-            </div>
-          )}
+            ) : null}
+          </div>{" "}
         </div>
-      )}
-    </>
-  );
+      );
+    }
+
+    return (
+      <div
+        onContextMenu={(e) => handleContextMenu(e)}
+        className={
+          "mb-2 flex gap-2 rounded px-4 text-customText hover:bg-customDark_1"
+        }
+      >
+        <div className={"flex flex-col"}>
+          <div className={"mb-0.5 flex items-end"}>
+            <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
+            {props.chat.createTime ? (
+              <div className={"text-xs text-gray-400"}>
+                {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
+                {minute}
+              </div>
+            ) : null}
+          </div>
+
+          <div className={"flex items-end"}>
+            <div className={`${props.chat.error ? "text-red-600" : ""} mr-2`}>
+              {props.chat.message}
+            </div>
+
+            <div className={"text-xs text-gray-400"}>
+              {props.chat.createTime !== props.chat.updateTime
+                ? "(수정됨)"
+                : null}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return renderPage();
 }

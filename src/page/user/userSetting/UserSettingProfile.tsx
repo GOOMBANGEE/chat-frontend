@@ -28,7 +28,7 @@ export default function UserSettingProfile() {
   }, []);
 
   return (
-    <div className={"z-10 h-full w-full px-8 py-8 text-white"}>
+    <div className={"z-10 h-full w-full px-8 py-8 text-customText"}>
       <div className={"mb-4 text-lg font-bold"}>프로필</div>
 
       <div className={"mb-8 flex w-4/5 flex-col rounded py-4"}>
@@ -60,7 +60,9 @@ export default function UserSettingProfile() {
                 debouncedUsernameCheck(e.target.value);
               }}
               defaultValue={userState.username}
-              className={"bg-inputBackground w-2/3 rounded px-2 py-2 text-sm"}
+              className={
+                "w-2/3 rounded bg-customDark_1 px-2 py-2 text-sm outline-none"
+              }
             />
             <button
               onClick={() => resetUsername()}

@@ -59,12 +59,11 @@ export default function ChatContextMenu() {
   return (
     <div
       style={{
-        position: "fixed",
-        top: `${menuPosition.y}px`,
-        left: `${menuPosition.x}px`,
+        top: `${Math.min(menuPosition.y, window.innerHeight - 160)}px`,
+        left: `${Math.min(menuPosition.x, window.innerWidth - 150)}px`,
       }}
       className={
-        "server-chat-context-menu flex flex-col gap-2 rounded bg-black px-2 py-2 text-gray-300"
+        "server-chat-context-menu fixed flex flex-col gap-2 rounded bg-black px-2 py-2 text-gray-300"
       }
     >
       {chatState.username === userState.username && !chatState.enter ? (

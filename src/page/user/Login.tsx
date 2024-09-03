@@ -90,7 +90,7 @@ export default function Login() {
           <div
             style={{ width: "480px" }}
             className={
-              "rounded bg-menuGray p-4 text-center text-lg font-semibold text-white"
+              "rounded bg-customDark_5 p-4 text-center text-lg font-semibold text-customText"
             }
           >
             <div className={"mb-6 mt-2"}>로그인</div>
@@ -103,29 +103,21 @@ export default function Login() {
               }
             >
               <div className={"w-full"}>
-                {userState.loginErrorMessage ? (
-                  <div className={"mb-1 text-start text-xs text-red-400"}>
-                    이메일{" "}
+                <div
+                  className={`mb-1 text-start text-xs ${userState.emailVerified && !userState.loginErrorMessage ? "text-gray-300" : "text-red-400"}`}
+                >
+                  이메일
+                  {userState.loginErrorMessage ? (
                     <span className={"font-light"}>
                       - {userState.loginErrorMessage}
                     </span>
-                  </div>
-                ) : (
-                  <>
-                    {userState.emailVerified ? (
-                      <div className={"mb-1 text-start text-xs text-gray-300"}>
-                        이메일
-                      </div>
-                    ) : (
-                      <div className={"mb-1 text-start text-xs text-red-400"}>
-                        이메일{" "}
-                        <span className={"font-light"}>
-                          - {userState.emailErrorMessage}
-                        </span>
-                      </div>
-                    )}
-                  </>
-                )}
+                  ) : null}
+                  {!userState.emailVerified ? (
+                    <span className={"font-light"}>
+                      - {userState.emailErrorMessage}
+                    </span>
+                  ) : null}
+                </div>
 
                 <input
                   onChange={(e) => {
@@ -137,36 +129,27 @@ export default function Login() {
                     });
                   }}
                   className={
-                    "mb-2 w-full rounded bg-customDarkGray px-2 py-1 text-base font-medium hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
+                    "hover:ring-customPurple mb-2 w-full rounded bg-customDark_1 px-2 py-1 text-base font-medium outline-none hover:ring-1 focus:ring-2 focus:ring-indigo-400"
                   }
                 />
               </div>
 
               <div className={"w-full"}>
-                {userState.loginErrorMessage ? (
-                  <div className={"mb-1 text-start text-xs text-red-400"}>
-                    비밀번호{" "}
+                <div
+                  className={`mb-1 text-start text-xs ${userState.passwordVerified && !userState.loginErrorMessage ? "text-gray-300" : "text-red-400"}`}
+                >
+                  비밀번호
+                  {userState.loginErrorMessage ? (
                     <span className={"font-light"}>
                       - {userState.loginErrorMessage}
                     </span>
-                  </div>
-                ) : (
-                  <>
-                    {userState.passwordVerified ? (
-                      <div className={"mb-1 text-start text-xs text-gray-300"}>
-                        비밀번호
-                      </div>
-                    ) : (
-                      <div className={"mb-1 text-start text-xs text-red-400"}>
-                        비밀번호{" "}
-                        <span className={"font-light"}>
-                          - {userState.passwordErrorMessage}
-                        </span>
-                      </div>
-                    )}
-                  </>
-                )}
-
+                  ) : null}
+                  {!userState.passwordVerified ? (
+                    <span className={"font-light"}>
+                      - {userState.passwordErrorMessage}
+                    </span>
+                  ) : null}
+                </div>
                 <input
                   type={"password"}
                   onChange={(e) => {
@@ -178,14 +161,14 @@ export default function Login() {
                     });
                   }}
                   className={
-                    "w-full rounded bg-customDarkGray px-2 py-1 text-base hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
+                    "hover:ring-customPurple w-full rounded bg-customDark_1 px-2 py-1 text-base outline-none hover:ring-1 focus:ring-2 focus:ring-indigo-400"
                   }
                 />
 
                 <button
                   type={"button"}
                   className={
-                    "flex w-fit cursor-pointer text-sm font-medium text-customPurple hover:underline"
+                    "mt-1 flex w-fit cursor-pointer text-sm font-medium text-indigo-400 hover:text-indigo-300 hover:underline"
                   }
                   onClick={() => {
                     handleClickRecoverButton();
@@ -196,7 +179,9 @@ export default function Login() {
               </div>
               <button
                 type="submit"
-                className={"mt-2 w-full rounded bg-indigo-400 py-2 text-base"}
+                className={
+                  "mt-2 w-full rounded bg-indigo-500 py-2 text-base text-white hover:bg-indigo-600"
+                }
               >
                 로그인
               </button>
@@ -209,7 +194,7 @@ export default function Login() {
               계정이 필요한가요?{" "}
               <button
                 className={
-                  "w-fit cursor-pointer text-sm font-medium text-customPurple hover:underline"
+                  "w-fit cursor-pointer text-sm font-medium text-indigo-400 hover:text-indigo-300 hover:underline"
                 }
                 onClick={() => {
                   handleNavigateButton(registerUrl);

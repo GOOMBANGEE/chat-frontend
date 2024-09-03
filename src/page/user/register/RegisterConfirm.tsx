@@ -34,7 +34,7 @@ export default function RegisterConfirm() {
               <div
                 style={{ width: "480px" }}
                 className={
-                  "rounded bg-menuGray p-4 text-center text-lg font-semibold text-white"
+                  "rounded bg-customDark_5 p-4 text-center text-lg font-semibold text-customText"
                 }
               >
                 <div className={"mb-6 mt-4"}>가입 인증</div>
@@ -46,7 +46,7 @@ export default function RegisterConfirm() {
                 <button
                   onClick={() => handleConfirmButton()}
                   className={
-                    "mb-2 mt-2 w-fit rounded bg-indigo-400 px-4 py-2 text-base"
+                    "mb-2 mt-2 w-fit rounded bg-indigo-500 px-4 py-2 text-base hover:bg-indigo-600"
                   }
                 >
                   인증

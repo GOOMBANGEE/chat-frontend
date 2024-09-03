@@ -60,10 +60,12 @@ export default function UserContextMenu() {
       style={{
         position: "fixed",
         top: `${menuPosition.y}px`,
-        left: `${menuPosition.x - 120}px`,
+        ...(location.pathname !== "/server"
+          ? { left: `${menuPosition.x - 120}px` }
+          : { left: `${menuPosition.x}px` }),
       }}
       className={
-        "server-chat-user-list-context-menu flex flex-col gap-2 rounded bg-black px-2 py-2 text-gray-300"
+        "server-chat-user-list-context-menu flex flex-col gap-2 rounded bg-black px-2 py-2 text-customText text-gray-300"
       }
     >
       {friend ? (

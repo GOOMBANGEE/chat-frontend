@@ -104,7 +104,7 @@ export default function RegisterForm() {
       <div
         style={{ width: "480px" }}
         className={
-          "rounded bg-menuGray p-4 text-center text-lg font-semibold text-white"
+          "rounded bg-customDark_5 p-4 text-center text-lg font-semibold text-customText"
         }
       >
         <div className={"mb-6 mt-2"}>계정 만들기</div>
@@ -114,16 +114,16 @@ export default function RegisterForm() {
           }}
           className={"mx-auto mb-2 flex w-full flex-col gap-y-2 px-4"}
         >
-          {userState.emailVerified ? (
-            <div className={"text-start text-xs text-gray-300"}>이메일</div>
-          ) : (
-            <div className={"text-start text-xs text-red-400"}>
-              이메일{" "}
+          <div
+            className={`text-start text-xs ${userState.emailVerified ? "text-gray-300" : "text-red-400"} `}
+          >
+            이메일
+            {userState.emailVerified ? (
               <span className={"font-light"}>
                 - {userState.emailErrorMessage}
               </span>
-            </div>
-          )}
+            ) : null}
+          </div>
           <input
             onChange={(e) => {
               setUserState({
@@ -134,20 +134,20 @@ export default function RegisterForm() {
               debouncedEmailCheck(e.target.value);
             }}
             className={
-              "mb-2 w-full rounded bg-customDarkGray px-2 py-1 text-base font-medium hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
+              "mb-2 w-full rounded bg-customDark_1 px-2 py-1 text-base font-medium outline-none hover:ring-1 hover:ring-indigo-400 focus:ring-2 focus:ring-indigo-400"
             }
           />
 
-          {userState.usernameVerified ? (
-            <div className={"text-start text-xs text-gray-300"}>사용자명</div>
-          ) : (
-            <div className={"text-start text-xs text-red-400"}>
-              사용자명{" "}
+          <div
+            className={`text-start text-xs ${userState.usernameVerified ? "text-gray-300" : "text-red-400"} `}
+          >
+            사용자명
+            {userState.usernameVerified ? (
               <span className={"font-light"}>
                 - {userState.usernameErrorMessage}
               </span>
-            </div>
-          )}
+            ) : null}
+          </div>
           <input
             onChange={(e) => {
               setUserState({
@@ -158,20 +158,20 @@ export default function RegisterForm() {
               debouncedUsernameCheck(e.target.value);
             }}
             className={
-              "mb-2 w-full rounded bg-customDarkGray px-2 py-1 text-base font-medium hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
+              "mb-2 w-full rounded bg-customDark_1 px-2 py-1 text-base font-medium outline-none hover:ring-1 hover:ring-indigo-400 focus:ring-2 focus:ring-indigo-400"
             }
           />
 
-          {userState.passwordVerified ? (
-            <div className={"text-start text-xs text-gray-300"}>비밀번호</div>
-          ) : (
-            <div className={"text-start text-xs text-red-400"}>
-              비밀번호{" "}
+          <div
+            className={`text-start text-xs ${userState.passwordVerified ? "text-gray-300" : "text-red-400"} `}
+          >
+            비밀번호
+            {userState.passwordVerified ? (
               <span className={"font-light"}>
                 - {userState.passwordErrorMessage}
               </span>
-            </div>
-          )}
+            ) : null}
+          </div>
           <input
             type={"password"}
             onChange={(e) => {
@@ -183,22 +183,20 @@ export default function RegisterForm() {
               debouncedPasswordCheck(e.target.value);
             }}
             className={
-              "mb-2 w-full rounded bg-customDarkGray px-2 py-1 text-base font-medium hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
+              "mb-2 w-full rounded bg-customDark_1 px-2 py-1 text-base font-medium outline-none hover:ring-1 hover:ring-indigo-400 focus:ring-2 focus:ring-indigo-400"
             }
           />
 
-          {userState.passwordVerified ? (
-            <div className={"text-start text-xs text-gray-300"}>
-              비밀번호확인
-            </div>
-          ) : (
-            <div className={"text-start text-xs text-red-400"}>
-              비밀번호확인{" "}
+          <div
+            className={`text-start text-xs ${userState.passwordVerified ? "text-gray-300" : "text-red-400"} `}
+          >
+            비밀번호확인
+            {userState.passwordVerified ? (
               <span className={"font-light"}>
                 - {userState.passwordErrorMessage}
               </span>
-            </div>
-          )}
+            ) : null}
+          </div>
           <input
             type={"password"}
             onChange={(e) => {
@@ -209,19 +207,21 @@ export default function RegisterForm() {
               });
             }}
             className={
-              "mb-2 w-full rounded bg-customDarkGray px-2 py-1 text-base font-medium hover:ring-1 hover:ring-customPurple focus:outline-none focus:ring-2 focus:ring-customPurple"
+              "mb-2 w-full rounded bg-customDark_1 px-2 py-1 text-base font-medium outline-none hover:ring-1 hover:ring-indigo-400 focus:ring-2 focus:ring-indigo-400"
             }
           />
           <button
             type="submit"
-            className={"mb-2 mt-2 w-full rounded bg-indigo-400 py-2 text-base"}
+            className={
+              "mb-2 mt-2 w-full rounded bg-indigo-500 py-2 text-base hover:bg-indigo-600"
+            }
           >
             등록
           </button>
         </form>
         <button
           className={
-            "flex w-fit cursor-pointer px-4 text-sm font-medium text-customPurple hover:underline"
+            "flex w-fit cursor-pointer px-4 text-sm font-medium text-indigo-400 hover:text-indigo-500 hover:underline"
           }
           onClick={() => handleNavigateButton(loginUrl)}
         >

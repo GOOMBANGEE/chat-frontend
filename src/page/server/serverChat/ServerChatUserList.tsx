@@ -20,14 +20,18 @@ export default function ServerChatUserList() {
 
   return (
     <div
-      className={"flex h-full w-48 flex-col bg-serverChatUserList px-4 py-6"}
+      className={
+        "flex h-full w-48 flex-col bg-customDark_1 px-4 py-6 text-customText"
+      }
     >
       <div className={"mb-1 text-xs text-gray-400"}>참여중인 유저</div>
       {serverUserListState.map((serverUserInfo) => (
         <button
           key={serverUserInfo.id}
           onContextMenu={(e) => handleContextMenu(e, serverUserInfo)}
-          className={"flex w-full rounded px-2 py-2 hover:bg-customGray"}
+          className={
+            "flex w-full items-center rounded px-2 py-2 hover:bg-customDark_5"
+          }
         >
           <div>{serverUserInfo.username}</div>
         </button>

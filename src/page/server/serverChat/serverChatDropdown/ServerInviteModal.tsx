@@ -46,7 +46,7 @@ export default function ServerInviteModal() {
         <div
           style={{ width: "450px" }}
           className={
-            "absolute mx-4 flex flex-col rounded bg-modalGray text-center"
+            "absolute mx-4 flex flex-col rounded bg-customDark_3 text-center text-customText"
           }
         >
           <button
@@ -70,8 +70,8 @@ export default function ServerInviteModal() {
               ></g>
               <g id="SVGRepo_iconCarrier">
                 <path
+                  className={"stroke-customGray_4"}
                   d="M6 6L18 18M18 6L6 18"
-                  stroke="#9ca3af"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -81,7 +81,7 @@ export default function ServerInviteModal() {
           </button>
           <div
             className={
-              "relative flex items-center px-4 py-4 text-start font-semibold text-white"
+              "relative flex items-center px-4 py-4 text-start font-semibold"
             }
           >
             친구를 {serverState.name} 그룹으로 초대하기
@@ -89,8 +89,9 @@ export default function ServerInviteModal() {
           {/*<FriendList/>*/}
 
           <div
-            style={{ backgroundColor: "#1D2125" }}
-            className={"flex w-full flex-col rounded-b px-4 py-4"}
+            className={
+              "flex w-full flex-col rounded-b bg-customDark_1 px-4 py-4"
+            }
           >
             <div
               className={"mb-2 text-start text-xs font-semibold text-gray-400"}
@@ -99,7 +100,7 @@ export default function ServerInviteModal() {
             </div>
             <div
               className={
-                "flex w-full items-center rounded bg-customDarkGray py-1"
+                "flex w-full items-center rounded bg-customDark_0 py-1"
               }
             >
               <div className={"ml-2"}>{serverState.inviteLink}</div>
@@ -107,7 +108,7 @@ export default function ServerInviteModal() {
                 <button
                   onClick={() => copyLink()}
                   className={
-                    "ml-auto mr-1 w-20 rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
+                    "ml-auto mr-1 w-20 rounded bg-green-600 px-4 py-2 text-sm hover:bg-green-700"
                   }
                 >
                   복사됨
@@ -116,7 +117,7 @@ export default function ServerInviteModal() {
                 <button
                   onClick={() => copyLink()}
                   className={
-                    "ml-auto mr-1 w-20 rounded bg-indigo-500 px-4 py-2 text-sm text-white hover:bg-indigo-600"
+                    "ml-auto mr-1 w-20 rounded bg-indigo-500 px-4 py-2 text-sm hover:bg-indigo-600"
                   }
                 >
                   복사

@@ -15,9 +15,9 @@ export default function UserSetting() {
         "fixed left-0 top-0 flex h-full w-full items-center justify-center"
       }
     >
-      <div className={"fixed inset-0 bg-defaultBackground"}></div>
+      <div className={"fixed inset-0 bg-customDark_3"}></div>
 
-      <div className={"z-10 flex h-full w-full text-white"}>
+      <div className={"z-10 flex h-full w-full"}>
         <UserSettingSidebar />
         {userState.userSettingAccount ? <UserSettingAccount /> : null}
         {userState.userSettingProfile ? <UserSettingProfile /> : null}
@@ -54,8 +54,8 @@ export default function UserSetting() {
             ></g>
             <g id="SVGRepo_iconCarrier">
               <path
+                className={"stroke-customGray_4"}
                 d="M6 6L18 18M18 6L6 18"
-                stroke="#9ca3af"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"

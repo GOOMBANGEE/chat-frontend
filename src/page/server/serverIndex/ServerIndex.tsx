@@ -9,7 +9,7 @@ export default function ServerIndex() {
 
   return (
     <div className={"flex h-full w-full"}>
-      <div className={"bg-serverSidebar relative h-full w-72"}>
+      <div className={"relative h-full w-72 bg-customDark_1"}>
         <ServerIndexDMList />
         <UserInfoMenu />
       </div>

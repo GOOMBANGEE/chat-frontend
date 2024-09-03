@@ -9,11 +9,11 @@ export default function UserSettingAccount() {
   const hideEmailDomain = userState.email?.slice(userState.email?.indexOf("@"));
 
   return (
-    <div className={"z-10 h-full w-full px-8 py-8 text-white"}>
+    <div className={"z-10 h-full w-full px-8 py-8 text-customText"}>
       <div className={"mb-4 text-lg font-bold"}>내 계정</div>
       <div
         className={
-          "mb-8 flex w-4/5 flex-col items-center rounded bg-black px-4 py-4"
+          "mb-8 flex w-4/5 flex-col items-center rounded bg-customDark_0 px-4 py-4"
         }
       >
         <div className={"mb-6 flex w-full items-center"}>
@@ -26,7 +26,7 @@ export default function UserSettingAccount() {
               });
             }}
             className={
-              "ml-auto rounded bg-indigo-600 px-4 py-1.5 hover:bg-indigo-500"
+              "ml-auto rounded bg-indigo-500 px-4 py-1.5 hover:bg-indigo-600"
             }
           >
             사용자 프로필 편집
@@ -35,7 +35,7 @@ export default function UserSettingAccount() {
 
         <div
           className={
-            "flex w-full flex-col gap-4 rounded bg-customDarkGray px-4 py-2"
+            "flex w-full flex-col gap-4 rounded bg-customDark_1 px-4 py-2"
           }
         >
           <div className={"flex items-center"}>
@@ -53,7 +53,7 @@ export default function UserSettingAccount() {
                 });
               }}
               className={
-                "ml-auto h-9 rounded bg-customGray px-4 text-sm hover:bg-gray-500"
+                "ml-auto h-9 rounded bg-customGray_0 px-4 text-sm hover:bg-customGray_2"
               }
             >
               수정

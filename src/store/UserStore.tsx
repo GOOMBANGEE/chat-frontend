@@ -47,9 +47,15 @@ interface UserState {
   focusUserId: number | undefined;
   focusUsername: string | undefined;
 
+  // friend list
   indexPageFriendList: boolean;
   indexPageFriendRequestList: boolean;
   searchUsername: string | undefined;
+
+  // friend waiting list
+  isHoverAcceptButton: boolean;
+  isHoverRejectButton: boolean;
+  hoverButtonY: number | undefined;
 }
 
 const initialUserState = {
@@ -89,7 +95,13 @@ const initialUserState = {
   indexPageFriendList: true,
   indexPageFriendRequestList: false,
   searchUsername: undefined,
+
+  // friend waiting list
+  isHoverAcceptButton: false,
+  isHoverRejectButton: false,
+  hoverButtonY: undefined,
 };
+
 export const useUserStore = create<UserStore>((set) => ({
   userState: initialUserState,
   setUserState: (state) =>

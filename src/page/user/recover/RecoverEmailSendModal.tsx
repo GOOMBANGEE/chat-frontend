@@ -17,14 +17,10 @@ export default function RecoverEmailSendModal() {
       <div className={"server-add-modal flex items-center justify-center"}>
         <div
           className={
-            "absolute mx-4 flex w-96 flex-col rounded bg-modalGray text-center"
+            "absolute mx-4 flex w-96 flex-col rounded bg-customDark_3 text-center text-customText"
           }
         >
-          <div
-            className={
-              "relative flex px-4 py-4 text-lg font-semibold text-white"
-            }
-          >
+          <div className={"relative flex px-4 py-4 text-lg font-semibold"}>
             이메일 전송 완료
           </div>
           <div
@@ -36,15 +32,16 @@ export default function RecoverEmailSendModal() {
           </div>
 
           <div
-            style={{ backgroundColor: "#1D2125" }}
-            className={"flex w-full flex-col rounded-b px-4 py-4"}
+            className={
+              "flex w-full flex-col rounded-b bg-customDark_1 px-4 py-4"
+            }
           >
             <button
               onClick={() => {
                 handleClickButton();
               }}
               className={
-                "ml-auto rounded bg-indigo-500 px-8 py-2 text-sm text-white hover:bg-indigo-600"
+                "ml-auto rounded bg-indigo-500 px-8 py-2 text-sm hover:bg-indigo-600"
               }
             >
               확인

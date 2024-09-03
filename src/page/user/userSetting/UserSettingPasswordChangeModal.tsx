@@ -89,7 +89,7 @@ export default function UserSettingPasswordChangeModal() {
         <div
           style={{ width: "450px" }}
           className={
-            "absolute mx-4 flex flex-col rounded bg-defaultBackground text-center"
+            "absolute mx-4 flex flex-col rounded bg-customDark_3 text-center text-customText"
           }
         >
           <button
@@ -118,8 +118,8 @@ export default function UserSettingPasswordChangeModal() {
               ></g>
               <g id="SVGRepo_iconCarrier">
                 <path
+                  className={"stroke-customGray_4"}
                   d="M6 6L18 18M18 6L6 18"
-                  stroke="#9ca3af"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -129,7 +129,7 @@ export default function UserSettingPasswordChangeModal() {
           </button>
           <div
             className={
-              "relative flex items-center justify-center px-4 pb-2 pt-4 text-xl font-semibold text-white"
+              "relative flex items-center justify-center px-4 pb-2 pt-4 text-xl font-semibold"
             }
           >
             비밀번호를 바꿔주세요
@@ -144,26 +144,16 @@ export default function UserSettingPasswordChangeModal() {
             }
           >
             <div className={"mb-6 w-full"}>
-              {userState.passwordVerified ? (
-                <div
-                  className={
-                    "mb-2 text-start text-xs font-semibold text-gray-400"
-                  }
-                >
-                  현재 비밀번호
-                </div>
-              ) : (
-                <div
-                  className={
-                    "mb-2 text-start text-xs font-semibold text-red-400"
-                  }
-                >
-                  현재 비밀번호{" "}
+              <div
+                className={`mb-2 text-start text-xs font-semibold ${userState.passwordVerified ? "text-gray-400" : "text-red-400"}`}
+              >
+                현재 비밀번호
+                {!userState.passwordVerified ? (
                   <span className={"font-light"}>
                     - {userState.passwordErrorMessage}
                   </span>
-                </div>
-              )}
+                ) : null}
+              </div>
               <div className={"flex"}>
                 <input
                   type={"password"}
@@ -175,33 +165,23 @@ export default function UserSettingPasswordChangeModal() {
                     });
                   }}
                   className={
-                    "bg-inputBackground w-full rounded px-2 py-2 text-sm"
+                    "w-full rounded bg-customDark_1 px-2 py-2 text-sm outline-none"
                   }
                 />
               </div>
             </div>
 
             <div className={"mb-6 w-full"}>
-              {userState.passwordVerified ? (
-                <div
-                  className={
-                    "mb-2 text-start text-xs font-semibold text-gray-400"
-                  }
-                >
-                  새 비밀번호
-                </div>
-              ) : (
-                <div
-                  className={
-                    "mb-2 text-start text-xs font-semibold text-red-400"
-                  }
-                >
-                  새 비밀번호{" "}
+              <div
+                className={`mb-2 text-start text-xs font-semibold ${userState.passwordVerified ? "text-gray-400" : "text-red-400"}`}
+              >
+                새 비밀번호
+                {!userState.passwordVerified ? (
                   <span className={"font-light"}>
                     - {userState.passwordErrorMessage}
                   </span>
-                </div>
-              )}
+                ) : null}
+              </div>
               <div className={"flex"}>
                 <input
                   type={"password"}
@@ -214,33 +194,23 @@ export default function UserSettingPasswordChangeModal() {
                     debouncedPasswordCheck(e.target.value);
                   }}
                   className={
-                    "bg-inputBackground w-full rounded px-2 py-2 text-sm"
+                    "w-full rounded bg-customDark_1 px-2 py-2 text-sm outline-none"
                   }
                 />
               </div>
             </div>
 
             <div className={"mb-6 w-full"}>
-              {userState.passwordVerified ? (
-                <div
-                  className={
-                    "mb-2 text-start text-xs font-semibold text-gray-400"
-                  }
-                >
-                  비밀번호 확인
-                </div>
-              ) : (
-                <div
-                  className={
-                    "mb-2 text-start text-xs font-semibold text-red-400"
-                  }
-                >
-                  비밀번호 확인{" "}
+              <div
+                className={`mb-2 text-start text-xs font-semibold ${userState.passwordVerified ? "text-gray-400" : "text-red-400"}`}
+              >
+                비밀번호 확인
+                {!userState.passwordVerified ? (
                   <span className={"font-light"}>
                     - {userState.passwordErrorMessage}
                   </span>
-                </div>
-              )}
+                ) : null}
+              </div>
               <div className={"flex"}>
                 <input
                   type={"password"}
@@ -253,7 +223,7 @@ export default function UserSettingPasswordChangeModal() {
                     debouncedPasswordCheck(e.target.value);
                   }}
                   className={
-                    "bg-inputBackground w-full rounded px-2 py-2 text-sm"
+                    "w-full rounded bg-customDark_1 px-2 py-2 text-sm outline-none"
                   }
                 />
               </div>
@@ -261,22 +231,19 @@ export default function UserSettingPasswordChangeModal() {
           </div>
 
           <div
-            style={{ backgroundColor: "#1D2125" }}
             className={
-              "flex w-full items-center justify-end gap-4 rounded-b px-4 py-4"
+              "flex w-full items-center justify-end gap-4 rounded-b bg-customDark_1 px-4 py-4"
             }
           >
             <button
               onClick={() => handleClickCancelButton()}
-              className={"px-4 py-2 text-white hover:underline"}
+              className={"px-4 py-2 hover:underline"}
             >
               취소
             </button>
             <button
               onClick={() => handleClickPasswordChangeButton()}
-              className={
-                "rounded bg-indigo-500 px-4 py-2 text-white hover:bg-indigo-600"
-              }
+              className={"rounded bg-indigo-500 px-4 py-2 hover:bg-indigo-600"}
             >
               완료
             </button>

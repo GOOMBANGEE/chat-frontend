@@ -19,7 +19,7 @@ export default function ErrorPage() {
   const renderPage = () => {
     if (globalState.pageInvalid) {
       return (
-        <div className={"mt-14 px-4 text-white opacity-90"}>
+        <div className={"mt-14 px-4 text-customText opacity-90"}>
           <div className={"px-2"}>
             <div className={"mb-2 font-semibold"}>ERROR 400</div>
             <div className={"mb-4 text-4xl font-semibold"}>오류</div>
@@ -41,7 +41,7 @@ export default function ErrorPage() {
 
     if (userState.username && !globalState.loginExpire) {
       return (
-        <div className={"mt-14 px-4 text-white opacity-90"}>
+        <div className={"mt-14 px-4 text-customText opacity-90"}>
           <div className={"px-2"}>
             <div className={"mb-2 font-semibold"}>ERROR 400</div>
             <div className={"mb-4 text-4xl font-semibold"}>오류</div>
@@ -63,7 +63,7 @@ export default function ErrorPage() {
     }
 
     return (
-      <div className={"mt-14 px-4 text-white opacity-90"}>
+      <div className={"mt-14 px-4 text-customText opacity-90"}>
         <div className={"px-2"}>
           <div className={"mb-2 font-semibold"}>ERROR 400</div>
           <div className={"mb-4 text-4xl font-semibold"}>오류</div>

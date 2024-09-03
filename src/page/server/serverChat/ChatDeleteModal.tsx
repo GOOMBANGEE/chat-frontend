@@ -24,12 +24,29 @@ export default function ChatDeleteModal() {
         handleClickCancelButton();
       }
     };
-
     document.addEventListener("mouseup", handleClickOutside);
     return () => {
       document.removeEventListener("mouseup", handleClickOutside);
     };
   }, [chatState, resetChatState]);
+
+  // 채팅 시간 변환
+  let formattedTime = "";
+  if (chatState.createTime) {
+    const createTimeToString = chatState.createTime.toLocaleString();
+    const year = createTimeToString.slice(0, 4);
+    const month = createTimeToString.slice(5, 7);
+    const day = createTimeToString.slice(8, 10);
+    let hour = Number(createTimeToString.slice(11, 13));
+    const minute = createTimeToString.slice(14, 16);
+    const period = hour < 12 ? "오전" : "오후";
+
+    if (hour > 12) hour -= 12; // 12시간제로 변환
+
+    formattedTime = `${year}.${month}.${day}. ${period} ${hour}:${minute}`;
+    //    todo
+    // 시간변환함수 밖으로 빼기
+  }
 
   return (
     <div
@@ -46,7 +63,7 @@ export default function ChatDeleteModal() {
         <div
           style={{ width: "450px" }}
           className={
-            "absolute mx-4 flex flex-col rounded bg-modalGray text-center"
+            "absolute mx-4 flex flex-col rounded bg-customDark_4 text-center text-customText"
           }
         >
           <div
@@ -58,27 +75,42 @@ export default function ChatDeleteModal() {
             정말 이 메시지를 삭제할까요?
           </div>
 
-          <div className={"mb-4 flex w-full rounded px-4 py-2"}>
-            <div className={"mr-2 font-semibold"}>{chatState.username} :</div>
-            <div>{chatState.message}</div>
+          <div className={"px-4"}>
+            <div
+              style={{ boxShadow: "0 0 1px 2px rgba(0, 0, 0, 0.2)" }}
+              className={"mb-8 flex w-full rounded px-4 py-2"}
+            >
+              <div className={"flex flex-col"}>
+                <div className={"mb-0.5 flex items-end"}>
+                  <div className={"mr-2 font-semibold"}>
+                    {chatState.username}
+                  </div>
+                  {formattedTime && (
+                    <div className={"text-xs text-gray-400"}>
+                      {formattedTime}
+                    </div>
+                  )}
+                </div>
+                <div className={"text-start"}>{chatState.message}</div>
+              </div>
+            </div>
           </div>
 
           <div
-            style={{ backgroundColor: "#1D2125" }}
             className={
-              "flex w-full items-center justify-end gap-4 rounded-b px-4 py-4"
+              "flex w-full items-center justify-end gap-4 rounded-b bg-customDark_1 px-4 py-4"
             }
           >
             <button
               onClick={() => handleClickCancelButton()}
-              className={"px-4 py-2 text-white hover:underline"}
+              className={"px-4 py-2 hover:underline"}
             >
               취소
             </button>
             <button
               onClick={() => handleClickDeleteButton()}
               className={
-                "rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+                "rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
               }
             >
               삭제

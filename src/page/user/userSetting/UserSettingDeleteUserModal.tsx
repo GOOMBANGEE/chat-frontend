@@ -59,12 +59,10 @@ export default function UserSettingDeleteUserModal() {
         <div
           style={{ width: "450px" }}
           className={
-            "absolute mx-4 flex flex-col rounded bg-modalGray text-center"
+            "absolute mx-4 flex flex-col rounded bg-customDark_3 text-center text-customText"
           }
         >
-          <div
-            className={"px-4 py-4 text-start text-xl font-semibold text-white"}
-          >
+          <div className={"px-4 py-4 text-start text-xl font-semibold"}>
             계정 삭제하기
           </div>
           <div className={"mb-8 px-4 text-start"}>
@@ -86,7 +84,7 @@ export default function UserSettingDeleteUserModal() {
                   passwordVerified: true,
                 });
               }}
-              className={"bg-customGray px-2 py-1"}
+              className={"bg-customDark_1 px-2 py-1 outline-none"}
             />
             {userState.passwordVerified ? null : (
               <div className={"mt-1 text-start text-sm text-red-400"}>
@@ -96,22 +94,19 @@ export default function UserSettingDeleteUserModal() {
           </div>
 
           <div
-            style={{ backgroundColor: "#1D2125" }}
             className={
-              "flex w-full items-center justify-end gap-4 rounded-b px-4 py-4"
+              "flex w-full items-center justify-end gap-4 rounded-b bg-customDark_1 px-4 py-4"
             }
           >
             <button
               onClick={() => handleClickCancelButton()}
-              className={"px-4 py-2 text-white hover:underline"}
+              className={"px-4 py-2 hover:underline"}
             >
               취소
             </button>
             <button
               onClick={() => handleClickDeleteButton()}
-              className={
-                "rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-              }
+              className={"rounded bg-red-600 px-4 py-2 hover:bg-red-700"}
             >
               계정 삭제하기
             </button>

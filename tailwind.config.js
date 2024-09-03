@@ -4,22 +4,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        defaultBackground: "#333333",
-        customBlue: "#579DFF",
-        menuBlue: "#1C2B41",
-        serverListSidebar: "#1D2125",
-        serverSidebar: "#252728",
-        serverChatUserList: "#252728",
-        serverChatUserInfo: "#1D2125",
-        searchbar: "#1D2125",
-        buttonDark: "#1D2125",
-        inputBackground: "#1D2125",
-        customGray: "#A6C5E229",
-        customDarkGray: "#282E33",
-        menuGray: "#3F434E",
-        modalGray: "#252728",
-        textGray: "#B6C2CF",
-        customPurple: "#ABB0F2",
+        customDark_0: "#1E1F22",
+        customDark_1: "#25262A",
+        customDark_2: "#2B2D31",
+        customDark_3: "#2F3135", // default background
+        customDark_4: "#323439",
+        customDark_5: "#383A40",
+        customDark_6: "#4A4C51",
+
+        customGray_0: "#4E5058",
+        customGray_1: "#5E6068",
+        customGray_2: "#6D6F78",
+        customGray_3: "#8F939B",
+        customGray_4: "#B1B7BE",
+
+        customText: "#EBEBEB",
       },
     },
   },

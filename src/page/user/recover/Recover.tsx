@@ -49,7 +49,9 @@ export default function Recover() {
     if (userState.userRecoverTokenCheck && userState.userRecoverTokenVerified) {
       return (
         <div className={"flex h-full w-full items-center justify-center"}>
-          <div className={"w-96 rounded bg-modalGray px-8 py-8 text-white"}>
+          <div
+            className={"w-96 rounded bg-customDark_5 px-8 py-8 text-customText"}
+          >
             <div className={"mb-6 text-center text-xl font-semibold"}>
               비밀번호 변경하기
             </div>
@@ -61,7 +63,9 @@ export default function Recover() {
               type={"password"}
               onKeyDown={(e) => handleKeyEnter(e)}
               onChange={(e) => setUserState({ password: e.target.value })}
-              className={"mx-auto mb-4 w-full rounded bg-customGray px-2 py-2"}
+              className={
+                "mx-auto mb-4 w-full rounded bg-customDark_1 px-2 py-2"
+              }
             />
             <button
               onClick={() => handleClickButton()}

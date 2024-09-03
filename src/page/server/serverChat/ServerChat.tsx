@@ -29,8 +29,11 @@ export default function ServerChat() {
   }, [chatListState]);
 
   return (
-    <div className={"flex h-full w-full"}>
-      <div className={"relative w-72 bg-serverSidebar"}>
+    <div
+      style={{ maxHeight: "100vh" }}
+      className={"relative flex h-full max-h-full w-full"}
+    >
+      <div className={"relative w-72 bg-customDark_2"}>
         <ServerChatDropdown />
         {/*<ServerChatChannelList/>*/}
         <UserInfoMenu />
@@ -38,13 +41,13 @@ export default function ServerChat() {
 
       <div className={"flex h-full w-full flex-col"}>
         <ServerChatHeader />
-        {serverState.serverSearchOption ? <ChatSearchOption /> : null}
+        {serverState.searchOptionMenu ? <ChatSearchOption /> : null}
         <div className={"flex h-full w-full"}>
           <div className={"flex h-full w-full flex-col"}>
             <div
               ref={chatContainerRef}
-              style={{ maxHeight: `calc(100vh - 120px)` }}
-              className={"custom-scrollbar overflow-y-auto px-6 py-2"}
+              style={{ maxHeight: "calc(100vh - 120px)" }}
+              className={"custom-scrollbar overflow-y-auto px-2 py-2"}
             >
               {chatListState.map((chat) => (
                 <ChatComponent key={chat.id} chat={chat} />
@@ -56,7 +59,7 @@ export default function ServerChat() {
           </div>
 
           {serverState.serverUserList ? <ServerChatUserList /> : null}
-          {serverState.serverSearchList ? <ServerChatSearchList /> : null}
+          {serverState.searchList ? <ServerChatSearchList /> : null}
         </div>
       </div>
       {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}

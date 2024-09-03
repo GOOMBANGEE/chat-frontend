@@ -113,7 +113,7 @@ export default function Server() {
     }
 
     return (
-      <div className={"flex h-full w-full text-white"}>
+      <div className={"relative flex h-full w-full text-white"}>
         <div className={"w-20"}>
           <ServerList />
         </div>

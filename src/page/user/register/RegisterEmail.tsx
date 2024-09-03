@@ -26,7 +26,7 @@ export default function RegisterEmail() {
           <div
             style={{ width: "480px" }}
             className={
-              "rounded bg-menuGray p-4 text-center text-lg font-semibold text-white"
+              "rounded bg-customDark_5 p-4 text-center text-lg font-semibold text-customText"
             }
           >
             <div className={"mb-6 mt-4"}>인증 필요</div>
@@ -40,7 +40,7 @@ export default function RegisterEmail() {
             >
               <button
                 className={
-                  "w-fit cursor-pointer px-4 text-sm font-medium text-customPurple hover:underline"
+                  "w-fit cursor-pointer px-4 text-sm font-medium text-indigo-400 hover:underline"
                 }
                 onClick={() => handleEmailSendButton()}
               >
@@ -49,7 +49,7 @@ export default function RegisterEmail() {
               <button
                 onClick={() => handleNavigateButton(loginUrl)}
                 className={
-                  "mb-2 mt-2 w-fit rounded bg-indigo-400 px-2 py-2 text-base"
+                  "mb-2 mt-2 w-fit rounded bg-indigo-500 px-2 py-2 text-base hover:bg-indigo-600"
                 }
               >
                 홈으로 이동
