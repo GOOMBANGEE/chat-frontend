@@ -118,7 +118,7 @@ export default function RegisterForm() {
             className={`text-start text-xs ${userState.emailVerified ? "text-gray-300" : "text-red-400"} `}
           >
             이메일
-            {userState.emailVerified ? (
+            {!userState.emailVerified ? (
               <span className={"font-light"}>
                 - {userState.emailErrorMessage}
               </span>
@@ -142,7 +142,7 @@ export default function RegisterForm() {
             className={`text-start text-xs ${userState.usernameVerified ? "text-gray-300" : "text-red-400"} `}
           >
             사용자명
-            {userState.usernameVerified ? (
+            {!userState.usernameVerified ? (
               <span className={"font-light"}>
                 - {userState.usernameErrorMessage}
               </span>
@@ -166,7 +166,7 @@ export default function RegisterForm() {
             className={`text-start text-xs ${userState.passwordVerified ? "text-gray-300" : "text-red-400"} `}
           >
             비밀번호
-            {userState.passwordVerified ? (
+            {!userState.passwordVerified ? (
               <span className={"font-light"}>
                 - {userState.passwordErrorMessage}
               </span>
@@ -191,7 +191,7 @@ export default function RegisterForm() {
             className={`text-start text-xs ${userState.passwordVerified ? "text-gray-300" : "text-red-400"} `}
           >
             비밀번호확인
-            {userState.passwordVerified ? (
+            {!userState.passwordVerified ? (
               <span className={"font-light"}>
                 - {userState.passwordErrorMessage}
               </span>

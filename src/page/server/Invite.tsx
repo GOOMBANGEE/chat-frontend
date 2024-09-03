@@ -5,7 +5,7 @@ import useServerJoin from "../../hook/server/useServerJoin.tsx";
 import ErrorPage from "../ErrorPage.tsx";
 import Loading from "../../component/Loading.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Invite() {
   const { fetchServerInfo } = useFetchServerInfo();
@@ -13,11 +13,14 @@ export default function Invite() {
 
   const { serverState, setServerState } = useServerStore();
   const { userState } = useUserStore();
+  const { code } = useParams();
   const navigate = useNavigate();
 
   const handleClickJoinButton = async () => {
-    const serverId = await serverJoin();
-    navigate(`/server/${serverId}`);
+    if (code) {
+      const serverId = await serverJoin({ code });
+      navigate(`/server/${serverId}`);
+    }
   };
 
   useEffect(() => {

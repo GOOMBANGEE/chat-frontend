@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL_HTTP;
 const BASE_URL_USER = import.meta.env.VITE_BASE_URL_USER;
 const BASE_URL_SERVER = import.meta.env.VITE_BASE_URL_SERVER;
 const BASE_URL_CHAT = import.meta.env.VITE_BASE_URL_CHAT;

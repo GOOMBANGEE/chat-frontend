@@ -11,6 +11,8 @@ interface ServerAddState {
   code: string | undefined;
   open: boolean;
   join: boolean;
+  codeVerified: boolean;
+  codeErrorMessage: string | undefined;
 }
 
 const initialServerAddState: ServerAddState = {
@@ -18,6 +20,8 @@ const initialServerAddState: ServerAddState = {
   code: undefined,
   open: false,
   join: false,
+  codeVerified: true,
+  codeErrorMessage: undefined,
 };
 
 export const useServerAddStore = create<ServerAddStore>((set) => ({

@@ -1,10 +1,29 @@
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useEnvStore } from "../../store/EnvStore.tsx";
+import useServerJoin from "../../hook/server/useServerJoin.tsx";
+import { useNavigate } from "react-router-dom";
 
 export default function ServerAddModalJoin() {
+  const { serverJoin } = useServerJoin();
   const { serverAddState, setServerAddState, resetServerAddState } =
     useServerAddStore();
   const { envState } = useEnvStore();
+  const navigate = useNavigate();
+
+  const handleClickJoinButton = async () => {
+    // invite/{code} 를 입력했다면 {code} 부분만 추출
+    if (!serverAddState.code) return;
+    let code;
+    if (serverAddState.code?.indexOf("invite/") !== -1) {
+      code = serverAddState.code?.slice(
+        serverAddState.code?.indexOf("invite/") + 7,
+      );
+    } else {
+      code = serverAddState.code;
+    }
+    const serverId = await serverJoin({ code });
+    navigate(`/server/${serverId}`);
+  };
 
   return (
     <div
@@ -54,20 +73,33 @@ export default function ServerAddModalJoin() {
           아래에 초대 코드를 입력하여 서버에 참가하세요.
         </div>
 
-        <div className={"mb-2 text-xs font-semibold"}>초대 링크</div>
+        <div
+          className={`mb-1 text-start text-xs ${serverAddState.codeVerified ? "text-gray-300" : "text-red-400"} `}
+        >
+          초대코드
+          {!serverAddState.codeVerified ? (
+            <span className={"font-light"}>
+              - {serverAddState.codeErrorMessage}
+            </span>
+          ) : null}
+        </div>
         <input
           onChange={(e) => {
-            setServerAddState({ name: e.target.value });
+            setServerAddState({
+              code: e.target.value,
+              codeVerified: true,
+              codeErrorMessage: undefined,
+            });
           }}
-          placeholder={`${envState.baseUrl}/example`}
+          placeholder={`${envState.baseUrl}/invite/example`}
           className={
-            "mb-4 w-full rounded bg-customDark_1 px-2 py-2 text-customText"
+            "mb-4 w-full rounded bg-customDark_1 px-2 py-2 text-customText outline-none"
           }
         />
         <div className={"mb-2 flex flex-col text-xs"}>
           <div className={"mb-1 font-semibold"}>초대는 다음 형태여야 해요.</div>
           <div>example</div>
-          <div>{envState.baseUrl}/example</div>
+          <div>{envState.baseUrl}/invite/example</div>
         </div>
       </div>
 
@@ -77,15 +109,22 @@ export default function ServerAddModalJoin() {
         }
       >
         <button
-          onClick={() => setServerAddState({ join: false })}
+          onClick={() =>
+            setServerAddState({
+              code: undefined,
+              join: false,
+              codeVerified: true,
+              codeErrorMessage: undefined,
+            })
+          }
           className={"text-sm text-gray-400"}
         >
           뒤로 가기
         </button>
-        {serverAddState.name ? (
+        {serverAddState.code ? (
           <button
             onClick={() => {
-              setServerAddState({ join: true });
+              handleClickJoinButton();
             }}
             className={
               "ml-auto rounded bg-indigo-500 px-4 py-2 text-sm text-customText hover:bg-indigo-600"
