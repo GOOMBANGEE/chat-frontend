@@ -5,15 +5,17 @@ export default function ChatSearchOption() {
 
   const handleClickUserOption = () => {
     setServerState({
-      serverSearchOption: false,
-      serverSearchOptionUser: true,
+      searchOptionMenu: false,
+      searchOption: true,
+      searchOptionUser: true,
     });
   };
 
   const handleClickMessageOption = () => {
     setServerState({
-      serverSearchOption: false,
-      serverSearchOptionMessage: true,
+      searchOptionMenu: false,
+      searchOption: true,
+      searchOptionMessage: true,
     });
   };
 
@@ -27,11 +29,11 @@ export default function ChatSearchOption() {
       <button
         onClick={() => handleClickUserOption()}
         className={
-          "group w-full rounded px-2 py-1 text-start font-semibold text-gray-400 hover:bg-customDarkGray hover:text-gray-300"
+          "group w-full rounded px-2 py-1 text-start font-semibold text-gray-400 hover:bg-customDark_1 hover:text-gray-300"
         }
       >
-        보낸유저:{" "}
-        <span className={"font-medium text-gray-500 group-hover:text-gray-400"}>
+        유저이름:{" "}
+        <span className={"font-medium text-gray-400 group-hover:text-gray-300"}>
           사용자
         </span>
       </button>
@@ -39,11 +41,11 @@ export default function ChatSearchOption() {
       <button
         onClick={() => handleClickMessageOption()}
         className={
-          "group w-full rounded px-2 py-1 text-start font-semibold text-gray-400 hover:bg-customDarkGray hover:text-gray-300"
+          "group w-full rounded px-2 py-1 text-start font-semibold text-gray-400 hover:bg-customDark_1 hover:text-gray-300"
         }
       >
         메시지:{" "}
-        <span className={"font-medium text-gray-500 group-hover:text-gray-400"}>
+        <span className={"font-medium text-gray-400 group-hover:text-gray-300"}>
           내용
         </span>
       </button>

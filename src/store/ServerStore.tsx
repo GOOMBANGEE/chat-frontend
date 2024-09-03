@@ -15,31 +15,49 @@ interface ServerState {
   id: number | undefined;
   name: string | undefined;
 
+  // server invite modal
   inviteModalOpen: boolean;
   inviteLink: string | undefined;
   inviteLinkCopy: boolean;
   inviteUsername: string | undefined;
 
+  // ServerListHover
+  isHover: boolean;
+  hoverServerId: number | undefined;
+  hoverServerName: string | undefined;
+  hoverButtonY: number | undefined;
+  isHoverDmButton: boolean;
+  isHoverAddButton: boolean;
+
+  // server setting
   settingModalOpen: boolean;
   settingDefault: boolean;
   newServerName: string | undefined;
   settingRole: boolean;
   settingUser: boolean;
 
+  // server delete
   settingServerDeleteModal: boolean;
   checkServerName: string | undefined;
   serverNameVerified: boolean;
 
+  // server join
   fetchServerInfo: boolean;
   userCount: number | undefined;
 
+  // server user list
   serverUserList: boolean;
-  serverSearchbar: boolean;
-  serverSearchOption: boolean;
-  serverSearchOptionUser: boolean;
-  serverSearchOptionMessage: boolean;
-  searchKeyword: string | undefined;
-  serverSearchList: boolean;
+
+  // search
+  searchList: boolean;
+  searchbar: boolean;
+  searchOptionMenu: boolean;
+  searchOption: boolean;
+  searchOptionUser: boolean;
+  searchOptionMessage: boolean;
+  searchDefault: string | undefined;
+  searchUser: string | undefined;
+  searchMessage: string | undefined;
 }
 
 const initialServerState: ServerState = {
@@ -49,6 +67,14 @@ const initialServerState: ServerState = {
   inviteModalOpen: false,
   inviteLink: undefined,
   inviteLinkCopy: false,
+
+  // ServerListHover
+  isHover: false,
+  hoverServerId: undefined,
+  hoverServerName: undefined,
+  hoverButtonY: undefined,
+  isHoverDmButton: false,
+  isHoverAddButton: false,
 
   settingModalOpen: false,
   settingDefault: false,
@@ -65,12 +91,16 @@ const initialServerState: ServerState = {
   userCount: undefined,
 
   serverUserList: false,
-  serverSearchbar: false,
-  serverSearchOption: false,
-  serverSearchOptionUser: false,
-  serverSearchOptionMessage: false,
-  searchKeyword: undefined,
-  serverSearchList: false,
+
+  searchList: false,
+  searchbar: false,
+  searchOptionMenu: false,
+  searchOption: false,
+  searchOptionUser: false,
+  searchOptionMessage: false,
+  searchDefault: undefined,
+  searchUser: undefined,
+  searchMessage: undefined,
 };
 
 export const useServerStore = create<ServerStore>((set) => ({
