@@ -12,6 +12,7 @@ export default function ServerIndexFriendHeader() {
     setUserState({
       indexPageFriendList: true,
       indexPageFriendRequestList: false,
+      indexPageFriendAdd: false,
       searchUsername: undefined,
     });
     setUserFriendSearchListState([]);
@@ -21,6 +22,7 @@ export default function ServerIndexFriendHeader() {
     setUserState({
       indexPageFriendRequestList: true,
       indexPageFriendList: false,
+      indexPageFriendAdd: false,
       searchUsername: undefined,
     });
     setUserFriendSearchListState([]);
@@ -38,6 +40,16 @@ export default function ServerIndexFriendHeader() {
         </div>
       );
     }
+  };
+
+  const handleClickFriendAddButton = () => {
+    setUserState({
+      indexPageFriendAdd: true,
+      indexPageFriendList: false,
+      indexPageFriendRequestList: false,
+      searchUsername: undefined,
+    });
+    setUserFriendSearchListState([]);
   };
 
   return (
@@ -107,6 +119,25 @@ export default function ServerIndexFriendHeader() {
             }
           >
             대기중{waitingCount()}
+          </button>
+        )}
+
+        {userState.indexPageFriendAdd ? (
+          <div
+            className={
+              "flex items-center justify-center rounded px-2 py-0.5 text-green-500"
+            }
+          >
+            친구 추가하기
+          </div>
+        ) : (
+          <button
+            onClick={() => handleClickFriendAddButton()}
+            className={
+              "flex items-center justify-center rounded bg-green-700 px-2 py-0.5 text-customText hover:bg-customDark_6 hover:bg-green-800 hover:text-white"
+            }
+          >
+            친구 추가하기
           </button>
         )}
       </div>

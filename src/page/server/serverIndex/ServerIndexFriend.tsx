@@ -2,6 +2,7 @@ import { useUserStore } from "../../../store/UserStore.tsx";
 import ServerIndexFriendHeader from "./ServerIndexFriendHeader.tsx";
 import ServerIndexFriendWaitingList from "./ServerIndexFriendWaitingList.tsx";
 import ServerIndexFriendList from "./ServerIndexFriendList.tsx";
+import ServerIndexFriendAdd from "./ServerIndexFriendAdd.tsx";
 
 export default function ServerIndexFriend() {
   const { userState } = useUserStore();
@@ -13,6 +14,7 @@ export default function ServerIndexFriend() {
       {userState.indexPageFriendRequestList ? (
         <ServerIndexFriendWaitingList />
       ) : null}
+      {userState.indexPageFriendAdd ? <ServerIndexFriendAdd /> : null}
     </div>
   );
 }

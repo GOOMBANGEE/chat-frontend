@@ -14,19 +14,22 @@ export default function useFriendRequest() {
       await axios.post(`${userUrl}/friend`, {
         id: userState.id,
         username: userState.username,
-        friendId: userState.focusUserId,
+        friendName: userState.focusUsername,
       });
       toast.success("친구신청을 보냈습니다");
+      return true;
     } catch (error) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data.message);
       }
     } finally {
-      setUserState({
-        userContextMenu: false,
-        focusUserId: undefined,
-        focusUsername: undefined,
-      });
+      if (userState.userContextMenu) {
+        setUserState({
+          userContextMenu: false,
+          focusUserId: undefined,
+          focusUsername: undefined,
+        });
+      }
     }
   };
 

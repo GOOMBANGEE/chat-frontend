@@ -47,9 +47,10 @@ interface UserState {
   focusUserId: number | undefined;
   focusUsername: string | undefined;
 
-  // friend list
+  // index page friend list
   indexPageFriendList: boolean;
   indexPageFriendRequestList: boolean;
+  indexPageFriendAdd: boolean;
   searchUsername: string | undefined;
 
   // friend waiting list
@@ -94,6 +95,7 @@ const initialUserState = {
 
   indexPageFriendList: true,
   indexPageFriendRequestList: false,
+  indexPageFriendAdd: false,
   searchUsername: undefined,
 
   // friend waiting list
