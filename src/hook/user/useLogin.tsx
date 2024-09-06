@@ -19,7 +19,8 @@ export default function useLogin() {
         email: userState.email,
         password: userState.password,
       });
-      const refreshToken = response.data.refreshToken;
+      // 헤더에서 refreshToken 추출
+      const refreshToken = response.headers["refresh-token"];
 
       setUserState({ password: undefined });
       setGlobalState({ loginExpire: false });
@@ -30,6 +31,7 @@ export default function useLogin() {
       const today = new Date();
       const expireDate = today.setDate(today.getDate() + 7);
       setCookie("refreshToken", refreshToken, {
+        secure: true,
         sameSite: "strict",
         path: "/",
         expires: new Date(expireDate),

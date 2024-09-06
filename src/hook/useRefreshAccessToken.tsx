@@ -13,10 +13,11 @@ export default function useRefreshAccessToken() {
     try {
       // refreshToken를 쿠키에서 가져와서 실행
       const response = await axios.post(`${envState.userUrl}/refresh`, {
-        refreshToken: refreshToken,
+        headers: { "Refresh-Token": refreshToken },
       });
       // accessToken 헤더에 담아서 이후 요청보낼때는 Authorization 추가
-      setHeaderAccessToken(response.data.accessToken);
+      const accessToken = response.headers["authorization"].split(" ")[1]; // Bearer {token}
+      setHeaderAccessToken(accessToken);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // refreshToken이 만료되거나 잘못된 경우 쿠키 삭제하여 로그인 유도
