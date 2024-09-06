@@ -21,6 +21,7 @@ import { ServerInfo } from "../../../index";
 import useFetchServerUserList from "../../hook/server/useFetchServerUserList.tsx";
 import useFetchFriendList from "../../hook/user/useFetchFriendList.tsx";
 import useFetchFriendWaitingList from "../../hook/user/useFetchFriendWaitingList.tsx";
+import { useTokenStore } from "../../store/TokenStore.tsx";
 
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
@@ -36,6 +37,7 @@ export default function Server() {
   const { serverState, setServerState, serverListState } = useServerStore();
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
+  const { tokenState } = useTokenStore();
   const { globalState } = useGlobalStore();
 
   const location = useLocation();
@@ -49,11 +51,20 @@ export default function Server() {
     stompClient: Client,
   ) => {
     for (const server of serverList) {
-      const subscriptionUrl = `/sub/server/${server.id}`;
-      stompClient.subscribe(subscriptionUrl, (message: IMessage) => {
-        const receiveMessage = JSON.parse(message.body);
-        setStompState({ chatMessage: receiveMessage });
-      });
+      if (userState.id) {
+        const subscriptionUrl = `/sub/server/${server.id}`;
+        stompClient.subscribe(
+          subscriptionUrl,
+          (message: IMessage) => {
+            const receiveMessage = JSON.parse(message.body);
+            setStompState({ chatMessage: receiveMessage });
+          },
+          {
+            id: userState.id.toString(),
+            Authorization: `Bearer ${tokenState.accessToken}`,
+          },
+        );
+      }
     }
   };
 
@@ -82,10 +93,19 @@ export default function Server() {
       onConnect: () => {
         subscribeToServer(serverListState, stompClient);
         const subscriptionUserUrl = `/sub/user/${userState.id}`;
-        stompClient.subscribe(subscriptionUserUrl, (message: IMessage) => {
-          const receiveMessage = JSON.parse(message.body);
-          setStompState({ chatMessage: receiveMessage });
-        });
+        if (userState.id) {
+          stompClient.subscribe(
+            subscriptionUserUrl,
+            (message: IMessage) => {
+              const receiveMessage = JSON.parse(message.body);
+              setStompState({ chatMessage: receiveMessage });
+            },
+            {
+              id: userState.id.toString(),
+              Authorization: `Bearer ${tokenState.accessToken}`,
+            },
+          );
+        }
       },
       onStompError: (frame) => {
         console.error("Stomp Error" + frame.body);
