@@ -2,9 +2,12 @@ import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useEnvStore } from "../../store/EnvStore.tsx";
 import useServerJoin from "../../hook/server/useServerJoin.tsx";
 import { useNavigate } from "react-router-dom";
+import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
 
 export default function ServerAddModalJoin() {
   const { serverJoin } = useServerJoin();
+  const { refreshAccessToken } = useRefreshAccessToken();
+
   const { serverAddState, setServerAddState, resetServerAddState } =
     useServerAddStore();
   const { envState } = useEnvStore();
@@ -21,8 +24,13 @@ export default function ServerAddModalJoin() {
     } else {
       code = serverAddState.code;
     }
-    const serverId = await serverJoin({ code });
-    navigate(`/server/${serverId}`);
+
+    const result = await serverJoin({ code });
+    if (result) {
+      const { serverId, refreshToken } = result;
+      refreshAccessToken(refreshToken);
+      navigate(`/server/${serverId}`);
+    }
   };
 
   return (

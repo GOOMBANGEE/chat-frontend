@@ -13,12 +13,14 @@ export default function useServerLeave() {
     const serverUrl = envState.serverUrl;
 
     try {
-      await axios.post(`${serverUrl}/${serverId}/leave`);
+      const response = await axios.post(`${serverUrl}/${serverId}/leave`);
+
       const newServerList = serverListState.filter(
         (server) => server.id !== Number(serverId),
       );
       setServerListState(newServerList);
-      return true;
+
+      return response.headers["refresh-token"];
     } catch (error) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data.message);

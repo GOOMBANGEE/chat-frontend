@@ -26,7 +26,8 @@ export default function useServerCreate() {
     setServerListState(newServerList);
     resetServerAddState();
 
-    return response.data.id;
+    const refreshToken = response.headers["refresh-token"];
+    return { serverId: response.data.id, refreshToken };
   };
 
   return { serverCreate };

@@ -2,9 +2,12 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import useServerDelete from "../../../../hook/server/useServerDelete.tsx";
+import useRefreshAccessToken from "../../../../hook/useRefreshAccessToken.tsx";
 
 export default function ServerSettingDeleteServerModal() {
   const { serverDelete } = useServerDelete();
+  const { refreshAccessToken } = useRefreshAccessToken();
+
   const { serverState, setServerState } = useServerStore();
   const navigate = useNavigate();
 
@@ -18,8 +21,11 @@ export default function ServerSettingDeleteServerModal() {
       return;
     }
 
-    await serverDelete();
-    navigate("/", { replace: true });
+    const refreshToken = await serverDelete();
+    refreshAccessToken(refreshToken);
+    if (refreshToken) {
+      navigate("/server", { replace: true });
+    }
   };
 
   // modal 바깥쪽 클릭시 modal close

@@ -1,6 +1,6 @@
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ServerList from "./ServerList.tsx";
 import ServerIndex from "./serverIndex/ServerIndex.tsx";
 import ServerChat from "./serverChat/ServerChat.tsx";
@@ -40,12 +40,37 @@ export default function Server() {
   const { tokenState } = useTokenStore();
   const { globalState } = useGlobalStore();
 
-  const location = useLocation();
   const serverId = Number(location.pathname.split("/").pop());
-
   const rootPath = "/server";
   const routePathList = ["/", "/:serverId"];
 
+  // 로그인해서 userState.username 변경된 경우
+  useEffect(() => {
+    if (userState.username) {
+      fetchServerList();
+      fetchFriendList();
+      fetchFriendWaitingList();
+    }
+  }, [userState.username]);
+
+  // 경로 바뀔때, server list 가져왔을때, 경로검증 + serverState change
+  useEffect(() => {
+    checkPath({ rootPath, routePathList });
+    if (serverId && userState.username) {
+      const server = serverListState.find((server) => server.id === serverId);
+      setServerState({ id: server?.id, name: server?.name });
+    }
+  }, [serverListState, location.pathname]);
+
+  // server 바뀔때 fetch server chat, user list
+  useEffect(() => {
+    if (serverState.id) {
+      fetchChatList({ serverId: serverState.id });
+      fetchServerUserList({ serverId: serverState.id });
+    }
+  }, [serverState.id]);
+
+  // stomp 연결
   const subscribeToServer = async (
     serverList: ServerInfo[],
     stompClient: Client,
@@ -67,26 +92,7 @@ export default function Server() {
       }
     }
   };
-
   useEffect(() => {
-    if (userState.username) {
-      fetchServerList();
-      fetchFriendList();
-      fetchFriendWaitingList();
-    }
-  }, [userState.username]);
-
-  useEffect(() => {
-    checkPath({ rootPath, routePathList });
-
-    if (serverId && userState.username) {
-      const server = serverListState.find((server) => server.id === serverId);
-      setServerState({ id: server?.id, name: server?.name });
-
-      fetchChatList({ serverId: Number(serverId) });
-      fetchServerUserList({ serverId: Number(serverId) });
-    }
-
     const stompUrl = envState.stompUrl;
     const stompClient = new Client({
       brokerURL: stompUrl,
@@ -112,12 +118,11 @@ export default function Server() {
       },
     });
     stompClient.activate();
-
     return () => {
       void stompClient.deactivate();
     };
-  }, [serverListState, location.pathname]);
-
+  }, [serverListState, tokenState.accessToken]);
+  // stomp 메시지 수신
   useEffect(() => {
     if (stompState.chatMessage)
       receiveStompMessageHandler(stompState.chatMessage);
