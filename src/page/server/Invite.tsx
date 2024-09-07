@@ -6,10 +6,12 @@ import ErrorPage from "../ErrorPage.tsx";
 import Loading from "../../component/Loading.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useNavigate, useParams } from "react-router-dom";
+import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
 
 export default function Invite() {
   const { fetchServerInfo } = useFetchServerInfo();
   const { serverJoin } = useServerJoin();
+  const { refreshAccessToken } = useRefreshAccessToken();
 
   const { serverState, setServerState } = useServerStore();
   const { userState } = useUserStore();
@@ -18,8 +20,12 @@ export default function Invite() {
 
   const handleClickJoinButton = async () => {
     if (code) {
-      const serverId = await serverJoin({ code });
-      navigate(`/server/${serverId}`);
+      const result = await serverJoin({ code });
+      if (result) {
+        const { serverId, refreshToken } = result;
+        refreshAccessToken(refreshToken);
+        navigate(`/server/${serverId}`);
+      }
     }
   };
 

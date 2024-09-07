@@ -12,7 +12,9 @@ export default function useServerJoin() {
   const { serverListState, setServerListState } = useServerStore();
   const { envState } = useEnvStore();
 
-  const serverJoin = async (prop: Props) => {
+  const serverJoin = async (
+    prop: Props,
+  ): Promise<{ serverId: string; refreshToken: string } | undefined> => {
     try {
       const serverUrl = envState.serverUrl;
       const response = await axios.post(`${serverUrl}/${prop.code}/join`);
@@ -25,13 +27,16 @@ export default function useServerJoin() {
       const newServerList = [...serverListState, newServer];
       setServerListState(newServerList);
       resetServerAddState();
-      return response.data.id;
+
+      const refreshToken = response.headers["refresh-token"];
+      return { serverId: response.data.id, refreshToken };
     } catch (error) {
       if (isAxiosError(error)) {
         setServerAddState({
           codeVerified: false,
           codeErrorMessage: error.response?.data.message,
         });
+        return undefined;
       }
     }
   };

@@ -5,9 +5,11 @@ import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import useLogin from "../../hook/user/useLogin.tsx";
 import useRecover from "../../hook/user/useRecover.tsx";
 import RecoverEmailSendModal from "./recover/RecoverEmailSendModal.tsx";
+import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
 
 export default function Login() {
   const { login } = useLogin();
+  const { refreshAccessToken } = useRefreshAccessToken();
   const { recover } = useRecover();
   const { userState, setUserState, resetUserState } = useUserStore();
   const { resetGlobalState } = useGlobalStore();
@@ -43,7 +45,8 @@ export default function Login() {
       return;
     }
 
-    if (await login()) {
+    const refreshToken = await login();
+    if (await refreshAccessToken(refreshToken)) {
       navigate(serverUrl);
       return;
     }
