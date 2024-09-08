@@ -22,10 +22,12 @@ import useFetchServerUserList from "../../hook/server/useFetchServerUserList.tsx
 import useFetchFriendList from "../../hook/user/useFetchFriendList.tsx";
 import useFetchFriendWaitingList from "../../hook/user/useFetchFriendWaitingList.tsx";
 import { useTokenStore } from "../../store/TokenStore.tsx";
+import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
 
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
+  const { refreshAccessToken } = useRefreshAccessToken();
   const { fetchFriendList } = useFetchFriendList();
   const { fetchFriendWaitingList } = useFetchFriendWaitingList();
   const { fetchServerUserList } = useFetchServerUserList();
@@ -44,10 +46,17 @@ export default function Server() {
   const rootPath = "/server";
   const routePathList = ["/", "/:serverId"];
 
+  const serverList = async () => {
+    const refreshToken = await fetchServerList();
+    if (refreshToken) {
+      refreshAccessToken(refreshToken);
+    }
+  };
+
   // 로그인해서 userState.username 변경된 경우
   useEffect(() => {
     if (userState.username) {
-      fetchServerList();
+      serverList();
       fetchFriendList();
       fetchFriendWaitingList();
     }
