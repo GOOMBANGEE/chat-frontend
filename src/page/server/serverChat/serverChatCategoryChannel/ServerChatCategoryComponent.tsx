@@ -1,5 +1,6 @@
 import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
 import { CategoryInfo } from "../../../../../index";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 
 interface Props {
   category: CategoryInfo;
@@ -7,6 +8,18 @@ interface Props {
 
 export default function ServerChatCategoryComponent(props: Readonly<Props>) {
   const { categoryState, setCategoryState } = useCategoryStore();
+  const { setChannelState } = useChannelStore();
+
+  const handleChannelCreateButton = () => {
+    setCategoryState({
+      id: props.category.id,
+      isHover: false,
+      hoverCategoryId: undefined,
+      hoverButtonY: undefined,
+    });
+    setChannelState({ createModalOpen: true });
+  };
+
   return (
     <div
       className={
@@ -38,6 +51,7 @@ export default function ServerChatCategoryComponent(props: Readonly<Props>) {
       </svg>
       <div className={"ml-1"}>{props.category.name}</div>
       <button
+        onClick={handleChannelCreateButton}
         onMouseOver={(e) =>
           setCategoryState({
             isHover: true,

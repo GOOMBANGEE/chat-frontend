@@ -15,13 +15,15 @@ export default function ServerChatCategoryChannelList() {
   );
 
   return (
-    <div className={"mt-2 w-full px-1.5 py-1 text-gray-400"}>
+    <div className={"mt-2 w-full px-2 py-1 text-gray-400"}>
       {filteredCategoryList.map((category) => {
-        const filteredChannelList = channelListState.filter(
-          (channel: ChannelInfo) =>
-            channel.serverId === serverState.id &&
-            channel.categoryId === category.id,
-        );
+        const filteredChannelList = channelListState
+          .filter(
+            (channel: ChannelInfo) =>
+              channel.serverId === serverState.id &&
+              channel.categoryId === category.id,
+          )
+          .sort((a, b) => a.displayOrder - b.displayOrder);
 
         return (
           <div key={category.id}>

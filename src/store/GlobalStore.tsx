@@ -12,6 +12,7 @@ interface GlobalState {
   pageInvalid: boolean;
   loginExpire: boolean;
   fetchProfile: boolean;
+  fetchServerList: boolean;
 }
 
 const initialGlobalState: GlobalState = {
@@ -20,6 +21,7 @@ const initialGlobalState: GlobalState = {
   pageInvalid: false,
   loginExpire: false,
   fetchProfile: false,
+  fetchServerList: false,
 };
 export const useGlobalStore = create<GlobalStore>((set) => ({
   globalState: initialGlobalState,

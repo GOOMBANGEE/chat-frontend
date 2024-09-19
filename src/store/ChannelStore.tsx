@@ -15,12 +15,42 @@ interface ChannelState {
   id: number | undefined;
   name: string | undefined;
   displayOrder: number | undefined;
+
+  // channel create modal
+  createModalOpen: boolean;
+  createModalName: string | undefined;
+  createModalOptionOpen: boolean;
+
+  // context menu
+  contextMenu: boolean;
+  deleteModalOpen: boolean;
+
+  // channel setting
+  settingModalOpen: boolean;
+  settingDefault: boolean;
+  settingAuth: boolean;
+  newName: string | undefined;
 }
 
 const initialChannelState: ChannelState = {
   id: undefined,
   name: undefined,
   displayOrder: undefined,
+
+  // channel create modal
+  createModalOpen: false,
+  createModalName: undefined,
+  createModalOptionOpen: true,
+
+  // context menu
+  contextMenu: false,
+  deleteModalOpen: false,
+
+  // channel setting
+  settingModalOpen: false,
+  settingDefault: false,
+  settingAuth: false,
+  newName: undefined,
 };
 
 export const useChannelStore = create<ChannelStore>((set) => ({

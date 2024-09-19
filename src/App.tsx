@@ -18,6 +18,9 @@ import { useUserStore } from "./store/UserStore.tsx";
 import { useServerStore } from "./store/ServerStore.tsx";
 import ServerSetting from "./page/server/serverChat/serverSetting/ServerSetting.tsx";
 import Recover from "./page/user/recover/Recover.tsx";
+import { useChannelStore } from "./store/ChannelStore.tsx";
+import { useCategoryStore } from "./store/CategoryStore.tsx";
+import ChannelSetting from "./page/server/serverChat/channelSetting/ChannelSetting.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();
@@ -26,6 +29,8 @@ export default function App() {
 
   const { userState } = useUserStore();
   const { serverState } = useServerStore();
+  const { categoryState } = useCategoryStore();
+  const { channelState } = useChannelStore();
   const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
 
@@ -79,6 +84,7 @@ export default function App() {
 
         {userState.userSettingOpen ? <UserSetting /> : null}
         {serverState.settingModalOpen ? <ServerSetting /> : null}
+        {channelState.settingModalOpen ? <ChannelSetting /> : null}
 
         <ToastContainer
           position="bottom-right"

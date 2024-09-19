@@ -13,11 +13,17 @@ import ServerChatSearchList from "./ServerChatSearchList.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
 import UserContextMenu from "../UserContextMenu.tsx";
 import { useEffect, useRef } from "react";
-import ServerChatCategoryChannelList from "./serverChatChannel/ServerChatCategoryChannelList.tsx";
+import ServerChatCategoryChannelList from "./serverChatCategoryChannel/ServerChatCategoryChannelList.tsx";
+import { useCategoryStore } from "../../../store/CategoryStore.tsx";
+import { useChannelStore } from "../../../store/ChannelStore.tsx";
+import ChannelContextMenu from "./ChannelContextMenu.tsx";
+import ChannelDeleteModal from "./ChannelDeleteModal.tsx";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
   const { serverState } = useServerStore();
+  const { categoryState } = useCategoryStore();
+  const { channelState } = useChannelStore();
   const { userState } = useUserStore();
 
   // 채팅 갱신시 스크롤 아래로 이동
@@ -66,6 +72,10 @@ export default function ServerChat() {
       {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
       {chatState.chatDeleteModalOpen ? <ChatDeleteModal /> : null}
       {userState.userContextMenu ? <UserContextMenu /> : null}
+
+      {/*{categoryState.contextMenu? <CategoryContextMenu/>:null}*/}
+      {channelState.contextMenu ? <ChannelContextMenu /> : null}
+      {channelState.deleteModalOpen ? <ChannelDeleteModal /> : null}
     </div>
   );
 }

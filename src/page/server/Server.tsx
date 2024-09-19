@@ -1,6 +1,6 @@
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import { useEffect } from "react";
-import { Route, Routes, useParams } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ServerList from "./ServerList.tsx";
 import ServerIndex from "./serverIndex/ServerIndex.tsx";
 import ServerChat from "./serverChat/ServerChat.tsx";
@@ -21,6 +21,8 @@ import useFetchServerUserList from "../../hook/server/useFetchServerUserList.tsx
 import useFetchFriendList from "../../hook/user/useFetchFriendList.tsx";
 import useFetchFriendWaitingList from "../../hook/user/useFetchFriendWaitingList.tsx";
 import { useTokenStore } from "../../store/TokenStore.tsx";
+import { useChannelStore } from "../../store/ChannelStore.tsx";
+import ChannelCreateModal from "./serverChat/ChannelCreateModal.tsx";
 
 let stompClient: Client | undefined = undefined;
 
@@ -36,17 +38,11 @@ export default function Server() {
   const { userState } = useUserStore();
   const { serverAddState } = useServerAddStore();
   const { serverState, setServerState, serverListState } = useServerStore();
+  const { channelState } = useChannelStore();
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
   const { tokenState } = useTokenStore();
   const { globalState } = useGlobalStore();
-
-  const { serverId, channelId } = useParams<{
-    serverId: string;
-    channelId: string;
-  }>();
-  const serverIdNumber = Number(serverId);
-  const channelIdNumber = Number(channelId);
 
   const rootPath = "/server";
   const routePathList = ["/", "/:serverId", "/:serverId/:channelId"];
@@ -60,13 +56,13 @@ export default function Server() {
     }
   }, [userState.username]);
 
+  // 새로고침시 server 상태 저장
   // 경로 바뀔때, server list 가져왔을때, 경로검증 + serverState change
   useEffect(() => {
     checkPath({ rootPath, routePathList });
+    const serverId = Number(location.pathname.split("/")[2]);
     if (serverId && userState.username) {
-      const server = serverListState.find(
-        (server) => server.id === serverIdNumber,
-      );
+      const server = serverListState.find((server) => server.id === serverId);
       setServerState({ id: server?.id, name: server?.name });
     }
   }, [serverListState, location.pathname]);
@@ -113,7 +109,6 @@ export default function Server() {
   useEffect(() => {
     setStomp();
     return () => {
-      void stompClient.deactivate();
       if (stompClient) {
         stompClient.deactivate();
         stompClient = undefined;
@@ -150,6 +145,8 @@ export default function Server() {
 
         {serverAddState.open ? <ServerAddModal /> : null}
         {serverState.inviteModalOpen ? <ServerInviteModal /> : null}
+
+        {channelState.createModalOpen ? <ChannelCreateModal /> : null}
       </div>
     );
   };
