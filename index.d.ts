@@ -4,6 +4,21 @@ export interface ServerInfo {
   icon: string;
 }
 
+export interface CategoryInfo {
+  id: number;
+  name: string;
+  displayOrder: number;
+  serverId: number;
+}
+
+export interface ChannelInfo {
+  id: number;
+  name: string;
+  displayOrder: number;
+  serverId: number;
+  categoryId: number;
+}
+
 export interface UserInfo {
   id: number;
   username: string;

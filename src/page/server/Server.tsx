@@ -1,6 +1,6 @@
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import ServerList from "./ServerList.tsx";
 import ServerIndex from "./serverIndex/ServerIndex.tsx";
 import ServerChat from "./serverChat/ServerChat.tsx";
@@ -17,17 +17,16 @@ import ServerInviteModal from "./serverChat/serverChatDropdown/ServerInviteModal
 import useReceiveStompMessageHandler from "../../hook/useReceiveStompMessageHandler.tsx";
 import ErrorPage from "../ErrorPage.tsx";
 import useFetchChatList from "../../hook/server/serverChat/useFetchChatList.tsx";
-import { ServerInfo } from "../../../index";
 import useFetchServerUserList from "../../hook/server/useFetchServerUserList.tsx";
 import useFetchFriendList from "../../hook/user/useFetchFriendList.tsx";
 import useFetchFriendWaitingList from "../../hook/user/useFetchFriendWaitingList.tsx";
 import { useTokenStore } from "../../store/TokenStore.tsx";
-import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
+
+let stompClient: Client | undefined = undefined;
 
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
-  const { refreshAccessToken } = useRefreshAccessToken();
   const { fetchFriendList } = useFetchFriendList();
   const { fetchFriendWaitingList } = useFetchFriendWaitingList();
   const { fetchServerUserList } = useFetchServerUserList();
@@ -42,21 +41,20 @@ export default function Server() {
   const { tokenState } = useTokenStore();
   const { globalState } = useGlobalStore();
 
-  const serverId = Number(location.pathname.split("/").pop());
-  const rootPath = "/server";
-  const routePathList = ["/", "/:serverId"];
+  const { serverId, channelId } = useParams<{
+    serverId: string;
+    channelId: string;
+  }>();
+  const serverIdNumber = Number(serverId);
+  const channelIdNumber = Number(channelId);
 
-  const serverList = async () => {
-    const refreshToken = await fetchServerList();
-    if (refreshToken) {
-      refreshAccessToken(refreshToken);
-    }
-  };
+  const rootPath = "/server";
+  const routePathList = ["/", "/:serverId", "/:serverId/:channelId"];
 
   // 로그인해서 userState.username 변경된 경우
   useEffect(() => {
     if (userState.username) {
-      serverList();
+      fetchServerList();
       fetchFriendList();
       fetchFriendWaitingList();
     }
@@ -66,7 +64,9 @@ export default function Server() {
   useEffect(() => {
     checkPath({ rootPath, routePathList });
     if (serverId && userState.username) {
-      const server = serverListState.find((server) => server.id === serverId);
+      const server = serverListState.find(
+        (server) => server.id === serverIdNumber,
+      );
       setServerState({ id: server?.id, name: server?.name });
     }
   }, [serverListState, location.pathname]);
@@ -80,57 +80,47 @@ export default function Server() {
   }, [serverState.id]);
 
   // stomp 연결
-  const subscribeToServer = async (
-    serverList: ServerInfo[],
-    stompClient: Client,
-  ) => {
-    for (const server of serverList) {
-      if (userState.id) {
-        const subscriptionUrl = `/sub/server/${server.id}`;
-        stompClient.subscribe(
-          subscriptionUrl,
-          (message: IMessage) => {
-            const receiveMessage = JSON.parse(message.body);
-            setStompState({ chatMessage: receiveMessage });
-          },
-          {
-            id: userState.id.toString(),
-            Authorization: `Bearer ${tokenState.accessToken}`,
-          },
-        );
-      }
+  const subscribeToUser = (stompClient: Client) => {
+    const subscriptionUserUrl = `/sub/user/${userState.id}`;
+    if (userState.id && stompClient) {
+      stompClient.subscribe(
+        subscriptionUserUrl,
+        (message: IMessage) => {
+          const receiveMessage = JSON.parse(message.body);
+          setStompState({ chatMessage: receiveMessage });
+        },
+        {
+          id: userState.id.toString(),
+          Authorization: `Bearer ${tokenState.accessToken}`,
+        },
+      );
     }
   };
-  useEffect(() => {
+
+  const setStomp = () => {
     const stompUrl = envState.stompUrl;
     const stompClient = new Client({
       brokerURL: stompUrl,
       onConnect: () => {
-        subscribeToServer(serverListState, stompClient);
-        const subscriptionUserUrl = `/sub/user/${userState.id}`;
-        if (userState.id) {
-          stompClient.subscribe(
-            subscriptionUserUrl,
-            (message: IMessage) => {
-              const receiveMessage = JSON.parse(message.body);
-              setStompState({ chatMessage: receiveMessage });
-            },
-            {
-              id: userState.id.toString(),
-              Authorization: `Bearer ${tokenState.accessToken}`,
-            },
-          );
-        }
+        subscribeToUser(stompClient);
       },
       onStompError: (frame) => {
         console.error("Stomp Error" + frame.body);
       },
     });
     stompClient.activate();
+  };
+  useEffect(() => {
+    setStomp();
     return () => {
       void stompClient.deactivate();
+      if (stompClient) {
+        stompClient.deactivate();
+        stompClient = undefined;
+      }
     };
   }, [serverListState, tokenState.accessToken]);
+
   // stomp 메시지 수신
   useEffect(() => {
     if (stompState.chatMessage)
@@ -154,7 +144,7 @@ export default function Server() {
         <div className={"w-full"}>
           <Routes>
             <Route index element={<ServerIndex />} />
-            <Route path={":serverId"} element={<ServerChat />} />
+            <Route path={":serverId/:channelId"} element={<ServerChat />} />
           </Routes>
         </div>
 

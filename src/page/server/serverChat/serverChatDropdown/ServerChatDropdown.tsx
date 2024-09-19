@@ -66,7 +66,7 @@ export default function ServerChatDropdown() {
       <button
         onClick={() => handleClickOpenButton()}
         className={
-          "server-serverChat-open-button flex w-full items-center px-6 py-3 text-start font-semibold shadow-md hover:bg-customDark_5"
+          "server-serverChat-open-button flex w-full items-center px-3 py-3 text-start font-semibold shadow-md hover:bg-customDark_5"
         }
       >
         {serverState.name}

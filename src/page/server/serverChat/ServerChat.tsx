@@ -13,6 +13,7 @@ import ServerChatSearchList from "./ServerChatSearchList.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
 import UserContextMenu from "../UserContextMenu.tsx";
 import { useEffect, useRef } from "react";
+import ServerChatCategoryChannelList from "./serverChatChannel/ServerChatCategoryChannelList.tsx";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
@@ -33,9 +34,9 @@ export default function ServerChat() {
       style={{ maxHeight: "100vh" }}
       className={"relative flex h-full max-h-full w-full"}
     >
-      <div className={"relative w-72 bg-customDark_2"}>
+      <div className={"relative w-60 bg-customDark_2"}>
         <ServerChatDropdown />
-        {/*<ServerChatChannelList/>*/}
+        <ServerChatCategoryChannelList />
         <UserInfoMenu />
       </div>
 
