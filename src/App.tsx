@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useGlobalStore } from "./store/GlobalStore.tsx";
 import useFetchProfile from "./hook/useFetchProfile.tsx";
@@ -29,6 +29,8 @@ export default function App() {
   const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
 
+  const navigate = useNavigate();
+
   const routePathList = [
     "/",
     "register/*",
@@ -41,10 +43,16 @@ export default function App() {
     checkPath({ routePathList: routePathList });
   }, []);
 
+  // accessToken 가져오기
   const refreshToken = getCookie(tokenState.refreshTokenKey);
+  const fetchAccessToken = async () => {
+    if (!(await refreshAccessToken(refreshToken))) {
+      navigate("/", { replace: true });
+    }
+  };
   useEffect(() => {
     if (refreshToken) {
-      void refreshAccessToken(refreshToken);
+      fetchAccessToken();
     }
   }, []);
 

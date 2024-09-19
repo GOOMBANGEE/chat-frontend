@@ -10,14 +10,12 @@ export default function useServerDelete() {
   const serverDelete = async () => {
     const serverUrl = envState.serverUrl;
 
-    const response = await axios.post(`${serverUrl}/${serverState.id}/delete`, {
+    await axios.post(`${serverUrl}/${serverState.id}/delete`, {
       name: serverState.checkServerName,
     });
 
     resetServerState();
     toast.success("삭제가 완료되었습니다.");
-
-    return response.headers["refresh-token"];
   };
 
   return { serverDelete };

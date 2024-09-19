@@ -28,8 +28,7 @@ export default function useServerJoin() {
       setServerListState(newServerList);
       resetServerAddState();
 
-      const refreshToken = response.headers["refresh-token"];
-      return { serverId: response.data.id, refreshToken };
+      return response.data.id;
     } catch (error) {
       if (isAxiosError(error)) {
         setServerAddState({

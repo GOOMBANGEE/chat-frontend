@@ -1,22 +1,16 @@
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import useServerCreate from "../../hook/server/useServerCreate.tsx";
 import { useNavigate } from "react-router-dom";
-import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
 
 export default function ServerAddModalCreate() {
   const { serverCreate } = useServerCreate();
-  const { refreshAccessToken } = useRefreshAccessToken();
-
   const { serverAddState, setServerAddState, resetServerAddState } =
     useServerAddStore();
   const navigate = useNavigate();
 
   const handleCreateButtonClick = async () => {
-    const { serverId, refreshToken } = await serverCreate();
-    refreshAccessToken(refreshToken);
-    if (refreshToken) {
-      navigate(`/server/${serverId}`);
-    }
+    const serverId = await serverCreate();
+    navigate(`/server/${serverId}`);
   };
 
   return (

@@ -42,11 +42,11 @@ export default function useRefreshAccessToken() {
         // refreshToken이 만료되거나 잘못된 경우 쿠키 삭제하여 로그인 유도
         if (
           error.response &&
-          (error.response.data.id === "USER:TOKEN_INVALID" ||
-            error.response.data.id === "USER:USER_UNREGISTERED")
+          error.response.data.id === "VALID:TOKEN_INVALID"
         ) {
           deleteCookie(tokenState.refreshTokenKey);
         }
+        return false;
       }
     } finally {
       setGlobalState({

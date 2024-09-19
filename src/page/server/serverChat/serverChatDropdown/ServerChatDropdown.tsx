@@ -3,11 +3,9 @@ import { useServerChatDropdownStore } from "../../../../store/ServerChatDropdown
 import { useEffect } from "react";
 import useServerLeave from "../../../../hook/server/useServerLeave.tsx";
 import { useNavigate } from "react-router-dom";
-import useRefreshAccessToken from "../../../../hook/useRefreshAccessToken.tsx";
 
 export default function ServerChatDropdown() {
   const { serverLeave } = useServerLeave();
-  const { refreshAccessToken } = useRefreshAccessToken();
 
   const {
     serverChatDropdownState,
@@ -36,9 +34,7 @@ export default function ServerChatDropdown() {
   };
 
   const handleClickLeaveButton = async () => {
-    const refreshToken = await serverLeave();
-    refreshAccessToken(refreshToken);
-    if (refreshToken) {
+    if (await serverLeave()) {
       navigate("/server", { replace: true });
     }
     setServerChatDropdownState({ open: false });
