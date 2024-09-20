@@ -12,13 +12,14 @@ interface Props {
 export default function useSendChatMessage() {
   const { setChatListState } = useChatStore();
   const { envState } = useEnvStore();
-  const { serverId } = useParams();
+  const { serverId, channelId } = useParams();
 
   const sendChatMessage = async (props: Props) => {
     const chatUrl = envState.chatUrl;
     const message = {
       messageType: "SEND",
       serverId: serverId,
+      channelId: channelId,
       username: props.chat.username,
       message: props.chat.message,
     };

@@ -1,5 +1,5 @@
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import ServerList from "./ServerList.tsx";
 import ServerIndex from "./serverIndex/ServerIndex.tsx";
@@ -24,8 +24,6 @@ import { useTokenStore } from "../../store/TokenStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import ChannelCreateModal from "./serverChat/ChannelCreateModal.tsx";
 
-let stompClient: Client | undefined = undefined;
-
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
@@ -38,7 +36,7 @@ export default function Server() {
   const { userState } = useUserStore();
   const { serverAddState } = useServerAddStore();
   const { serverState, setServerState, serverListState } = useServerStore();
-  const { channelState } = useChannelStore();
+  const { channelState, setChannelState, channelListState } = useChannelStore();
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
   const { tokenState } = useTokenStore();
@@ -56,16 +54,21 @@ export default function Server() {
     }
   }, [userState.username]);
 
-  // 새로고침시 server 상태 저장
+  // 새로고침시 server, channel 상태 저장
   // 경로 바뀔때, server list 가져왔을때, 경로검증 + serverState change
+  const serverId = Number(location.pathname.split("/")[2]);
+  const channelId = Number(location.pathname.split("/")[3]);
   useEffect(() => {
     checkPath({ rootPath, routePathList });
-    const serverId = Number(location.pathname.split("/")[2]);
-    if (serverId && userState.username) {
+    if (userState.username && serverId && channelId) {
       const server = serverListState.find((server) => server.id === serverId);
+      const channel = channelListState.find(
+        (channel) => channel.id === channelId,
+      );
       setServerState({ id: server?.id, name: server?.name });
+      setChannelState({ id: channel?.id, name: channel?.name });
     }
-  }, [serverListState, location.pathname]);
+  }, [serverListState, channelListState, location.pathname]);
 
   // server 바뀔때 fetch server chat, user list
   useEffect(() => {
@@ -76,11 +79,53 @@ export default function Server() {
   }, [serverState.id]);
 
   // stomp 연결
-  const subscribeToUser = (stompClient: Client) => {
-    const subscriptionUserUrl = `/sub/user/${userState.id}`;
-    if (userState.id && stompClient) {
+  const [stompClient, setStompClient] = useState<Client | undefined>(undefined);
+  const [activeSubscription, setActiveSubscription] = useState<Set<string>>(
+    new Set(),
+  );
+
+  // 초기 stomp 연결
+  const initializeStompClient = () => {
+    if (!stompClient) {
+      const stompUrl = envState.stompUrl;
+      const newStompClient = new Client({
+        brokerURL: stompUrl,
+        onConnect: () => {
+          setStompClient(newStompClient);
+        },
+        onStompError: (frame) => {
+          console.error("Stomp Error: " + frame.body);
+        },
+      });
+      newStompClient.activate();
+    }
+  };
+
+  useEffect(() => {
+    initializeStompClient();
+    return () => {
+      if (stompClient) {
+        stompClient.deactivate();
+        setStompClient(undefined);
+      }
+    };
+  }, [tokenState.accessToken]);
+  // stomp 메시지 수신
+  useEffect(() => {
+    if (stompState.chatMessage)
+      receiveStompMessageHandler(stompState.chatMessage);
+  }, [stompState.chatMessage]);
+
+  // 유저, 서버, 채널 변경시 추가로 구독
+  const subscribeToTopic = (subscriptionUrl: string) => {
+    if (
+      // 이미 추가되어있는 url이면 추가구독하지않음
+      !activeSubscription.has(subscriptionUrl) &&
+      stompClient?.active &&
+      userState.id
+    ) {
       stompClient.subscribe(
-        subscriptionUserUrl,
+        subscriptionUrl,
         (message: IMessage) => {
           const receiveMessage = JSON.parse(message.body);
           setStompState({ chatMessage: receiveMessage });
@@ -90,37 +135,39 @@ export default function Server() {
           Authorization: `Bearer ${tokenState.accessToken}`,
         },
       );
+      // 구독중인 경로 추가
+      setActiveSubscription((prevSubscriptions) => {
+        const newSubscription = new Set(prevSubscriptions);
+        newSubscription.add(subscriptionUrl);
+        return newSubscription;
+      });
     }
   };
 
-  const setStomp = () => {
-    const stompUrl = envState.stompUrl;
-    const stompClient = new Client({
-      brokerURL: stompUrl,
-      onConnect: () => {
-        subscribeToUser(stompClient);
-      },
-      onStompError: (frame) => {
-        console.error("Stomp Error" + frame.body);
-      },
-    });
-    stompClient.activate();
-  };
   useEffect(() => {
-    setStomp();
-    return () => {
-      if (stompClient) {
-        stompClient.deactivate();
-        stompClient = undefined;
+    if (stompClient?.active) {
+      if (userState.id) {
+        const userSubscriptionUrl = `/sub/user/${userState.id}`;
+        subscribeToTopic(userSubscriptionUrl);
       }
-    };
-  }, [serverListState, tokenState.accessToken]);
-
-  // stomp 메시지 수신
-  useEffect(() => {
-    if (stompState.chatMessage)
-      receiveStompMessageHandler(stompState.chatMessage);
-  }, [stompState.chatMessage]);
+      if (serverId && serverState.id) {
+        const serverSubscriptionUrl = `/sub/server/${serverState.id}`;
+        subscribeToTopic(serverSubscriptionUrl);
+      }
+      if (serverId && serverState.id && channelId && channelState.id) {
+        const channelSubscriptionUrl = `/sub/channel/${serverState.id}/${channelState.id}`;
+        subscribeToTopic(channelSubscriptionUrl);
+      }
+    }
+  }, [
+    userState.id,
+    serverId,
+    channelId,
+    serverState.id,
+    channelState.id,
+    location.pathname,
+    stompClient,
+  ]);
 
   const renderPage = () => {
     if (globalState.pageInvalid) {
