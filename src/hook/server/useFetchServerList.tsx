@@ -4,6 +4,7 @@ import { useServerStore } from "../../store/ServerStore.tsx";
 import { useCategoryStore } from "../../store/CategoryStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
+import devLog from "../../devLog.ts";
 
 export default function useFetchServerList() {
   const { setServerListState } = useServerStore();
@@ -11,14 +12,19 @@ export default function useFetchServerList() {
   const { setChannelListState } = useChannelStore();
   const { envState } = useEnvStore();
   const { setGlobalState } = useGlobalStore();
+  const componentName = "useFetchServerList";
 
   const fetchServerList = async () => {
     try {
       const response = await axios.get(`${envState.serverUrl}/list`);
+      devLog(componentName, "setServerListState");
       setServerListState(response.data.serverList);
+      devLog(componentName, "setCategoryListState");
       setCategoryListState(response.data.categoryList);
+      devLog(componentName, "setChannelListState");
       setChannelListState(response.data.channelList);
     } finally {
+      devLog(componentName, "setGlobalState fetchServerList true");
       setGlobalState({ fetchServerList: true });
     }
   };

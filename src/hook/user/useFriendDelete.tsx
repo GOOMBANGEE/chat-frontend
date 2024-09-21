@@ -1,11 +1,13 @@
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useEnvStore } from "../../store/EnvStore.tsx";
 import axios from "axios";
+import devLog from "../../devLog.ts";
 
 export default function useFriendDelete() {
   const { userState, userFriendListState, setUserFriendListState } =
     useUserStore();
   const { envState } = useEnvStore();
+  const componentName = "useFriendDelete";
 
   const friendDelete = async () => {
     const userUrl = envState.userUrl;
@@ -18,6 +20,8 @@ export default function useFriendDelete() {
     const newFriendList = userFriendListState.filter(
       (user) => user.id !== userState.focusUserId,
     );
+
+    devLog(componentName, "setUserFriendListState");
     setUserFriendListState(newFriendList);
   };
 

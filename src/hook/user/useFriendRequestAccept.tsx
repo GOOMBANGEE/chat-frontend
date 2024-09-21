@@ -2,6 +2,7 @@ import { useUserStore } from "../../store/UserStore.tsx";
 import { useEnvStore } from "../../store/EnvStore.tsx";
 import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
+import devLog from "../../devLog.ts";
 
 interface Props {
   id: number;
@@ -18,6 +19,7 @@ export default function useFriendRequestAccept() {
     setUserFriendWaitingListState,
   } = useUserStore();
   const { envState } = useEnvStore();
+  const componentName = "useFriendRequestAccept";
 
   const friendRequestAccept = async (props: Props) => {
     const userUrl = envState.userUrl;
@@ -33,11 +35,15 @@ export default function useFriendRequestAccept() {
         id: props.friendId,
         username: props.friendUsername,
       };
+
       const newFriendList = [...userFriendListState, newFriend];
+      devLog(componentName, "setUserFriendListState");
       setUserFriendListState(newFriendList);
+
       const newWaitingList = userFriendWaitingListState.filter(
         (user) => user.id !== props.friendId,
       );
+      devLog(componentName, "setUserFriendWaitingListState");
       setUserFriendWaitingListState(newWaitingList);
 
       toast.success("친구등록이 완료되었습니다");

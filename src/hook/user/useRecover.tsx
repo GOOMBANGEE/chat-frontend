@@ -2,10 +2,12 @@ import { useEnvStore } from "../../store/EnvStore.tsx";
 import axios, { isAxiosError } from "axios";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { toast } from "react-toastify";
+import devLog from "../../devLog.ts";
 
 export default function useRecover() {
   const { userState, setUserState } = useUserStore();
   const { envState } = useEnvStore();
+  const componentName = "useRecover";
 
   const recover = async () => {
     const userUrl = envState.userUrl;
@@ -14,6 +16,8 @@ export default function useRecover() {
       await axios.post(`${userUrl}/recover`, {
         email: userState.email,
       });
+
+      devLog(componentName, "setUserState");
       setUserState({ userRecoverEmailSendModal: true });
     } catch (error) {
       if (isAxiosError(error)) {

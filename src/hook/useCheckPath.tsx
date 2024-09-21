@@ -1,5 +1,6 @@
 import { useGlobalStore } from "../store/GlobalStore.tsx";
 import { matchPath } from "react-router-dom";
+import devLog from "../devLog.ts";
 
 interface Props {
   rootPath?: string;
@@ -8,6 +9,7 @@ interface Props {
 
 export default function useCheckPath() {
   const { setGlobalState } = useGlobalStore();
+  const componentName = "useCheckPath";
 
   const checkPath = (props: Props) => {
     let rootPath;
@@ -22,6 +24,7 @@ export default function useCheckPath() {
         matchPath(rootPath + path, location.pathname),
       )
     ) {
+      devLog(componentName, "setGlobalState");
       setGlobalState({ pageInvalid: true });
     }
   };

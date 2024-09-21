@@ -2,11 +2,13 @@ import { useEnvStore } from "../../store/EnvStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import axios from "axios";
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
+import devLog from "../../devLog.ts";
 
 export default function useLogin() {
   const { userState, setUserState } = useUserStore();
   const { envState } = useEnvStore();
   const { setGlobalState } = useGlobalStore();
+  const componentName = "useLogin";
 
   const login = async () => {
     try {
@@ -17,7 +19,10 @@ export default function useLogin() {
       // 헤더에서 refreshToken 추출
       const refreshToken = response.headers["refresh-token"];
 
+      devLog(componentName, "setUserState");
       setUserState({ password: undefined });
+
+      devLog(componentName, "setGlobalState");
       setGlobalState({ loginExpire: false });
 
       return refreshToken;

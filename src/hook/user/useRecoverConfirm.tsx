@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import { useUserStore } from "../../store/UserStore.tsx";
 import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
+import devLog from "../../devLog.ts";
 
 export default function useRecoverConfirm() {
   const { userState, resetUserState } = useUserStore();
   const { envState } = useEnvStore();
   const { token } = useParams();
+  const componentName = "useRecoverConfirm";
 
   const recoverConfirm = async () => {
     const userUrl = envState.userUrl;
@@ -17,7 +19,10 @@ export default function useRecoverConfirm() {
         email: userState.email,
         password: userState.password,
       });
+
+      devLog(componentName, "resetUserState");
       resetUserState();
+
       toast.success("비밀번호가 재설정 되었습니다.");
       return true;
     } catch (error) {

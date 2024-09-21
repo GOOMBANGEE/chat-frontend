@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useServerStore } from "../../../store/ServerStore.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import axios from "axios";
+import devLog from "../../../devLog.ts";
 
 interface Props {
   searchDefault?: string;
@@ -15,6 +16,7 @@ export default function useChatSearch() {
   const { setServerState } = useServerStore();
   const { envState } = useEnvStore();
   const { serverId } = useParams();
+  const componentName = "useChatSearch";
 
   const chatSearch = async (props: Props) => {
     try {
@@ -31,7 +33,10 @@ export default function useChatSearch() {
         message: message,
       });
 
+      devLog(componentName, "setServerState searchOptionMenu false");
       setServerState({ searchOptionMenu: false, searchList: true });
+
+      devLog(componentName, "setChatSearchListState");
       setChatSearchListState(response.data.chatInfoDtoList);
     } catch (error) {
       if (axios.isAxiosError(error)) {

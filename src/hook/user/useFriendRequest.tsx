@@ -2,10 +2,12 @@ import { useUserStore } from "../../store/UserStore.tsx";
 import { useEnvStore } from "../../store/EnvStore.tsx";
 import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
+import devLog from "../../devLog.ts";
 
 export default function useFriendRequest() {
   const { userState, setUserState } = useUserStore();
   const { envState } = useEnvStore();
+  const componentName = "useFriendRequest";
 
   const friendRequest = async () => {
     const userUrl = envState.userUrl;
@@ -24,6 +26,7 @@ export default function useFriendRequest() {
       }
     } finally {
       if (userState.userContextMenu) {
+        devLog(componentName, "setUserState");
         setUserState({
           userContextMenu: false,
           focusUserId: undefined,

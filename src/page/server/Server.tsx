@@ -23,6 +23,7 @@ import useFetchFriendWaitingList from "../../hook/user/useFetchFriendWaitingList
 import { useTokenStore } from "../../store/TokenStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import ChannelCreateModal from "./serverChat/ChannelCreateModal.tsx";
+import devLog from "../../devLog.ts";
 
 export default function Server() {
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
@@ -42,6 +43,7 @@ export default function Server() {
   const { tokenState } = useTokenStore();
   const { globalState } = useGlobalStore();
 
+  const componentName = "Server";
   const rootPath = "/server";
   const routePathList = ["/", "/:serverId", "/:serverId/:channelId"];
 
@@ -65,7 +67,10 @@ export default function Server() {
       const channel = channelListState.find(
         (channel) => channel.id === channelId,
       );
+      devLog(componentName, "setServerState");
       setServerState({ id: server?.id, name: server?.name });
+
+      devLog(componentName, "setChannelState");
       setChannelState({ id: channel?.id, name: channel?.name });
     }
   }, [serverListState, channelListState, location.pathname]);
@@ -91,6 +96,7 @@ export default function Server() {
       const newStompClient = new Client({
         brokerURL: stompUrl,
         onConnect: () => {
+          devLog(componentName, "setStompClient");
           setStompClient(newStompClient);
         },
         onStompError: (frame) => {
@@ -106,6 +112,7 @@ export default function Server() {
     return () => {
       if (stompClient) {
         stompClient.deactivate();
+        devLog(componentName, "setStompClient undefined");
         setStompClient(undefined);
       }
     };
@@ -128,6 +135,7 @@ export default function Server() {
         subscriptionUrl,
         (message: IMessage) => {
           const receiveMessage = JSON.parse(message.body);
+          devLog(componentName, "setStompClient chatMessage");
           setStompState({ chatMessage: receiveMessage });
         },
         {
@@ -138,6 +146,7 @@ export default function Server() {
       // 구독중인 경로 추가
       setActiveSubscription((prevSubscriptions) => {
         const newSubscription = new Set(prevSubscriptions);
+        devLog(componentName, "activeSubscription subscriptionUrl");
         newSubscription.add(subscriptionUrl);
         return newSubscription;
       });

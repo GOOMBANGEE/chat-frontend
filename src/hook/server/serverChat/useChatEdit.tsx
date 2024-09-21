@@ -3,6 +3,7 @@ import { useEnvStore } from "../../../store/EnvStore.tsx";
 import axios, { isAxiosError } from "axios";
 import { useParams } from "react-router-dom";
 import { Chat } from "../../../../index";
+import devLog from "../../../devLog.ts";
 
 interface Props {
   chat: Chat;
@@ -13,6 +14,7 @@ export default function useChatEdit() {
   const { setChatListState } = useChatStore();
   const { envState } = useEnvStore();
   const { serverId } = useParams();
+  const componentName = "useChatEdit";
 
   const chatEdit = async (props: Props) => {
     const chatUrl = envState.chatUrl;
@@ -35,6 +37,7 @@ export default function useChatEdit() {
           return chat;
         });
 
+        devLog(componentName, "setChatListState newChatList");
         setChatListState(newChatList);
       }
     }

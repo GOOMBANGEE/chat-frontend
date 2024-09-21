@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios, { isAxiosError } from "axios";
 import { useEnvStore } from "../../../store/EnvStore.tsx";
 import { Chat } from "../../../../index";
+import devLog from "../../../devLog.ts";
 
 interface Props {
   chat: Chat;
@@ -13,6 +14,7 @@ export default function useSendChatMessage() {
   const { setChatListState } = useChatStore();
   const { envState } = useEnvStore();
   const { serverId, channelId } = useParams();
+  const componentName = "useSendChatMessage";
 
   const sendChatMessage = async (props: Props) => {
     const chatUrl = envState.chatUrl;
@@ -39,6 +41,7 @@ export default function useSendChatMessage() {
         return chat;
       });
 
+      devLog(componentName, "setChatListState");
       setChatListState(newChatList);
     } catch (error) {
       if (isAxiosError(error)) {
@@ -50,7 +53,7 @@ export default function useSendChatMessage() {
           }
           return chat;
         });
-
+        devLog(componentName, "setChatListState");
         setChatListState(newChatList);
       }
     }

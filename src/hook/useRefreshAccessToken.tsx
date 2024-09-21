@@ -3,19 +3,23 @@ import { deleteCookie, setCookie } from "../Cookie.tsx";
 import { useEnvStore } from "../store/EnvStore.tsx";
 import { useTokenStore } from "../store/TokenStore.tsx";
 import { useGlobalStore } from "../store/GlobalStore.tsx";
+import devLog from "../devLog.ts";
 
 export default function useRefreshAccessToken() {
   const { tokenState, setTokenState, setHeaderAccessToken } = useTokenStore();
   const { envState } = useEnvStore();
   const { setGlobalState } = useGlobalStore();
+  const componentName = "useRefreshAccessToken";
 
   const refreshAccessToken = async (refreshToken: string) => {
+    devLog(componentName, "setTokenState");
     setTokenState({
       refreshToken: refreshToken,
     });
 
     const today = new Date();
     const expireDate = today.setDate(today.getDate() + 7);
+    devLog(componentName, "setCookie");
     setCookie("refreshToken", refreshToken, {
       secure: true,
       sameSite: "strict",
@@ -34,6 +38,7 @@ export default function useRefreshAccessToken() {
       );
       // accessToken 헤더에 담아서 이후 요청보낼때는 Authorization 추가
       const accessToken = response.headers["authorization"].split(" ")[1]; // Bearer {token}
+      devLog(componentName, "setHeaderAccessToken");
       setHeaderAccessToken(accessToken);
 
       return true;
@@ -44,11 +49,13 @@ export default function useRefreshAccessToken() {
           error.response &&
           error.response.data.id === "VALID:TOKEN_INVALID"
         ) {
+          devLog(componentName, "deleteCookie");
           deleteCookie(tokenState.refreshTokenKey);
         }
         return false;
       }
     } finally {
+      devLog(componentName, "setGlobalState loading");
       setGlobalState({
         loading: false,
       });

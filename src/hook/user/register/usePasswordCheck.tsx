@@ -1,7 +1,9 @@
 import { useUserStore } from "../../../store/UserStore.tsx";
+import devLog from "../../../devLog.ts";
 
 export default function usePasswordCheck() {
   const { setUserState } = useUserStore();
+  const componentName = "usePasswordCheck";
 
   const passwordCheck = async (password: string) => {
     const passwordRegExp =
@@ -9,6 +11,7 @@ export default function usePasswordCheck() {
         password ? password : "",
       );
     if (!passwordRegExp) {
+      devLog(componentName, "setUserState");
       setUserState({
         passwordVerified: false,
         passwordErrorMessage:

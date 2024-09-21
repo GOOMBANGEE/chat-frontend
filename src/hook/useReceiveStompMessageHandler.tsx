@@ -3,6 +3,7 @@ import { useChatStore } from "../store/ChatStore.tsx";
 import { useUserStore } from "../store/UserStore.tsx";
 import { useServerStore } from "../store/ServerStore.tsx";
 import { useNavigate } from "react-router-dom";
+import devLog from "../devLog.ts";
 
 export default function useReceiveStompMessageHandler() {
   const { chatListState, setChatListState } = useChatStore();
@@ -21,6 +22,7 @@ export default function useReceiveStompMessageHandler() {
     setUserFriendWaitingListState,
   } = useUserStore();
   const navigate = useNavigate();
+  const componentName = "useReceiveStompMessageHandler";
 
   const receiveStompMessageHandler = (message: StompChatMessage) => {
     let newChatList: Chat[] = [];
@@ -39,6 +41,8 @@ export default function useReceiveStompMessageHandler() {
         updateTime: message.createTime,
       };
       newChatList = [...chatListState, newChat];
+
+      devLog(componentName, "SEND setChatListState newChatList");
       setChatListState(newChatList);
       return;
     }
@@ -50,6 +54,7 @@ export default function useReceiveStompMessageHandler() {
       newChatList = chatListState.filter(
         (chat: Chat) => chat.id !== message.chatId,
       );
+      devLog(componentName, "DELETE_CHAT setChatListState newChatList");
       setChatListState(newChatList);
       return;
     }
@@ -69,6 +74,7 @@ export default function useReceiveStompMessageHandler() {
         }
         return chat;
       });
+      devLog(componentName, "UPDATE_CHAT setChatListState newChatList");
       setChatListState(newChatList);
       return;
     }
@@ -85,6 +91,7 @@ export default function useReceiveStompMessageHandler() {
         updateTime: message.createTime,
       };
       newChatList = [...chatListState, newChat];
+      devLog(componentName, "ENTER setChatListState newChatList");
       setChatListState(newChatList);
 
       newUser = {
@@ -92,6 +99,7 @@ export default function useReceiveStompMessageHandler() {
         username: message.username,
       };
       newUserList = [...serverUserListState, newUser];
+      devLog(componentName, "ENTER setChatListState newChatList");
       setServerUserListState(newUserList);
       return;
     }
@@ -100,6 +108,7 @@ export default function useReceiveStompMessageHandler() {
       newUserList = serverUserListState.filter(
         (user) => user.id !== message.userId,
       );
+      devLog(componentName, "LEAVE setChatListState newChatList");
       setServerUserListState(newUserList);
     }
 
@@ -116,6 +125,7 @@ export default function useReceiveStompMessageHandler() {
         }
         return server;
       });
+      devLog(componentName, "SERVER_INFO setServerListState newServerList");
       setServerListState(newServerList);
       return;
     }
@@ -125,6 +135,7 @@ export default function useReceiveStompMessageHandler() {
       newServerList = serverListState.filter(
         (server) => server.id !== message.serverId,
       );
+      devLog(componentName, "DELETE_SERVER setServerListState newServerList");
       setServerListState(newServerList);
       navigate("/server", { replace: true });
       return;
@@ -140,6 +151,7 @@ export default function useReceiveStompMessageHandler() {
         ...userFriendWaitingListState,
         newFriendRequest,
       ];
+      devLog(componentName, "setUserFriendWaitingListState");
       setUserFriendWaitingListState(newFriendRequestList);
     }
 
@@ -150,6 +162,7 @@ export default function useReceiveStompMessageHandler() {
         username: message.username,
       };
       const newFriendList = [...userFriendListState, newFriend];
+      devLog(componentName, "setUserFriendListState");
       setUserFriendListState(newFriendList);
     }
 
@@ -158,6 +171,7 @@ export default function useReceiveStompMessageHandler() {
       const newFriendList = userFriendListState.filter(
         (user) => user.id !== message.userId,
       );
+      devLog(componentName, "setUserFriendListState");
       setUserFriendListState(newFriendList);
     }
   };

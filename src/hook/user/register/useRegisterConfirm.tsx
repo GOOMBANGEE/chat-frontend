@@ -3,11 +3,13 @@ import { useEnvStore } from "../../../store/EnvStore.tsx";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import devLog from "../../../devLog.ts";
 
 export function useRegisterConfirm() {
   const { userState, resetUserState } = useUserStore();
   const { envState } = useEnvStore();
   const { token } = useParams();
+  const componentName = "useRegisterConfirm";
 
   const registerConfirm = async () => {
     try {
@@ -15,6 +17,7 @@ export function useRegisterConfirm() {
         token: token,
         email: userState.email,
       });
+      devLog(componentName, "resetUserState");
       resetUserState();
       toast.success("가입이 완료되었습니다.");
       return true;

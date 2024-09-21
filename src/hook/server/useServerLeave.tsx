@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import axios, { isAxiosError } from "axios";
 import { useServerStore } from "../../store/ServerStore.tsx";
 import { toast } from "react-toastify";
+import devLog from "../../devLog.ts";
 
 export default function useServerLeave() {
   const { serverListState, setServerListState } = useServerStore();
   const { envState } = useEnvStore();
   const { serverId } = useParams();
+  const componentName = "useServerLeave";
 
   const serverLeave = async () => {
     const serverUrl = envState.serverUrl;
@@ -18,6 +20,7 @@ export default function useServerLeave() {
       const newServerList = serverListState.filter(
         (server) => server.id !== Number(serverId),
       );
+      devLog(componentName, "setServerListState newServerList");
       setServerListState(newServerList);
       return true;
     } catch (error) {
