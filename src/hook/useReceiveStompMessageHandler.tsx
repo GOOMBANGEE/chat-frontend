@@ -1,9 +1,16 @@
-import { Chat, ServerInfo, StompChatMessage, UserInfo } from "../../index";
+import {
+  ChannelInfo,
+  Chat,
+  ServerInfo,
+  StompChatMessage,
+  UserInfo,
+} from "../../index";
 import { useChatStore } from "../store/ChatStore.tsx";
 import { useUserStore } from "../store/UserStore.tsx";
 import { useServerStore } from "../store/ServerStore.tsx";
 import { useNavigate } from "react-router-dom";
 import devLog from "../devLog.ts";
+import { useChannelStore } from "../store/ChannelStore.tsx";
 
 export default function useReceiveStompMessageHandler() {
   const { chatListState, setChatListState } = useChatStore();
@@ -14,6 +21,7 @@ export default function useReceiveStompMessageHandler() {
     serverUserListState,
     setServerUserListState,
   } = useServerStore();
+  const { channelListState, setChannelListState } = useChannelStore();
   const {
     userState,
     userFriendListState,
@@ -22,6 +30,7 @@ export default function useReceiveStompMessageHandler() {
     setUserFriendWaitingListState,
   } = useUserStore();
   const navigate = useNavigate();
+
   const componentName = "useReceiveStompMessageHandler";
 
   const receiveStompMessageHandler = (message: StompChatMessage) => {
@@ -29,7 +38,7 @@ export default function useReceiveStompMessageHandler() {
     let newChat: Chat;
     // 들어온 메세지가 현재 들어가있는 serverId와 같은경우 chatList 갱신
     if (
-      message.messageType === "SEND" &&
+      message.messageType === "CHAT_SEND" &&
       message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
@@ -48,7 +57,7 @@ export default function useReceiveStompMessageHandler() {
     }
 
     if (
-      message.messageType === "DELETE_CHAT" &&
+      message.messageType === "CHAT_DELETE" &&
       message.serverId === serverState.id
     ) {
       newChatList = chatListState.filter(
@@ -60,7 +69,7 @@ export default function useReceiveStompMessageHandler() {
     }
 
     if (
-      message.messageType === "UPDATE_CHAT" &&
+      message.messageType === "CHAT_UPDATE" &&
       message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
@@ -78,10 +87,16 @@ export default function useReceiveStompMessageHandler() {
       setChatListState(newChatList);
       return;
     }
-
     let newUserList = [];
     let newUser: UserInfo;
-    if (message.enter && message.serverId === serverState.id) {
+    if (message.messageType === "SERVER_CREATE") {
+      navigate(`/server/${message.serverId}/${message.channelId}`);
+    }
+
+    if (
+      message.messageType === "SERVER_ENTER" &&
+      message.serverId === serverState.id
+    ) {
       newChat = {
         id: message.chatId,
         username: message.username,
@@ -104,7 +119,10 @@ export default function useReceiveStompMessageHandler() {
       return;
     }
 
-    if (message.leave && message.serverId === serverState.id) {
+    if (
+      message.messageType === "SERVER_LEAVE" &&
+      message.serverId === serverState.id
+    ) {
       newUserList = serverUserListState.filter(
         (user) => user.id !== message.userId,
       );
@@ -113,11 +131,10 @@ export default function useReceiveStompMessageHandler() {
     }
 
     // 들어온 메세지가 현재 들어가있는 serverId와 다른경우 무시 -> 알림만 남김
-
     let newServerList: ServerInfo[] = [];
     // 서버이름변경
     // 해당하는 서버 id찾아서 server의 name변경
-    if (message.messageType === "INFO") {
+    if (message.messageType === "SERVER_UPDATE") {
       const parsedMessage = JSON.parse(message.message);
       newServerList = serverListState.map((server: ServerInfo) => {
         if (server.id === message.serverId) {
@@ -131,7 +148,7 @@ export default function useReceiveStompMessageHandler() {
     }
 
     // 서버 삭제
-    if (message.messageType === "DELETE_SERVER") {
+    if (message.messageType === "SERVER_DELETE") {
       newServerList = serverListState.filter(
         (server) => server.id !== message.serverId,
       );
@@ -141,8 +158,30 @@ export default function useReceiveStompMessageHandler() {
       return;
     }
 
+    // 채널 생성
+    let newChannelList: ChannelInfo[] = [];
+    if (message.messageType === "CHANNEL_CREATE") {
+      const channelData = JSON.parse(message.message);
+
+      const newChannel = {
+        id: channelData.id,
+        name: channelData.name,
+        displayOrder: channelData.displayOrder,
+        serverId: channelData.serverId,
+        categoryId: channelData.categoryId,
+      };
+      newChannelList = [...channelListState, newChannel];
+
+      devLog(
+        componentName,
+        "CHANNEL_CREATE setChannelListState newChannelList",
+      );
+      setChannelListState(newChannelList);
+      return;
+    }
+
     // 친구요청을 받은 경우
-    if (message.friendRequest) {
+    if (message.messageType === "FRIEND_REQUEST") {
       const newFriendRequest = {
         id: message.userId,
         username: message.username,
@@ -156,7 +195,7 @@ export default function useReceiveStompMessageHandler() {
     }
 
     // 친구요청이 수락된 경우
-    if (message.friendAccept) {
+    if (message.messageType === "FRIEND_ACCEPT") {
       const newFriend = {
         id: message.userId,
         username: message.username,
@@ -167,7 +206,7 @@ export default function useReceiveStompMessageHandler() {
     }
 
     // 친구삭제 요청이 들어온 경우
-    if (message.friendDelete) {
+    if (message.messageType === "FRIEND_DELETE") {
       const newFriendList = userFriendListState.filter(
         (user) => user.id !== message.userId,
       );

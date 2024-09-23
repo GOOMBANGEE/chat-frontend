@@ -19,7 +19,7 @@ export default function useSendChatMessage() {
   const sendChatMessage = async (props: Props) => {
     const chatUrl = envState.chatUrl;
     const message = {
-      messageType: "SEND",
+      messageType: "CHAT_SEND",
       serverId: serverId,
       channelId: channelId,
       username: props.chat.username,

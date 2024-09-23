@@ -6,6 +6,7 @@ import devLog from "../../../devLog.ts";
 
 interface Props {
   serverId: number;
+  channelId: number;
 }
 
 export default function useFetchChatList() {
@@ -15,7 +16,9 @@ export default function useFetchChatList() {
 
   const fetchChatList = async (props: Props) => {
     const chatUrl = envState.chatUrl;
-    const response = await axios.get(`${chatUrl}/${props.serverId}/list`);
+    const response = await axios.get(
+      `${chatUrl}/${props.serverId}/${props.channelId}/list`,
+    );
 
     devLog(componentName, "setChatListState");
     setChatListState(

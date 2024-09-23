@@ -26,8 +26,12 @@ export default function ServerList() {
     navigate("/server");
   };
 
-  const handleClickServerIcon = (server: ServerInfo) => {
-    setServerState({ id: server.id, name: server.name, serverUserList: false });
+  const handleClickServerIcon = async (server: ServerInfo) => {
+    setServerState({
+      id: server.id,
+      name: server.name,
+      serverUserList: false,
+    });
     setServerState({
       isHover: false,
       hoverServerId: undefined,
@@ -35,9 +39,6 @@ export default function ServerList() {
       hoverButtonY: undefined,
     });
     resetChatListState();
-
-    // fetch serverChat log limit 50
-    fetchChatList({ serverId: server.id });
 
     // 해당 서버의 채널 리스트를 필터링하고 displayOrder에 따라 정렬
     const sortedChannels = channelListState
@@ -47,6 +48,9 @@ export default function ServerList() {
     // displayOrder가 가장 작은 채널로 이동
     const firstChannel = sortedChannels[0];
     setChannelState({ id: firstChannel.id, name: firstChannel.name });
+
+    // fetch serverChat log limit 50
+    await fetchChatList({ serverId: server.id, channelId: firstChannel.id });
     navigate(`/server/${server.id}/${firstChannel.id}`);
   };
 

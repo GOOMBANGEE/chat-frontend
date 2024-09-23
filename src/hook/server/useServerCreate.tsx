@@ -4,10 +4,16 @@ import axios from "axios";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useServerStore } from "../../store/ServerStore.tsx";
 import devLog from "../../devLog.ts";
+import { useChannelStore } from "../../store/ChannelStore.tsx";
+import { useCategoryStore } from "../../store/CategoryStore.tsx";
 
 export default function useServerCreate() {
   const { serverAddState, resetServerAddState } = useServerAddStore();
-  const { serverListState, setServerListState } = useServerStore();
+  const { setServerState, serverListState, setServerListState } =
+    useServerStore();
+  const { setCategoryListState } = useCategoryStore();
+  const { channelListState, setChannelState, setChannelListState } =
+    useChannelStore();
   const { userState } = useUserStore();
   const { envState } = useEnvStore();
   const componentName = "useServerCreate";
@@ -15,6 +21,7 @@ export default function useServerCreate() {
   const serverCreate = async () => {
     const serverUrl = envState.serverUrl;
     const response = await axios.post(`${serverUrl}/create`, {
+      userId: userState.id,
       username: userState.username,
       name: serverAddState.name,
     });
@@ -22,9 +29,10 @@ export default function useServerCreate() {
     const newServer = {
       id: response.data.id,
       name: response.data.name,
-      icon: "",
     };
     const newServerList = [...serverListState, newServer];
+    devLog(componentName, "setServerState");
+    setServerState({ id: response.data.id, name: response.data.name });
 
     devLog(componentName, "setServerListState newServerList");
     setServerListState(newServerList);
@@ -32,7 +40,32 @@ export default function useServerCreate() {
     devLog(componentName, "resetServerAddState");
     resetServerAddState();
 
-    return response.data.id;
+    const newCategory = {
+      id: response.data.categoryId,
+      name: response.data.categoryName,
+      displayOrder: response.data.categoryDisplayOrder,
+      serverId: response.data.id,
+    };
+    const newCategoryList = [newCategory];
+    devLog(componentName, "setCategoryListState newCategoryList");
+    setCategoryListState(newCategoryList);
+
+    devLog(componentName, "setChannelState");
+    setChannelState({
+      id: response.data.channelId,
+      name: response.data.channelName,
+    });
+
+    const newChannel = {
+      id: response.data.channelId,
+      name: response.data.channelName,
+      displayOrder: response.data.channelDisplayOrder,
+      serverId: response.data.id,
+      categoryId: response.data.categoryId,
+    };
+    const newChannelList = [...channelListState, newChannel];
+    devLog(componentName, "setChannelListState newChannelList");
+    setChannelListState(newChannelList);
   };
 
   return { serverCreate };

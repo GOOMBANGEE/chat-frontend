@@ -1,7 +1,6 @@
 export interface ServerInfo {
   id: number;
   name: string;
-  icon: string;
 }
 
 export interface CategoryInfo {
@@ -38,15 +37,12 @@ export interface Chat {
 export interface StompChatMessage {
   messageType: string;
   serverId: number;
+  categoryId: number;
+  channelId: number;
   chatId: number;
   userId: number;
   username: string;
   message: string;
-  enter: boolean;
-  leave: boolean;
-  friendRequest: boolean;
-  friendAccept: boolean;
-  friendDelete: boolean;
   createTime?: number;
   updateTime?: number;
 }
