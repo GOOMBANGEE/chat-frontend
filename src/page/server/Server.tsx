@@ -111,19 +111,23 @@ export default function Server() {
 
       // subscribe server
       const server = serverListState.find((server) => server.id === serverId);
-      devLog(componentName, "setServerState");
-      setServerState({ id: server?.id, name: server?.name });
-      const serverSubscriptionUrl = `/sub/server/${server?.id}`;
-      stompSubscribe(serverSubscriptionUrl);
+      if (server) {
+        devLog(componentName, "setServerState");
+        setServerState({ id: server.id, name: server.name });
+        const serverSubscriptionUrl = `/sub/server/${server.id}`;
+        stompSubscribe(serverSubscriptionUrl);
+      }
 
       // subscribe channel
       const channel = channelListState.find(
         (channel) => channel.id === channelId,
       );
-      devLog(componentName, "setChannelState");
-      setChannelState({ id: channel?.id, name: channel?.name });
-      const channelSubscriptionUrl = `/sub/channel/${server?.id}/${channel?.id}`;
-      stompSubscribe(channelSubscriptionUrl);
+      if (server && channel) {
+        devLog(componentName, "setChannelState");
+        setChannelState({ id: channel.id, name: channel.name });
+        const channelSubscriptionUrl = `/sub/channel/${server.id}/${channel.id}`;
+        stompSubscribe(channelSubscriptionUrl);
+      }
     }
   }, [serverListState, channelListState, location.pathname]);
 

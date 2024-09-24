@@ -4,9 +4,11 @@ import axios, { isAxiosError } from "axios";
 import { useServerStore } from "../../store/ServerStore.tsx";
 import { toast } from "react-toastify";
 import devLog from "../../devLog.ts";
+import { useChannelStore } from "../../store/ChannelStore.tsx";
 
 export default function useServerLeave() {
   const { serverListState, setServerListState } = useServerStore();
+  const { channelListState, setChannelListState } = useChannelStore();
   const { envState } = useEnvStore();
   const { serverId } = useParams();
   const componentName = "useServerLeave";
@@ -22,6 +24,13 @@ export default function useServerLeave() {
       );
       devLog(componentName, "setServerListState newServerList");
       setServerListState(newServerList);
+
+      const newChannelList = channelListState.filter(
+        (channel) => channel.serverId !== Number(serverId),
+      );
+      devLog(componentName, "setChannelListState newChannelList");
+      setChannelListState(newChannelList);
+
       return true;
     } catch (error) {
       if (isAxiosError(error)) {
