@@ -1,14 +1,14 @@
 import ServerChatHeader from "./ServerChatHeader.tsx";
-import ChatComponent from "./ChatComponent.tsx";
-import ChatInput from "./ChatInput.tsx";
+import ChatComponent from "./chat/ChatComponent.tsx";
+import ChatInput from "./chat/ChatInput.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import ServerChatDropdown from "./serverChatDropdown/ServerChatDropdown.tsx";
 import UserInfoMenu from "../UserInfoMenu.tsx";
-import ChatContextMenu from "./ChatContextMenu.tsx";
-import ChatDeleteModal from "./ChatDeleteModal.tsx";
+import ChatContextMenu from "./chat/ChatContextMenu.tsx";
+import ChatDeleteModal from "./chat/ChatDeleteModal.tsx";
 import { useServerStore } from "../../../store/ServerStore.tsx";
 import ServerChatUserList from "./ServerChatUserList.tsx";
-import ChatSearchOption from "./ChatSearchOption.tsx";
+import ChatSearchOption from "./chat/ChatSearchOption.tsx";
 import ServerChatSearchList from "./ServerChatSearchList.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
 import UserContextMenu from "../UserContextMenu.tsx";
@@ -16,8 +16,13 @@ import { useEffect, useRef } from "react";
 import ServerChatCategoryChannelList from "./serverChatCategoryChannel/ServerChatCategoryChannelList.tsx";
 import { useCategoryStore } from "../../../store/CategoryStore.tsx";
 import { useChannelStore } from "../../../store/ChannelStore.tsx";
-import ChannelContextMenu from "./ChannelContextMenu.tsx";
-import ChannelDeleteModal from "./ChannelDeleteModal.tsx";
+import ChannelContextMenu from "./channel/ChannelContextMenu.tsx";
+import ChannelDeleteModal from "./channel/ChannelDeleteModal.tsx";
+import ServerChatCategoryChannelContextMenu from "./serverChatCategoryChannel/ServerChatCategoryChannelContextMenu.tsx";
+import CategoryContextMenu from "./category/CategoryContextMenu.tsx";
+import ChannelCreateModal from "./channel/ChannelCreateModal.tsx";
+import CategoryCreateModal from "./category/CategoryCreateModal.tsx";
+import CategoryDeleteModal from "./category/CategoryDeleteModal.tsx";
 
 export default function ServerChat() {
   const { chatState, chatListState } = useChatStore();
@@ -69,13 +74,23 @@ export default function ServerChat() {
           {serverState.searchList ? <ServerChatSearchList /> : null}
         </div>
       </div>
+
+      {serverState.categoryChannelContextMenu ? (
+        <ServerChatCategoryChannelContextMenu />
+      ) : null}
+
+      {categoryState.contextMenu ? <CategoryContextMenu /> : null}
+      {categoryState.createModalOpen ? <CategoryCreateModal /> : null}
+      {categoryState.deleteModalOpen ? <CategoryDeleteModal /> : null}
+
+      {channelState.contextMenu ? <ChannelContextMenu /> : null}
+      {channelState.createModalOpen ? <ChannelCreateModal /> : null}
+      {channelState.deleteModalOpen ? <ChannelDeleteModal /> : null}
+
       {chatState.chatContextMenuOpen ? <ChatContextMenu /> : null}
       {chatState.chatDeleteModalOpen ? <ChatDeleteModal /> : null}
-      {userState.userContextMenu ? <UserContextMenu /> : null}
 
-      {/*{categoryState.contextMenu? <CategoryContextMenu/>:null}*/}
-      {channelState.contextMenu ? <ChannelContextMenu /> : null}
-      {channelState.deleteModalOpen ? <ChannelDeleteModal /> : null}
+      {userState.userContextMenu ? <UserContextMenu /> : null}
     </div>
   );
 }

@@ -15,7 +15,7 @@ export interface ChannelInfo {
   name: string;
   displayOrder: number;
   serverId: number;
-  categoryId: number;
+  categoryId: number | null;
 }
 
 export interface UserInfo {

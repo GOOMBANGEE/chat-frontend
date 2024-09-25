@@ -58,6 +58,9 @@ interface ServerState {
   searchDefault: string | undefined;
   searchUser: string | undefined;
   searchMessage: string | undefined;
+
+  // server category channel context menu
+  categoryChannelContextMenu: boolean;
 }
 
 const initialServerState: ServerState = {
@@ -101,6 +104,9 @@ const initialServerState: ServerState = {
   searchDefault: undefined,
   searchUser: undefined,
   searchMessage: undefined,
+
+  // server category channel context menu
+  categoryChannelContextMenu: false,
 };
 
 export const useServerStore = create<ServerStore>((set) => ({

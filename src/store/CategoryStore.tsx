@@ -20,6 +20,21 @@ interface CategoryState {
   isHover: boolean;
   hoverCategoryId: number | undefined;
   hoverButtonY: number | undefined;
+
+  // channel create modal
+  createModalOpen: boolean;
+  createModalName: string | undefined;
+  createModalOptionOpen: boolean;
+
+  // context menu
+  contextMenu: boolean;
+  deleteModalOpen: boolean;
+
+  // channel setting
+  settingModalOpen: boolean;
+  settingDefault: boolean;
+  settingAuth: boolean;
+  newName: string | undefined;
 }
 
 const initialCategoryState: CategoryState = {
@@ -31,6 +46,21 @@ const initialCategoryState: CategoryState = {
   isHover: false,
   hoverCategoryId: undefined,
   hoverButtonY: undefined,
+
+  // channel create modal
+  createModalOpen: false,
+  createModalName: undefined,
+  createModalOptionOpen: true,
+
+  // context menu
+  contextMenu: false,
+  deleteModalOpen: false,
+
+  // channel setting
+  settingModalOpen: false,
+  settingDefault: false,
+  settingAuth: false,
+  newName: undefined,
 };
 
 export const useCategoryStore = create<CategoryStore>((set) => ({

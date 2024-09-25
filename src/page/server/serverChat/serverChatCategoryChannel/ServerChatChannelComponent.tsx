@@ -17,7 +17,6 @@ export default function ServerChatChannelComponent(props: Readonly<Props>) {
     setChannelState({ id: props.channel.id });
     navigate(`/server/${serverState.id}/${props.channel.id}`);
   };
-
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     setChannelState({
@@ -30,12 +29,12 @@ export default function ServerChatChannelComponent(props: Readonly<Props>) {
   return (
     <div
       onContextMenu={(e) => handleContextMenu(e)}
-      className={"mt-1 flex w-full items-center rounded text-sm"}
+      className={"mt-1 flex w-full items-center rounded text-base"}
     >
       {channelState.id === props.channel.id ? (
         <div
           className={
-            "w-full rounded bg-customDark_6 px-4 py-1 text-start text-customText"
+            "w-full rounded bg-customDark_6 px-6 py-1 text-start text-customText"
           }
         >
           {props.channel.name}
@@ -44,7 +43,7 @@ export default function ServerChatChannelComponent(props: Readonly<Props>) {
         <button
           onClick={handleChannelClick}
           className={
-            "w-full rounded px-4 py-1 text-start hover:bg-customDark_5 hover:text-gray-300"
+            "w-full rounded px-6 py-1 text-start hover:bg-customDark_5 hover:text-gray-300"
           }
         >
           {props.channel.name}

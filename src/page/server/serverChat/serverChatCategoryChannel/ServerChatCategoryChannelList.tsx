@@ -4,9 +4,10 @@ import { useServerStore } from "../../../../store/ServerStore.tsx";
 import { CategoryInfo, ChannelInfo } from "../../../../../index";
 import ServerChatCategoryComponent from "./ServerChatCategoryComponent.tsx";
 import ServerChatChannelComponent from "./ServerChatChannelComponent.tsx";
+import React from "react";
 
 export default function ServerChatCategoryChannelList() {
-  const { serverState } = useServerStore();
+  const { serverState, setServerState } = useServerStore();
   const { categoryListState } = useCategoryStore();
   const { channelListState } = useChannelStore();
 
@@ -14,8 +15,26 @@ export default function ServerChatCategoryChannelList() {
     (category: CategoryInfo) => category.serverId === serverState.id,
   );
 
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setServerState({
+      categoryChannelContextMenu: true,
+    });
+  };
+
   return (
-    <div className={"mt-2 w-full px-2 py-1 text-gray-400"}>
+    <div
+      style={{ maxHeight: "calc(100vh - 120px)" }}
+      className={"mt-2 h-full w-full px-2 text-gray-400"}
+    >
+      {channelListState.map((channel) => {
+        if (channel.categoryId === null) {
+          return (
+            <ServerChatChannelComponent key={channel.id} channel={channel} />
+          );
+        }
+      })}
+
       {filteredCategoryList.map((category) => {
         const filteredChannelList = channelListState
           .filter(
@@ -27,6 +46,10 @@ export default function ServerChatCategoryChannelList() {
 
         return (
           <div key={category.id}>
+            <div
+              className={"py-1"}
+              onContextMenu={(e) => handleContextMenu(e)}
+            ></div>
             <ServerChatCategoryComponent category={category} />
             {filteredChannelList.map((channel: ChannelInfo) => (
               <ServerChatChannelComponent key={channel.id} channel={channel} />
@@ -34,6 +57,10 @@ export default function ServerChatCategoryChannelList() {
           </div>
         );
       })}
+      <div
+        className={"h-full"}
+        onContextMenu={(e) => handleContextMenu(e)}
+      ></div>
     </div>
   );
 }

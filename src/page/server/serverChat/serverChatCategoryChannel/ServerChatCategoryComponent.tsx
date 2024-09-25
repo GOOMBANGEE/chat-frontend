@@ -1,6 +1,7 @@
 import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
 import { CategoryInfo } from "../../../../../index";
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
+import React from "react";
 
 interface Props {
   category: CategoryInfo;
@@ -13,15 +14,25 @@ export default function ServerChatCategoryComponent(props: Readonly<Props>) {
   const handleChannelCreateButton = () => {
     setCategoryState({
       id: props.category.id,
+      name: props.category.name,
       isHover: false,
       hoverCategoryId: undefined,
       hoverButtonY: undefined,
     });
     setChannelState({ createModalOpen: true });
   };
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCategoryState({
+      id: props.category.id,
+      name: props.category.name,
+      contextMenu: true,
+    });
+  };
 
   return (
     <div
+      onContextMenu={(e) => handleContextMenu(e)}
       className={
         "mb-1 flex items-center text-xs font-semibold hover:text-customText"
       }

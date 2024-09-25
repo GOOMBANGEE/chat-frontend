@@ -22,7 +22,6 @@ import useFetchFriendList from "../../hook/user/useFetchFriendList.tsx";
 import useFetchFriendWaitingList from "../../hook/user/useFetchFriendWaitingList.tsx";
 import { useTokenStore } from "../../store/TokenStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
-import ChannelCreateModal from "./serverChat/ChannelCreateModal.tsx";
 import devLog from "../../devLog.ts";
 import useStompSubscribe from "../../hook/useStompSubscribe.tsx";
 
@@ -154,8 +153,6 @@ export default function Server() {
 
         {serverAddState.open ? <ServerAddModal /> : null}
         {serverState.inviteModalOpen ? <ServerInviteModal /> : null}
-
-        {channelState.createModalOpen ? <ChannelCreateModal /> : null}
       </div>
     );
   };

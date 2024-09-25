@@ -1,9 +1,9 @@
 import {
+  CategoryInfo,
   ChannelInfo,
   Chat,
   ServerInfo,
   StompChatMessage,
-  UserInfo,
 } from "../../index";
 import { useChatStore } from "../store/ChatStore.tsx";
 import { useUserStore } from "../store/UserStore.tsx";
@@ -11,6 +11,7 @@ import { useServerStore } from "../store/ServerStore.tsx";
 import { useNavigate } from "react-router-dom";
 import devLog from "../devLog.ts";
 import { useChannelStore } from "../store/ChannelStore.tsx";
+import { useCategoryStore } from "../store/CategoryStore.tsx";
 
 export default function useReceiveStompMessageHandler() {
   const { chatListState, setChatListState } = useChatStore();
@@ -21,6 +22,7 @@ export default function useReceiveStompMessageHandler() {
     serverUserListState,
     setServerUserListState,
   } = useServerStore();
+  const { categoryListState, setCategoryListState } = useCategoryStore();
   const { channelListState, setChannelListState } = useChannelStore();
   const {
     userState,
@@ -33,16 +35,20 @@ export default function useReceiveStompMessageHandler() {
 
   const componentName = "useReceiveStompMessageHandler";
 
+  let newServerList: ServerInfo[] = [];
+  let newCategoryList: CategoryInfo[] = [];
+  let newChannelList: ChannelInfo[] = [];
+  let newChatList: Chat[] = [];
+  let newUserList = [];
+
   const receiveStompMessageHandler = (message: StompChatMessage) => {
-    let newChatList: Chat[] = [];
-    let newChat: Chat;
     // 들어온 메세지가 현재 들어가있는 serverId와 같은경우 chatList 갱신
     if (
       message.messageType === "CHAT_SEND" &&
       message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
-      newChat = {
+      const newChat = {
         id: message.chatId,
         username: message.username,
         message: message.message,
@@ -87,8 +93,7 @@ export default function useReceiveStompMessageHandler() {
       setChatListState(newChatList);
       return;
     }
-    let newUserList = [];
-    let newUser: UserInfo;
+
     if (message.messageType === "SERVER_CREATE") {
       navigate(`/server/${message.serverId}/${message.channelId}`);
     }
@@ -97,7 +102,7 @@ export default function useReceiveStompMessageHandler() {
       message.messageType === "SERVER_ENTER" &&
       message.serverId === serverState.id
     ) {
-      newChat = {
+      const newChat = {
         id: message.chatId,
         username: message.username,
         message: message.message,
@@ -109,7 +114,7 @@ export default function useReceiveStompMessageHandler() {
       devLog(componentName, "ENTER setChatListState newChatList");
       setChatListState(newChatList);
 
-      newUser = {
+      const newUser = {
         id: message.userId,
         username: message.username,
       };
@@ -131,7 +136,7 @@ export default function useReceiveStompMessageHandler() {
     }
 
     // 들어온 메세지가 현재 들어가있는 serverId와 다른경우 무시 -> 알림만 남김
-    let newServerList: ServerInfo[] = [];
+
     // 서버이름변경
     // 해당하는 서버 id찾아서 server의 name변경
     if (message.messageType === "SERVER_UPDATE") {
@@ -158,8 +163,50 @@ export default function useReceiveStompMessageHandler() {
       return;
     }
 
+    // 카테고리 생성
+    if (message.messageType === "CATEGORY_CREATE") {
+      const parsedMessage = JSON.parse(message.message);
+      const newCategory = {
+        id: parsedMessage.id,
+        name: parsedMessage.name,
+        displayOrder: parsedMessage.displayOrder,
+        serverId: parsedMessage.serverId,
+      };
+      newCategoryList = [...categoryListState, newCategory];
+
+      devLog(
+        componentName,
+        "CATEGORY_CREATE setCategoryListState newCategoryList",
+      );
+      setCategoryListState(newCategoryList);
+      return;
+    }
+
+    // 카테고리 삭제
+    // 해당 카테고리에 포함된 채널들을 카테고리 null로 표시
+    if (message.messageType === "CATEGORY_DELETE") {
+      newCategoryList = categoryListState.filter(
+        (category: CategoryInfo) => category.id !== message.categoryId,
+      );
+      newChannelList = channelListState.map((channel: ChannelInfo) => {
+        if (channel.categoryId === message.categoryId) {
+          return { ...channel, categoryId: null };
+        }
+        return channel;
+      });
+
+      devLog(componentName, "CATEGORY_DELETE setChannelListState");
+      setChannelListState(newChannelList);
+
+      devLog(
+        componentName,
+        "CATEGORY_DELETE setCategoryListState newCategoryList",
+      );
+      setCategoryListState(newCategoryList);
+      return;
+    }
+
     // 채널 생성
-    let newChannelList: ChannelInfo[] = [];
     if (message.messageType === "CHANNEL_CREATE") {
       const channelData = JSON.parse(message.message);
 
