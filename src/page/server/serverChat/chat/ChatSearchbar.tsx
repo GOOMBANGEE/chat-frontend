@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import useChatSearch from "../../../hook/server/serverChat/useChatSearch.tsx";
-import { useServerStore } from "../../../store/ServerStore.tsx";
+import useChatSearch from "../../../../hook/server/serverChat/useChatSearch.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
 
 export default function ChatSearchbar() {
   const { chatSearch } = useChatSearch();

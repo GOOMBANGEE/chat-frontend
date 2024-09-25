@@ -1,4 +1,4 @@
-import { useServerStore } from "../../../store/ServerStore.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
 
 export default function ChatSearchOption() {
   const { setServerState } = useServerStore();

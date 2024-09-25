@@ -1,5 +1,5 @@
 import { useServerStore } from "../../../store/ServerStore.tsx";
-import ChatSearchbar from "./ChatSearchbar.tsx";
+import ChatSearchbar from "./chat/ChatSearchbar.tsx";
 
 export default function ServerChatHeader() {
   const { serverState, setServerState } = useServerStore();

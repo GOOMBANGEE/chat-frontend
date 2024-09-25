@@ -1,9 +1,9 @@
-import useSendChatMessage from "../../../hook/server/serverChat/useSendChatMessage.tsx";
-import { useUserStore } from "../../../store/UserStore.tsx";
-import { useChatStore } from "../../../store/ChatStore.tsx";
-import { useServerStore } from "../../../store/ServerStore.tsx";
+import useSendChatMessage from "../../../../hook/server/serverChat/useSendChatMessage.tsx";
+import { useUserStore } from "../../../../store/UserStore.tsx";
+import { useChatStore } from "../../../../store/ChatStore.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
 import React, { useEffect, useRef } from "react";
-import { Chat } from "../../../../index";
+import { Chat } from "../../../../../index";
 
 export default function ChatInput() {
   const { sendChatMessage } = useSendChatMessage();

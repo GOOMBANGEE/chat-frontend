@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useChannelStore } from "../../../store/ChannelStore.tsx";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 
 export default function ChannelContextMenu() {
   const { channelState, setChannelState } = useChannelStore();
@@ -29,6 +29,7 @@ export default function ChannelContextMenu() {
       ) {
         setChannelState({
           id: undefined,
+          name: undefined,
           contextMenu: false,
         });
       }

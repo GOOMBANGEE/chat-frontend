@@ -20,7 +20,7 @@ import ServerSetting from "./page/server/serverChat/serverSetting/ServerSetting.
 import Recover from "./page/user/recover/Recover.tsx";
 import { useChannelStore } from "./store/ChannelStore.tsx";
 import { useCategoryStore } from "./store/CategoryStore.tsx";
-import ChannelSetting from "./page/server/serverChat/channelSetting/ChannelSetting.tsx";
+import ChannelSetting from "./page/server/serverChat/channel/channelSetting/ChannelSetting.tsx";
 
 export default function App() {
   const { fetchProfile } = useFetchProfile();

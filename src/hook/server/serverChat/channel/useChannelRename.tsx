@@ -1,7 +1,7 @@
-import { useEnvStore } from "../../../store/EnvStore.tsx";
+import { useEnvStore } from "../../../../store/EnvStore.tsx";
 import axios from "axios";
-import { useServerStore } from "../../../store/ServerStore.tsx";
-import { useChannelStore } from "../../../store/ChannelStore.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 
 export default function useChannelRename() {
   const { serverState } = useServerStore();

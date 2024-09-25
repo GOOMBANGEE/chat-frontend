@@ -65,7 +65,7 @@ export default function UserContextMenu() {
           : { left: `${menuPosition.x}px` }),
       }}
       className={
-        "server-chat-user-list-context-menu flex flex-col gap-2 rounded bg-black px-2 py-2 text-customText text-gray-300"
+        "server-chat-user-list-context-menu flex flex-col gap-2 rounded bg-black px-2 py-2 text-customText"
       }
     >
       {friend ? (

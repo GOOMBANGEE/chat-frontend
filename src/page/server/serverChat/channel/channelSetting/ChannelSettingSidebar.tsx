@@ -1,4 +1,4 @@
-import { useChannelStore } from "../../../../store/ChannelStore.tsx";
+import { useChannelStore } from "../../../../../store/ChannelStore.tsx";
 
 export default function ChannelSettingSidebar() {
   const { channelState, setChannelState } = useChannelStore();

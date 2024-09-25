@@ -1,4 +1,4 @@
-import { useChannelStore } from "../../../../store/ChannelStore.tsx";
+import { useChannelStore } from "../../../../../store/ChannelStore.tsx";
 import ChannelSettingSidebar from "./ChannelSettingSidebar.tsx";
 import ChannelSettingDefault from "./ChannelSettingDefault.tsx";
 import ChannelSettingAuth from "./ChannelSettingAuth.tsx";

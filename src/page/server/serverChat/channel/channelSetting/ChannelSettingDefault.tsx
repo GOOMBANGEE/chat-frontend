@@ -1,5 +1,5 @@
-import { useChannelStore } from "../../../../store/ChannelStore.tsx";
-import useChannelRename from "../../../../hook/server/channel/useChannelRename.tsx";
+import { useChannelStore } from "../../../../../store/ChannelStore.tsx";
+import useChannelRename from "../../../../../hook/server/serverChat/channel/useChannelRename.tsx";
 
 export default function ChannelSettingDefault() {
   const { channelRename } = useChannelRename();

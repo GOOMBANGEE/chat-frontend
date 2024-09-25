@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useChatStore } from "../../../store/ChatStore.tsx";
-import { useUserStore } from "../../../store/UserStore.tsx";
+import { useChatStore } from "../../../../store/ChatStore.tsx";
+import { useUserStore } from "../../../../store/UserStore.tsx";
 import { toast } from "react-toastify";
 
 export default function ChatContextMenu() {

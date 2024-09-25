@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useChatStore } from "../../../store/ChatStore.tsx";
-import useChatDelete from "../../../hook/server/serverChat/useChatDelete.tsx";
+import { useChatStore } from "../../../../store/ChatStore.tsx";
+import useChatDelete from "../../../../hook/server/serverChat/useChatDelete.tsx";
 
 export default function ChatDeleteModal() {
   const { chatDelete } = useChatDelete();

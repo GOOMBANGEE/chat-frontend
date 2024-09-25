@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useChannelStore } from "../../../store/ChannelStore.tsx";
-import useChannelDelete from "../../../hook/server/channel/useChannelDelete.tsx";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
+import useChannelDelete from "../../../../hook/server/serverChat/channel/useChannelDelete.tsx";
 
 export default function ChannelDeleteModal() {
   const { channelDelete } = useChannelDelete();

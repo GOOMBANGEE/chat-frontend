@@ -1,8 +1,8 @@
-import { Chat } from "../../../../index";
-import { useChatStore } from "../../../store/ChatStore.tsx";
+import { Chat } from "../../../../../index";
+import { useChatStore } from "../../../../store/ChatStore.tsx";
 import React, { useEffect, useRef } from "react";
-import { useUserStore } from "../../../store/UserStore.tsx";
-import useChatEdit from "../../../hook/server/serverChat/useChatEdit.tsx";
+import { useUserStore } from "../../../../store/UserStore.tsx";
+import useChatEdit from "../../../../hook/server/serverChat/useChatEdit.tsx";
 
 interface Props {
   chat: Chat;

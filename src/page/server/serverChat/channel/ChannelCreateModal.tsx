@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useChannelStore } from "../../../store/ChannelStore.tsx";
-import { useCategoryStore } from "../../../store/CategoryStore.tsx";
-import { useServerStore } from "../../../store/ServerStore.tsx";
-import useChannelCreate from "../../../hook/server/channel/useChannelCreate.tsx";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
+import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
+import useChannelCreate from "../../../../hook/server/serverChat/channel/useChannelCreate.tsx";
 
 export default function ChannelCreateModal() {
   const { channelCreate } = useChannelCreate();
@@ -95,7 +95,7 @@ export default function ChannelCreateModal() {
           </div>
           {categoryState.id ? (
             <div className={"px-4 text-start text-xs"}>
-              {categoryState.id}에 속해 있음
+              {categoryState.name}에 속해 있음
             </div>
           ) : null}
 
