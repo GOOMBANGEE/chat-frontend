@@ -3,14 +3,16 @@ import { useUserStore } from "../../../../store/UserStore.tsx";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import React, { useEffect, useRef } from "react";
-import { Chat } from "../../../../../index";
+import { Chat, ChatInfoList } from "../../../../../index";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 
 export default function ChatInput() {
   const { sendChatMessage } = useSendChatMessage();
 
+  const { serverState } = useServerStore();
+  const { channelState } = useChannelStore();
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
-  const { serverState } = useServerStore();
   const { userState } = useUserStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,9 +35,25 @@ export default function ChatInput() {
         username: userState.username,
         message: chatState.chatMessage,
       };
-      const newChatList = [...chatListState, chat];
-      setChatListState(newChatList);
-      sendChatMessage({ chat: chat, chatList: newChatList });
+
+      const newChatInfoList: ChatInfoList[] = chatListState.map(
+        (chatInfoList) => {
+          if (
+            chatInfoList.serverId === serverState.id &&
+            chatInfoList.channelId === channelState.id
+          ) {
+            return {
+              ...chatInfoList,
+              chatList: [...chatInfoList.chatList, chat],
+            };
+          }
+          return chatInfoList;
+        },
+      );
+      setChatState({ sendMessage: true });
+      setChatListState(newChatInfoList);
+
+      sendChatMessage({ chat: chat, chatList: newChatInfoList });
     }
 
     setChatState({ chatMessage: undefined });

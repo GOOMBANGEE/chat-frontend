@@ -2,6 +2,7 @@ import {
   CategoryInfo,
   ChannelInfo,
   Chat,
+  ChatInfoList,
   ServerInfo,
   StompChatMessage,
 } from "../../index";
@@ -23,7 +24,12 @@ export default function useReceiveStompMessageHandler() {
     setServerUserListState,
   } = useServerStore();
   const { categoryListState, setCategoryListState } = useCategoryStore();
-  const { channelListState, setChannelListState } = useChannelStore();
+  const {
+    channelState,
+    setChannelState,
+    channelListState,
+    setChannelListState,
+  } = useChannelStore();
   const {
     userState,
     userFriendListState,
@@ -38,7 +44,7 @@ export default function useReceiveStompMessageHandler() {
   let newServerList: ServerInfo[] = [];
   let newCategoryList: CategoryInfo[] = [];
   let newChannelList: ChannelInfo[] = [];
-  let newChatList: Chat[] = [];
+  let newChatInfoList: ChatInfoList[] = [];
   let newUserList = [];
 
   const receiveStompMessageHandler = (message: StompChatMessage) => {
@@ -55,22 +61,39 @@ export default function useReceiveStompMessageHandler() {
         createTime: message.createTime,
         updateTime: message.createTime,
       };
-      newChatList = [...chatListState, newChat];
 
-      devLog(componentName, "SEND setChatListState newChatList");
-      setChatListState(newChatList);
-      return;
-    }
+      newChatInfoList = chatListState.map((chatInfoList) => {
+        if (
+          chatInfoList.serverId === message.serverId &&
+          chatInfoList.channelId === message.channelId
+        ) {
+          return {
+            ...chatInfoList,
+            chatList: [...chatInfoList.chatList, newChat], // 기존 채팅에 새 채팅추가
+          };
+        }
+        return chatInfoList;
+      });
 
-    if (
-      message.messageType === "CHAT_DELETE" &&
-      message.serverId === serverState.id
-    ) {
-      newChatList = chatListState.filter(
-        (chat: Chat) => chat.id !== message.chatId,
-      );
-      devLog(componentName, "DELETE_CHAT setChatListState newChatList");
-      setChatListState(newChatList);
+      // 보고있는 채널인 경우 && focus 중인 채널
+      if (channelState.id === message.channelId && channelState.windowFocus) {
+        // scrollBottom -> 맨 아래에 스크롤 위치
+        if (channelState.scrollBottom) {
+          devLog(componentName, "setChannelState");
+          setChannelState({
+            newMessage: true,
+            newMessageId: message.chatId,
+            newMessageScroll: true,
+          });
+        } else {
+          // scroll 다른곳에 위치해 있다면 -> 스크롤 강제로 아래로 내리지않음
+          devLog(componentName, "setChannelState");
+          setChannelState({ newMessage: true, newMessageId: message.chatId });
+        }
+      }
+
+      devLog(componentName, "CHAT_SEND setChatListState newChatList");
+      setChatListState(newChatInfoList);
       return;
     }
 
@@ -79,18 +102,55 @@ export default function useReceiveStompMessageHandler() {
       message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
-      newChatList = chatListState.map((chat: Chat) => {
-        if (chat.id === message.chatId) {
+      newChatInfoList = chatListState.map((chatInfoList) => {
+        if (
+          chatInfoList.serverId === message.serverId &&
+          chatInfoList.channelId === message.channelId
+        ) {
           return {
-            ...chat,
-            message: message.message,
-            updateTime: message.updateTime,
+            ...chatInfoList,
+            chatList: chatInfoList.chatList.map((chat: Chat) => {
+              if (chat.id === message.chatId) {
+                return {
+                  ...chat,
+                  message: message.message,
+                  updateTime: message.updateTime,
+                };
+              }
+              return chat;
+            }),
           };
         }
-        return chat;
+        return chatInfoList;
       });
-      devLog(componentName, "UPDATE_CHAT setChatListState newChatList");
-      setChatListState(newChatList);
+
+      devLog(componentName, "CHAT_UPDATE setChatListState newChatList");
+      setChatListState(newChatInfoList);
+      return;
+    }
+
+    if (
+      message.messageType === "CHAT_DELETE" &&
+      message.serverId === serverState.id &&
+      message.username !== userState.username
+    ) {
+      newChatInfoList = chatListState.map((chatInfoList) => {
+        if (
+          chatInfoList.serverId === message.serverId &&
+          chatInfoList.channelId === message.channelId
+        ) {
+          return {
+            ...chatInfoList,
+            chatList: chatInfoList.chatList.filter(
+              (chat: Chat) => chat.id !== message.chatId,
+            ),
+          };
+        }
+        return chatInfoList;
+      });
+
+      devLog(componentName, "CHAT_DELETE setChatListState newChatList");
+      setChatListState(newChatInfoList);
       return;
     }
 
@@ -102,7 +162,7 @@ export default function useReceiveStompMessageHandler() {
       message.messageType === "SERVER_ENTER" &&
       message.serverId === serverState.id
     ) {
-      const newChat = {
+      const newChat: Chat = {
         id: message.chatId,
         username: message.username,
         message: message.message,
@@ -110,9 +170,22 @@ export default function useReceiveStompMessageHandler() {
         createTime: message.createTime,
         updateTime: message.createTime,
       };
-      newChatList = [...chatListState, newChat];
-      devLog(componentName, "ENTER setChatListState newChatList");
-      setChatListState(newChatList);
+
+      newChatInfoList = chatListState.map((chatInfoList) => {
+        if (
+          chatInfoList.serverId === message.serverId &&
+          chatInfoList.channelId === message.channelId
+        ) {
+          return {
+            ...chatInfoList,
+            chatList: [...chatInfoList.chatList, newChat], // 기존 채팅에 새 채팅추가
+          };
+        }
+        return chatInfoList;
+      });
+
+      devLog(componentName, "SERVER_ENTER setChatListState newChatList");
+      setChatListState(newChatInfoList);
 
       const newUser = {
         id: message.userId,
@@ -214,6 +287,8 @@ export default function useReceiveStompMessageHandler() {
         id: channelData.id,
         name: channelData.name,
         displayOrder: channelData.displayOrder,
+        lastReadMessageId: null,
+        lastMessageId: null,
         serverId: channelData.serverId,
         categoryId: channelData.categoryId,
       };

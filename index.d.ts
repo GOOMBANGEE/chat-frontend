@@ -1,6 +1,8 @@
 export interface ServerInfo {
   id: number;
   name: string;
+  lastRead: number;
+  lastMessage: number;
 }
 
 export interface CategoryInfo {
@@ -21,6 +23,12 @@ export interface ChannelInfo {
 export interface UserInfo {
   id: number;
   username: string;
+}
+
+export interface ChatInfoList {
+  serverId: number;
+  channelId: number;
+  chatList: Chat[];
 }
 
 export interface Chat {

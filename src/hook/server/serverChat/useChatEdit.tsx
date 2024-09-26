@@ -1,25 +1,28 @@
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import { useEnvStore } from "../../../store/EnvStore.tsx";
 import axios, { isAxiosError } from "axios";
-import { useParams } from "react-router-dom";
-import { Chat } from "../../../../index";
+import { Chat, ChatInfoList } from "../../../../index";
 import devLog from "../../../devLog.ts";
+import { useServerStore } from "../../../store/ServerStore.tsx";
+import { useChannelStore } from "../../../store/ChannelStore.tsx";
 
 interface Props {
   chat: Chat;
-  chatList: Chat[];
+  chatInfoList: ChatInfoList[];
 }
 
 export default function useChatEdit() {
+  const { serverState } = useServerStore();
+  const { channelState } = useChannelStore();
   const { setChatListState } = useChatStore();
   const { envState } = useEnvStore();
-  const { serverId } = useParams();
   const componentName = "useChatEdit";
 
   const chatEdit = async (props: Props) => {
     const chatUrl = envState.chatUrl;
     const message = {
-      serverId: serverId,
+      serverId: serverState.id,
+      channelId: channelState.id,
       chatId: props.chat.id,
       username: props.chat.username,
       message: props.chat.message,
@@ -30,15 +33,28 @@ export default function useChatEdit() {
     } catch (error) {
       if (isAxiosError(error)) {
         // 해당 id를 찾아서 발송문제를 표시
-        const newChatList = props.chatList.map((chat: Chat) => {
-          if (chat.id === props.chat.id) {
-            return { ...chat, error: true };
-          }
-          return chat;
-        });
+        const newChatInfoList: ChatInfoList[] = props.chatInfoList.map(
+          (chatInfoList) => {
+            if (
+              chatInfoList.serverId === serverState.id &&
+              chatInfoList.channelId === channelState.id
+            ) {
+              return {
+                ...chatInfoList,
+                chatList: chatInfoList.chatList.map((chat: Chat) => {
+                  if (chat.id === props.chat.id) {
+                    return { ...chat, error: true };
+                  }
+                  return chat;
+                }),
+              };
+            }
+            return chatInfoList;
+          },
+        );
 
         devLog(componentName, "setChatListState newChatList");
-        setChatListState(newChatList);
+        setChatListState(newChatInfoList);
       }
     }
   };

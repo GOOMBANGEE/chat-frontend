@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { Chat } from "../../index";
+import { Chat, ChatInfoList } from "../../index";
 
 interface ChatStore {
   chatState: ChatState;
   setChatState: (state: Partial<ChatState>) => void;
-  chatListState: Chat[];
-  setChatListState: (state: Chat[]) => void;
+  chatListState: ChatInfoList[];
+  setChatListState: (state: ChatInfoList[]) => void;
   chatSearchListState: Chat[];
   setChatSearchListState: (state: Chat[]) => void;
   resetChatState: () => void;

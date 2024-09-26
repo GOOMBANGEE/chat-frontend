@@ -1,8 +1,10 @@
-import { Chat } from "../../../../../index";
+import { Chat, ChatInfoList } from "../../../../../index";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
 import React, { useEffect, useRef } from "react";
 import { useUserStore } from "../../../../store/UserStore.tsx";
 import useChatEdit from "../../../../hook/server/serverChat/useChatEdit.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 
 interface Props {
   chat: Chat;
@@ -10,6 +12,8 @@ interface Props {
 
 export default function ChatComponent(props: Readonly<Props>) {
   const { chatEdit } = useChatEdit();
+  const { serverState } = useServerStore();
+  const { channelState } = useChannelStore();
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
   const { userState } = useUserStore();
@@ -59,19 +63,32 @@ export default function ChatComponent(props: Readonly<Props>) {
         username: userState.username,
         message: chatState.chatMessage,
       };
-      const newChatList = chatListState.map((chat) => {
-        if (chat.id === chatState.id && chatState.chatMessage) {
-          return {
-            ...chat,
-            message: chatState.chatMessage,
-            updateTime: Date.now(),
-          };
-        }
-        return chat;
-      });
-      setChatListState(newChatList);
+      const newChatInfoList: ChatInfoList[] = chatListState.map(
+        (chatInfoList) => {
+          if (
+            chatInfoList.serverId === serverState.id &&
+            chatInfoList.channelId === channelState.id
+          ) {
+            return {
+              ...chatInfoList,
+              chatList: chatInfoList.chatList.map((chat: Chat) => {
+                if (chat.id === chatState.id && chatState.chatMessage) {
+                  return {
+                    ...chat,
+                    message: chatState.chatMessage,
+                    updateTime: Date.now(),
+                  };
+                }
+                return chat;
+              }),
+            };
+          }
+          return chatInfoList;
+        },
+      );
+      setChatListState(newChatInfoList);
 
-      chatEdit({ chat: chat, chatList: newChatList });
+      chatEdit({ chat: chat, chatInfoList: newChatInfoList });
     }
 
     setChatState({ chatMessage: undefined });

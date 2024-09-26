@@ -15,6 +15,17 @@ interface ChannelState {
   id: number | undefined;
   name: string | undefined;
   displayOrder: number | undefined;
+  lastReadMessageId: number | undefined;
+  lastMessageId: number | undefined;
+  serverId: number | undefined;
+  categoryId: number | undefined;
+
+  // channel focus -> 채팅을 수신했을때, 읽음처리할지 결정
+  windowFocus: boolean;
+  newMessageId: number | undefined;
+  newMessage: boolean;
+  newMessageScroll: boolean;
+  scrollBottom: boolean;
 
   // channel create modal
   createModalOpen: boolean;
@@ -36,6 +47,17 @@ const initialChannelState: ChannelState = {
   id: undefined,
   name: undefined,
   displayOrder: undefined,
+  lastReadMessageId: undefined,
+  lastMessageId: undefined,
+  serverId: undefined,
+  categoryId: undefined,
+
+  // channel focus -> 채팅을 수신했을때, 읽음처리할지 결정
+  windowFocus: false,
+  newMessageId: undefined,
+  newMessage: false,
+  newMessageScroll: false,
+  scrollBottom: false,
 
   // channel create modal
   createModalOpen: false,
