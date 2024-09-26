@@ -18,7 +18,7 @@ export default function UserInfoMenu() {
         }
         onMouseOver={() => setIsHover(true)}
         onMouseOut={() => setIsHover(false)}
-        className={`hover:bg-customGray_0 ml-auto rounded`}
+        className={`ml-auto rounded hover:bg-customGray_0`}
       >
         <svg
           width="32px"

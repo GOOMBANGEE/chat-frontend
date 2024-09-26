@@ -12,7 +12,7 @@ import ChatSearchOption from "./chat/ChatSearchOption.tsx";
 import ServerChatSearchList from "./ServerChatSearchList.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
 import UserContextMenu from "../UserContextMenu.tsx";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ServerChatCategoryChannelList from "./serverChatCategoryChannel/ServerChatCategoryChannelList.tsx";
 import { useCategoryStore } from "../../../store/CategoryStore.tsx";
 import { useChannelStore } from "../../../store/ChannelStore.tsx";
@@ -23,29 +23,146 @@ import CategoryContextMenu from "./category/CategoryContextMenu.tsx";
 import ChannelCreateModal from "./channel/ChannelCreateModal.tsx";
 import CategoryCreateModal from "./category/CategoryCreateModal.tsx";
 import CategoryDeleteModal from "./category/CategoryDeleteModal.tsx";
+import { Chat } from "../../../../index";
+import useReadMessage from "../../../hook/server/serverChat/useReadMessage.tsx";
 
 export default function ServerChat() {
-  const { chatState, chatListState } = useChatStore();
+  const { readMessage } = useReadMessage();
+
   const { serverState } = useServerStore();
   const { categoryState } = useCategoryStore();
-  const { channelState } = useChannelStore();
+  const { channelState, setChannelState } = useChannelStore();
+  const { chatState, setChatState, chatListState } = useChatStore();
   const { userState } = useUserStore();
 
-  // 채팅 갱신시 스크롤 아래로 이동
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
+
+  // lastReadMessageId와 lastMessageId가 같을경우 스크롤 최하단 위치
   useEffect(() => {
-    if (chatContainerRef.current) {
+    if (
+      channelState.lastReadMessageId === channelState.lastMessageId &&
+      chatContainerRef.current
+    ) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [chatListState]);
+  }, [channelState.id]);
+
+  // 채팅시 스크롤 아래로 이동
+  useEffect(() => {
+    if (chatState.sendMessage && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+      setChatState({ sendMessage: false });
+    }
+  }, [chatState.sendMessage]);
+
+  // 새로운 메시지를 받을때
+  useEffect(() => {
+    if (channelState.newMessage) {
+      // 스크롤이 최하단인 경우
+      if (channelState.newMessageScroll && chatContainerRef.current) {
+        chatContainerRef.current.scrollTop =
+          chatContainerRef.current.scrollHeight;
+        if (channelState.newMessageId) {
+          readMessage({ chatId: channelState.newMessageId });
+        }
+
+        setChannelState({
+          newMessage: false,
+          newMessageId: undefined,
+          newMessageScroll: false,
+        });
+      }
+      // todo
+      // 스크롤이 최하단이 아닌경우
+    }
+  }, [channelState.newMessage]);
+
+  // 스크롤 최하단 이동시 모든 메시지를 읽은것으로 간주
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chatContainerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } =
+          chatContainerRef.current;
+        const isBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+        if (isBottom) {
+          setChannelState({ scrollBottom: true });
+          // 바닥에 도달했을 때 1초 유지되면
+          if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+          }
+
+          const timeout = setTimeout(() => {
+            if (channelState.lastMessageId) {
+              readMessage({ chatId: channelState.lastMessageId });
+            }
+          }, 1000);
+
+          setScrollTimeout(timeout);
+        } else {
+          setChannelState({ scrollBottom: false });
+          // 바닥에서 벗어나면 타이머 초기화
+          if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+            setScrollTimeout(null);
+          }
+        }
+      }
+    };
+
+    const chatContainer = chatContainerRef.current;
+    if (chatContainer) {
+      chatContainer.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (chatContainer) {
+        chatContainer.removeEventListener("scroll", handleScroll);
+      }
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+    };
+  }, [chatListState, channelState.id, scrollTimeout]);
+
+  const filteredChatInfoList = chatListState.filter(
+    (chatInfoList) =>
+      chatInfoList.serverId === serverState.id &&
+      chatInfoList.channelId === channelState.id,
+  );
+  const filteredChatList: Chat[] = filteredChatInfoList.flatMap(
+    (chatInfoList) => chatInfoList.chatList,
+  );
+
+  // 윈도우 포커스 감지
+  useEffect(() => {
+    const handleFocus = () => {
+      setChannelState({ windowFocus: true });
+    };
+
+    const handleBlur = () => {
+      setChannelState({ windowFocus: false });
+    };
+
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("blur", handleBlur);
+
+    return () => {
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("blur", handleBlur);
+    };
+  }, [setChannelState]);
 
   return (
     <div
       style={{ maxHeight: "100vh" }}
       className={"relative flex h-full max-h-full w-full"}
     >
-      <div className={"relative w-60 bg-customDark_2"}>
+      <div className={"relative flex w-60 flex-col gap-0 bg-customDark_2"}>
         <ServerChatDropdown />
         <ServerChatCategoryChannelList />
         <UserInfoMenu />
@@ -61,7 +178,7 @@ export default function ServerChat() {
               style={{ maxHeight: "calc(100vh - 120px)" }}
               className={"custom-scrollbar overflow-y-auto px-2 py-2"}
             >
-              {chatListState.map((chat) => (
+              {filteredChatList.map((chat) => (
                 <ChatComponent key={chat.id} chat={chat} />
               ))}
             </div>

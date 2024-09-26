@@ -16,6 +16,8 @@ export interface ChannelInfo {
   id: number;
   name: string;
   displayOrder: number;
+  lastReadMessageId: number | null;
+  lastMessageId: number | null;
   serverId: number;
   categoryId: number | null;
 }

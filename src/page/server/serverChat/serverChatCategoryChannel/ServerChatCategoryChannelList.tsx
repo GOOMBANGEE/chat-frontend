@@ -24,8 +24,9 @@ export default function ServerChatCategoryChannelList() {
 
   return (
     <div
-      style={{ maxHeight: "calc(100vh - 120px)" }}
-      className={"mt-2 h-full w-full px-2 text-gray-400"}
+      className={
+        "mt-2 flex h-full w-full flex-grow flex-col px-2 text-gray-400"
+      }
     >
       {channelListState.map((channel) => {
         if (channel.categoryId === null) {
@@ -58,7 +59,7 @@ export default function ServerChatCategoryChannelList() {
         );
       })}
       <div
-        className={"h-full"}
+        className={"flex-grow"}
         onContextMenu={(e) => handleContextMenu(e)}
       ></div>
     </div>

@@ -24,6 +24,7 @@ import { useTokenStore } from "../../store/TokenStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import devLog from "../../devLog.ts";
 import useStompSubscribe from "../../hook/useStompSubscribe.tsx";
+import { useChatStore } from "../../store/ChatStore.tsx";
 
 export default function Server() {
   const { stompSubscribe } = useStompSubscribe();
@@ -39,6 +40,7 @@ export default function Server() {
   const { serverAddState } = useServerAddStore();
   const { serverState, setServerState, serverListState } = useServerStore();
   const { channelState, setChannelState, channelListState } = useChannelStore();
+  const { chatListState } = useChatStore();
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
   const { tokenState } = useTokenStore();
@@ -60,10 +62,20 @@ export default function Server() {
   // server 바뀔때 fetch server chat, user list
   useEffect(() => {
     if (serverState.id && channelState.id) {
-      fetchChatList({ serverId: serverState.id, channelId: channelState.id });
+      // chatListState에 해당 serverId, channelId인 chatList가 있는지 확인
+      const chatInfoExists = chatListState.some(
+        (chatInfo) =>
+          chatInfo.serverId === serverState.id &&
+          chatInfo.channelId === channelState.id,
+      );
+
+      // chatList가 없는경우
+      if (!chatInfoExists) {
+        fetchChatList({ serverId: serverState.id, channelId: channelState.id });
+      }
       fetchServerUserList({ serverId: serverState.id });
     }
-  }, [serverState.id]);
+  }, [serverState.id, channelState.id]);
 
   // 초기 stomp 연결
   const initializeStompClient = () => {
@@ -123,7 +135,19 @@ export default function Server() {
       );
       if (server && channel) {
         devLog(componentName, "setChannelState");
-        setChannelState({ id: channel.id, name: channel.name });
+        setChannelState({
+          id: channel.id,
+          name: channel.name,
+          displayOrder: channel.displayOrder,
+          lastReadMessageId: channel.lastReadMessageId
+            ? channel.lastReadMessageId
+            : undefined,
+          lastMessageId: channel.lastMessageId
+            ? channel.lastMessageId
+            : undefined,
+          serverId: channel.serverId,
+          categoryId: channel.categoryId ? channel.categoryId : undefined,
+        });
         const channelSubscriptionUrl = `/sub/channel/${server.id}/${channel.id}`;
         stompSubscribe(channelSubscriptionUrl);
       }

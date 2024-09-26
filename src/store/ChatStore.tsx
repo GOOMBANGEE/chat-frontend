@@ -21,6 +21,8 @@ interface ChatState {
 
   focusInput: boolean;
   chatMessage: string | undefined;
+  // send message 후 scroll 최하단위치
+  sendMessage: boolean;
 
   chatContextMenuOpen: boolean;
   chatEdit: boolean;
@@ -38,6 +40,8 @@ const initialChatState: ChatState = {
 
   focusInput: false,
   chatMessage: undefined,
+  // send message 후 scroll 최하단위치
+  sendMessage: false,
 
   chatContextMenuOpen: false,
   chatEdit: false,
