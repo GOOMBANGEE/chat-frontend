@@ -25,9 +25,12 @@ import CategoryCreateModal from "./category/CategoryCreateModal.tsx";
 import CategoryDeleteModal from "./category/CategoryDeleteModal.tsx";
 import { Chat } from "../../../../index";
 import useReadMessage from "../../../hook/server/serverChat/useReadMessage.tsx";
+import ServerChatNewMessageBar from "./ServerChatNewMessageBar.tsx";
+import useFetchChatListBefore from "../../../hook/server/serverChat/useFetchChatListBefore.tsx";
 
 export default function ServerChat() {
   const { readMessage } = useReadMessage();
+  const { fetchChatListBefore } = useFetchChatListBefore();
 
   const { serverState } = useServerStore();
   const { categoryState } = useCategoryStore();
@@ -39,6 +42,17 @@ export default function ServerChat() {
   const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(
     null,
   );
+  const [scrollHeightBeforeFetch, setScrollHeightBeforeFetch] = useState(0);
+  const [scrollTopBeforeFetch, setScrollTopBeforeFetch] = useState(0);
+
+  const filteredChatInfoList = chatListState.filter(
+    (chatInfoList) =>
+      chatInfoList.serverId === serverState.id &&
+      chatInfoList.channelId === channelState.id,
+  );
+  const filteredChatList: Chat[] = filteredChatInfoList.flatMap(
+    (chatInfoList) => chatInfoList.chatList,
+  );
 
   // lastReadMessageId와 lastMessageId가 같을경우 스크롤 최하단 위치
   useEffect(() => {
@@ -49,7 +63,13 @@ export default function ServerChat() {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current?.scrollHeight;
       setChannelState({ fetchChatList: false });
+    } else {
+      setChannelState({ newMessage: true, fetchChatList: false });
     }
+
+    return () => {
+      setChannelState({ newMessage: false, fetchChatList: false });
+    };
   }, [channelState.id, channelState.fetchChatList]);
 
   // 채팅시 스크롤 아래로 이동
@@ -78,17 +98,17 @@ export default function ServerChat() {
           newMessageScroll: false,
         });
       }
-      // todo
-      // 스크롤이 최하단이 아닌경우
     }
   }, [channelState.newMessage]);
 
-  // 스크롤 최하단 이동시 모든 메시지를 읽은것으로 간주
+  // 스크롤 이벤트
   useEffect(() => {
     const handleScroll = () => {
       if (chatContainerRef.current) {
         const { scrollTop, scrollHeight, clientHeight } =
           chatContainerRef.current;
+
+        // 스크롤 최하단 이동시 모든 메시지를 읽은것으로 간주
         const isBottom = scrollTop + clientHeight >= scrollHeight - 1;
 
         if (isBottom) {
@@ -113,9 +133,21 @@ export default function ServerChat() {
             setScrollTimeout(null);
           }
         }
+
+        // 메시지 추가로 fetch
+        const isTop = scrollTop === 0;
+        if (isTop) {
+          // 현재 스크롤 높이와 위치를 저장
+          setScrollHeightBeforeFetch(scrollHeight);
+          setScrollTopBeforeFetch(scrollTop);
+
+          // 채팅 불러오기
+          fetchChatListBefore();
+        }
       }
     };
 
+    // 스크롤 이벤트 추가
     const chatContainer = chatContainerRef.current;
     if (chatContainer) {
       chatContainer.addEventListener("scroll", handleScroll);
@@ -130,14 +162,15 @@ export default function ServerChat() {
     };
   }, [chatListState, channelState.id, scrollTimeout]);
 
-  const filteredChatInfoList = chatListState.filter(
-    (chatInfoList) =>
-      chatInfoList.serverId === serverState.id &&
-      chatInfoList.channelId === channelState.id,
-  );
-  const filteredChatList: Chat[] = filteredChatInfoList.flatMap(
-    (chatInfoList) => chatInfoList.chatList,
-  );
+  // fetchChatListBefore 호출 후 새로 추가된 높이만큼 스크롤 보정
+  useEffect(() => {
+    if (chatContainerRef.current && channelState.fetchChatListBefore) {
+      const newScrollHeight = chatContainerRef.current.scrollHeight;
+      const scrollDiff = newScrollHeight - scrollHeightBeforeFetch;
+      chatContainerRef.current.scrollTop = scrollTopBeforeFetch + scrollDiff;
+      setChannelState({ fetchChatListBefore: false });
+    }
+  }, [channelState.fetchChatListBefore]);
 
   // 윈도우 포커스 감지
   useEffect(() => {
@@ -173,7 +206,10 @@ export default function ServerChat() {
         <ServerChatHeader />
         {serverState.searchOptionMenu ? <ChatSearchOption /> : null}
         <div className={"flex h-full w-full"}>
-          <div className={"flex h-full w-full flex-col"}>
+          <div className={"relative flex h-full w-full flex-col"}>
+            {channelState.newMessage && !channelState.newMessageScroll ? (
+              <ServerChatNewMessageBar />
+            ) : null}
             <div
               ref={chatContainerRef}
               style={{ maxHeight: "calc(100vh - 120px)" }}

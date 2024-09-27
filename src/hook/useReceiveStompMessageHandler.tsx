@@ -76,11 +76,12 @@ export default function useReceiveStompMessageHandler() {
       });
 
       // 보고있는 채널인 경우 && focus 중인 채널
-      if (channelState.id === message.channelId && channelState.windowFocus) {
+      if (channelState.id === message.channelId) {
         // scrollBottom -> 맨 아래에 스크롤 위치
-        if (channelState.scrollBottom) {
+        if (channelState.windowFocus && channelState.scrollBottom) {
           devLog(componentName, "setChannelState");
           setChannelState({
+            lastMessageId: message.chatId,
             newMessage: true,
             newMessageId: message.chatId,
             newMessageScroll: true,
@@ -88,8 +89,25 @@ export default function useReceiveStompMessageHandler() {
         } else {
           // scroll 다른곳에 위치해 있다면 -> 스크롤 강제로 아래로 내리지않음
           devLog(componentName, "setChannelState");
-          setChannelState({ newMessage: true, newMessageId: message.chatId });
+          setChannelState({
+            lastMessageId: message.chatId,
+            newMessage: true,
+            newMessageId: message.chatId,
+          });
         }
+      }
+
+      // 보고있지않은 채널인 경우 -> 해당되는 채널의 lastMessageId 업데이트
+      if (channelState.id !== message.channelId) {
+        newChannelList = channelListState.map((channelInfo) => {
+          // 해당되는 채널
+          if (channelInfo.id === message.channelId) {
+            return { ...channelInfo, lastMessageId: message.chatId };
+          }
+          return channelInfo;
+        });
+        devLog(componentName, "CHAT_SEND setChannelListState");
+        setChannelListState(newChannelList);
       }
 
       devLog(componentName, "CHAT_SEND setChatListState newChatList");

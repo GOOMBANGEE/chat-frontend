@@ -32,9 +32,6 @@ export default function useFetchChatList() {
       chatList: newChatList,
     };
 
-    // todo
-    // 이미 해당 채널에 대한 state가 있는지 확인
-
     const newChatInfoList = [...chatListState, newChatInfo];
     devLog(componentName, "setChatListState");
     setChatListState(newChatInfoList);
