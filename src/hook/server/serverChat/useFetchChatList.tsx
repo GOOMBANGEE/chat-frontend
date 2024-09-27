@@ -3,6 +3,7 @@ import axios from "axios";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import { Chat, ChatInfoList } from "../../../../index";
 import devLog from "../../../devLog.ts";
+import { useChannelStore } from "../../../store/ChannelStore.tsx";
 
 interface Props {
   serverId: number;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function useFetchChatList() {
+  const { setChannelState } = useChannelStore();
   const { chatListState, setChatListState } = useChatStore();
   const { envState } = useEnvStore();
   const componentName = "useFetchChatList";
@@ -36,6 +38,9 @@ export default function useFetchChatList() {
     const newChatInfoList = [...chatListState, newChatInfo];
     devLog(componentName, "setChatListState");
     setChatListState(newChatInfoList);
+
+    devLog(componentName, "setChannelState fetchChatList true");
+    setChannelState({ fetchChatList: true });
   };
 
   return { fetchChatList };

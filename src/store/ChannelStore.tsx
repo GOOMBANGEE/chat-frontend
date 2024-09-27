@@ -26,6 +26,8 @@ interface ChannelState {
   newMessage: boolean;
   newMessageScroll: boolean;
   scrollBottom: boolean;
+  // 채팅을 가져온 다음 스크롤 아래로 이동
+  fetchChatList: boolean;
 
   // channel create modal
   createModalOpen: boolean;
@@ -58,6 +60,8 @@ const initialChannelState: ChannelState = {
   newMessage: false,
   newMessageScroll: false,
   scrollBottom: false,
+  // 채팅을 가져온 다음 스크롤 아래로 이동
+  fetchChatList: false,
 
   // channel create modal
   createModalOpen: false,

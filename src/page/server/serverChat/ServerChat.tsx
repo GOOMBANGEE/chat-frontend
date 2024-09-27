@@ -47,9 +47,10 @@ export default function ServerChat() {
       chatContainerRef.current
     ) {
       chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+        chatContainerRef.current?.scrollHeight;
+      setChannelState({ fetchChatList: false });
     }
-  }, [channelState.id]);
+  }, [channelState.id, channelState.fetchChatList]);
 
   // 채팅시 스크롤 아래로 이동
   useEffect(() => {
