@@ -42,6 +42,9 @@ interface UserState {
   newUsername: string | undefined;
   newPassword: string | undefined;
   newConfirmPassword: string | undefined;
+  // user avatar file upload
+  userSettingAvatarChangeModal: boolean;
+  newAvatarImage: string | undefined;
 
   userContextMenu: boolean;
   focusUserId: number | undefined;
@@ -88,6 +91,9 @@ const initialUserState = {
   newUsername: undefined,
   newPassword: undefined,
   newConfirmPassword: undefined,
+  // user avatar file upload
+  userSettingAvatarChangeModal: false,
+  newAvatarImage: undefined,
 
   userContextMenu: false,
   focusUserId: undefined,

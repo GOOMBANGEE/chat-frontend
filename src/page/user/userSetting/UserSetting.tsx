@@ -5,6 +5,7 @@ import UserSettingAccount from "./UserSettingAccount.tsx";
 import UserSettingLogoutModal from "./UserSettingLogoutModal.tsx";
 import UserSettingDeleteUserModal from "./UserSettingDeleteUserModal.tsx";
 import UserSettingPasswordChangeModal from "./UserSettingPasswordChangeModal.tsx";
+import UserSettingAvatarChangeModal from "./UserSettingAvatarChangeModal.tsx";
 
 export default function UserSetting() {
   const { userState, setUserState } = useUserStore();
@@ -21,6 +22,9 @@ export default function UserSetting() {
         <UserSettingSidebar />
         {userState.userSettingAccount ? <UserSettingAccount /> : null}
         {userState.userSettingProfile ? <UserSettingProfile /> : null}
+        {userState.userSettingAvatarChangeModal ? (
+          <UserSettingAvatarChangeModal />
+        ) : null}
         {userState.userSettingPasswordChangeModal ? (
           <UserSettingPasswordChangeModal />
         ) : null}
