@@ -1,20 +1,17 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useUserStore } from "../../../store/UserStore.tsx";
-import useResetPassword from "../../../hook/user/useResetPassword.tsx";
 import { debounce } from "lodash";
 import usePasswordCheck from "../../../hook/user/register/usePasswordCheck.tsx";
+import useChangePassword from "../../../hook/user/userSetting/useChangePassword.tsx";
 
 export default function UserSettingPasswordChangeModal() {
-  const { resetPassword } = useResetPassword();
+  const { changePassword } = useChangePassword();
   const { passwordCheck } = usePasswordCheck();
   const { userState, setUserState } = useUserStore();
 
-  const debouncedPasswordCheck = useCallback(
-    debounce((password: string) => {
-      passwordCheck(password);
-    }, 1000),
-    [],
-  );
+  const debouncedPasswordCheck = debounce((password: string) => {
+    passwordCheck(password);
+  }, 1000);
 
   const handleClickCancelButton = () => {
     setUserState({ userSettingPasswordChangeModal: false });
@@ -42,7 +39,7 @@ export default function UserSettingPasswordChangeModal() {
       return;
     }
 
-    await resetPassword();
+    await changePassword();
     setUserState({ userSettingPasswordChangeModal: false });
   };
 

@@ -1,21 +1,18 @@
 import { useUserStore } from "../../../store/UserStore.tsx";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { debounce } from "lodash";
 import useUsernameCheck from "../../../hook/user/register/useUsernameCheck.tsx";
-import useResetUsername from "../../../hook/user/useResetUsername.tsx";
+import useChangeUsername from "../../../hook/user/userSetting/useChangeUsername.tsx";
 
 export default function UserSettingProfile() {
-  const { resetUsername } = useResetUsername();
+  const { changeUsername } = useChangeUsername();
   const { usernameCheck } = useUsernameCheck();
 
   const { userState, setUserState } = useUserStore();
 
-  const debouncedUsernameCheck = useCallback(
-    debounce((username: string) => {
-      usernameCheck(username);
-    }, 1000),
-    [],
-  );
+  const debouncedUsernameCheck = debounce((username: string) => {
+    usernameCheck(username);
+  }, 1000);
 
   useEffect(() => {
     return () => {
@@ -65,7 +62,7 @@ export default function UserSettingProfile() {
               }
             />
             <button
-              onClick={() => resetUsername()}
+              onClick={() => changeUsername()}
               className={
                 "ml-auto rounded bg-indigo-500 px-4 py-2 text-sm hover:bg-indigo-600"
               }
