@@ -10,25 +10,12 @@ interface Props {
 
 export default function ServerChatChannelComponent(props: Readonly<Props>) {
   const { serverState } = useServerStore();
-  const { channelState, setChannelState } = useChannelStore();
+  const { channelState, setChannelState, resetChannelState } =
+    useChannelStore();
   const navigate = useNavigate();
 
   const handleChannelClick = () => {
-    setChannelState({
-      id: props.channel.id,
-      name: props.channel.name,
-      displayOrder: props.channel.displayOrder,
-      lastReadMessageId: props.channel.lastReadMessageId
-        ? props.channel.lastReadMessageId
-        : undefined,
-      lastMessageId: props.channel.lastMessageId
-        ? props.channel.lastMessageId
-        : undefined,
-      serverId: props.channel.serverId,
-      categoryId: props.channel.categoryId
-        ? props.channel.categoryId
-        : undefined,
-    });
+    resetChannelState();
     navigate(`/server/${serverState.id}/${props.channel.id}`);
   };
   const handleContextMenu = (e: React.MouseEvent) => {

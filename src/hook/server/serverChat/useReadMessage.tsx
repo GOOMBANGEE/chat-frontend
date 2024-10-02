@@ -33,15 +33,16 @@ export default function useReadMessage() {
       return channel;
     });
 
-    devLog(componentName, "setChannelListState newChannelList");
-    setChannelListState(newChannelList);
-
     devLog(componentName, "setChannelState");
     setChannelState({
       lastReadMessageId: channelState.newMessageId,
       newMessage: false,
       fetchChatList: true,
+      newMessageScroll: true,
     });
+
+    devLog(componentName, "setChannelListState newChannelList");
+    setChannelListState(newChannelList);
   };
 
   return { readMessage };

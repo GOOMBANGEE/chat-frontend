@@ -1,6 +1,6 @@
 import { Chat, ChatInfoList } from "../../../../../index";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
-import React, { useEffect, useRef } from "react";
+import React, { ForwardedRef, forwardRef, useEffect, useRef } from "react";
 import { useUserStore } from "../../../../store/UserStore.tsx";
 import useChatEdit from "../../../../hook/server/serverChat/useChatEdit.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
@@ -8,9 +8,14 @@ import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 
 interface Props {
   chat: Chat;
+  leastFetchChatId: number;
+  lastReadMessageId: number | null | undefined;
 }
 
-export default function ChatComponent(props: Readonly<Props>) {
+export default forwardRef(function ChatComponent(
+  props: Readonly<Props>,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
   const { chatEdit } = useChatEdit();
   const { serverState } = useServerStore();
   const { channelState } = useChannelStore();
@@ -105,6 +110,7 @@ export default function ChatComponent(props: Readonly<Props>) {
   }, [chatState.chatEdit]);
 
   const renderPage = () => {
+    // 수정중 메시지
     if (chatState.chatEdit && chatState.id === props.chat.id) {
       return (
         <div
@@ -116,8 +122,8 @@ export default function ChatComponent(props: Readonly<Props>) {
             <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
             {props.chat.createTime ? (
               <div className={"text-xs text-gray-400"}>
-                {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
-                {minute}
+                {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
+                {hour > 12 ? hour - 12 : hour}:{minute}
               </div>
             ) : null}
           </div>
@@ -152,9 +158,11 @@ export default function ChatComponent(props: Readonly<Props>) {
       );
     }
 
+    // 입장 메시지
     if (props.chat.enter) {
       return (
         <div
+          ref={ref}
           onContextMenu={(e) => handleContextMenu(e)}
           className={
             "mb-2 flex gap-2 rounded px-4 text-customText hover:bg-customDark_1"
@@ -165,8 +173,8 @@ export default function ChatComponent(props: Readonly<Props>) {
             <div className={"mr-2"}>님이 입장하였습니다.</div>
             {props.chat.createTime ? (
               <div className={"text-xs text-gray-400"}>
-                {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
-                {minute}
+                {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
+                {hour > 12 ? hour - 12 : hour}:{minute}
               </div>
             ) : null}
           </div>{" "}
@@ -174,33 +182,35 @@ export default function ChatComponent(props: Readonly<Props>) {
       );
     }
 
+    // 일반 메시지
     return (
-      <div
-        onContextMenu={(e) => handleContextMenu(e)}
-        className={
-          "mb-2 flex gap-2 rounded px-4 text-customText hover:bg-customDark_1"
-        }
-      >
-        <div className={"flex flex-col"}>
-          <div className={"mb-0.5 flex items-end"}>
-            <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
-            {props.chat.createTime ? (
-              <div className={"text-xs text-gray-400"}>
-                {year}.{month}.{day}. {hour < 12 ? "오전" : "오후"} {hour}:
-                {minute}
-              </div>
-            ) : null}
-          </div>
-
-          <div className={"flex items-end"}>
-            <div className={`${props.chat.error ? "text-red-600" : ""} mr-2`}>
-              {props.chat.message}
+      <div ref={ref} className={"flex flex-col"}>
+        <div
+          onContextMenu={(e) => handleContextMenu(e)}
+          className={
+            "mb-2 flex flex-col gap-2 rounded px-4 text-customText hover:bg-customDark_1"
+          }
+        >
+          <div className={"flex flex-col"}>
+            <div className={"mb-0.5 flex items-end"}>
+              <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
+              {props.chat.createTime ? (
+                <div className={"text-xs text-gray-400"}>
+                  {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
+                  {hour > 12 ? hour - 12 : hour}:{minute}
+                </div>
+              ) : null}
             </div>
 
-            <div className={"text-xs text-gray-400"}>
-              {props.chat.createTime !== props.chat.updateTime
-                ? "(수정됨)"
-                : null}
+            <div className={"flex items-end"}>
+              <div className={`${props.chat.error ? "text-red-600" : ""} mr-2`}>
+                {props.chat.message}
+              </div>
+              <div className={"text-xs text-gray-400"}>
+                {props.chat.createTime !== props.chat.updateTime
+                  ? "(수정됨)"
+                  : null}
+              </div>
             </div>
           </div>
         </div>
@@ -209,4 +219,4 @@ export default function ChatComponent(props: Readonly<Props>) {
   };
 
   return renderPage();
-}
+});

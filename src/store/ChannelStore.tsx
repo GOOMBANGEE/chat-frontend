@@ -26,9 +26,15 @@ interface ChannelState {
   newMessage: boolean;
   newMessageScroll: boolean;
   scrollBottom: boolean;
+
   // 채팅을 가져온 다음 스크롤 아래로 이동
   fetchChatList: boolean;
   fetchChatListBefore: boolean;
+  // 첫 렌더인지 확인 -> 새로고침, 채널변경시 스크롤 제일 아래일때 읽음처리 안되도록
+  initialRender: boolean;
+  // ServerChatNewMessageBar 에서 handleClickFetchChatListBefore 클릭
+  // 이전 채팅 가져오기 또는 newLine 으로 이동하는 로직구현
+  moveNewLine: boolean;
 
   // channel create modal
   createModalOpen: boolean;
@@ -61,9 +67,15 @@ const initialChannelState: ChannelState = {
   newMessage: false,
   newMessageScroll: false,
   scrollBottom: false,
+
   // 채팅을 가져온 다음 스크롤 아래로 이동
   fetchChatList: false,
   fetchChatListBefore: false,
+  // 첫 렌더인지 확인 -> 새로고침, 채널변경시 스크롤 제일 아래일때 읽음처리 안되도록
+  initialRender: true,
+  // ServerChatNewMessageBar 에서 handleClickFetchChatListBefore 클릭
+  // 이전 채팅 가져오기 또는 newLine 으로 이동하는 로직구현
+  moveNewLine: false,
 
   // channel create modal
   createModalOpen: false,

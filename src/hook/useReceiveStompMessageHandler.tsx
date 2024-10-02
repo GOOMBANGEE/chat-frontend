@@ -77,6 +77,19 @@ export default function useReceiveStompMessageHandler() {
 
       // 보고있는 채널인 경우 && focus 중인 채널
       if (channelState.id === message.channelId) {
+        newChannelList = channelListState.map((channelInfo) => {
+          if (channelInfo.id === channelState.id) {
+            return {
+              ...channelInfo,
+              lastMessageId: message.chatId,
+              newMessageId: message.chatId,
+            };
+          }
+          return channelInfo;
+        });
+
+        devLog(componentName, "setChannelListState");
+        setChannelListState(newChannelList);
         // scrollBottom -> 맨 아래에 스크롤 위치
         if (channelState.windowFocus && channelState.scrollBottom) {
           devLog(componentName, "setChannelState");

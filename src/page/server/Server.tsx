@@ -147,6 +147,7 @@ export default function Server() {
             : undefined,
           serverId: channel.serverId,
           categoryId: channel.categoryId ? channel.categoryId : undefined,
+          newMessage: channel.lastMessageId !== channel.lastReadMessageId,
         });
         const channelSubscriptionUrl = `/sub/channel/${server.id}/${channel.id}`;
         stompSubscribe(channelSubscriptionUrl);

@@ -47,6 +47,7 @@ export default function useFetchChatListBefore() {
       devLog(componentName, "setChatListState");
       setChatListState(newChatInfoList);
 
+      devLog(componentName, "setChannelState");
       setChannelState({ fetchChatListBefore: true });
     }
   };
