@@ -17,6 +17,7 @@ interface UserState {
   id: number | undefined;
   email: string | undefined;
   username: string | undefined;
+  avatar: string | undefined;
   password: string | undefined;
   confirmPassword: string | undefined;
   emailVerified: boolean;
@@ -67,6 +68,7 @@ const initialUserState = {
   email: undefined,
   username: undefined,
   password: undefined,
+  avatar: undefined,
   confirmPassword: undefined,
   emailVerified: true,
   usernameVerified: true,

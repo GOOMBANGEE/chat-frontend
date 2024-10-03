@@ -25,6 +25,7 @@ export interface ChannelInfo {
 export interface UserInfo {
   id: number;
   username: string;
+  avatarImageSmall: string;
 }
 
 export interface ChatInfoList {

@@ -11,13 +11,19 @@ export default function useFetchProfile() {
   const componentName = "useFetchProfile";
 
   const fetchProfile = async () => {
+    const baseUrl = envState.baseUrl;
+    const userUrl = envState.userUrl;
+
     try {
-      const response = await axios.get(`${envState.userUrl}/profile`);
+      const response = await axios.get(`${userUrl}/profile`);
       devLog(componentName, "setUserState");
       setUserState({
         id: response.data.id,
         email: response.data.email,
         username: response.data.username,
+        avatar: response.data.avatar
+          ? baseUrl + response.data.avatar
+          : undefined,
         login: true,
       });
     } catch (error) {
