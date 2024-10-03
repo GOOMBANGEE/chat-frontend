@@ -54,9 +54,10 @@ export default function useReceiveStompMessageHandler() {
       message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
-      const newChat = {
+      const newChat: Chat = {
         id: message.chatId,
         username: message.username,
+        avatarImageSmall: message.avatar,
         message: message.message,
         createTime: message.createTime,
         updateTime: message.createTime,

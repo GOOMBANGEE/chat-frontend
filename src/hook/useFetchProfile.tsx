@@ -11,7 +11,6 @@ export default function useFetchProfile() {
   const componentName = "useFetchProfile";
 
   const fetchProfile = async () => {
-    const baseUrl = envState.baseUrl;
     const userUrl = envState.userUrl;
 
     try {
@@ -21,9 +20,8 @@ export default function useFetchProfile() {
         id: response.data.id,
         email: response.data.email,
         username: response.data.username,
-        avatar: response.data.avatar
-          ? baseUrl + response.data.avatar
-          : undefined,
+        avatar: response.data.avatar,
+
         login: true,
       });
     } catch (error) {

@@ -1,8 +1,10 @@
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useState } from "react";
+import { useEnvStore } from "../../store/EnvStore.tsx";
 
 export default function UserInfoMenu() {
   const { userState, setUserState } = useUserStore();
+  const { envState } = useEnvStore();
   const [isHover, setIsHover] = useState(false);
 
   return (
@@ -13,7 +15,10 @@ export default function UserInfoMenu() {
     >
       <div className={"ml-2 mr-2 flex w-10 justify-center"}>
         {userState.avatar ? (
-          <img className={"h-10 w-10 rounded-full"} src={userState.avatar} />
+          <img
+            className={"h-10 w-10 rounded-full"}
+            src={envState.baseUrl + userState.avatar}
+          />
         ) : (
           <svg
             className={"mr-2 h-10 w-10"}

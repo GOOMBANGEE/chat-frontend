@@ -5,6 +5,7 @@ import { useUserStore } from "../../../../store/UserStore.tsx";
 import useChatEdit from "../../../../hook/server/serverChat/useChatEdit.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
+import { useEnvStore } from "../../../../store/EnvStore.tsx";
 
 interface Props {
   chat: Chat;
@@ -22,6 +23,7 @@ export default forwardRef(function ChatComponent(
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
   const { userState } = useUserStore();
+  const { envState } = useEnvStore();
 
   // 시간 편집
   const createTimeToString = props.chat.createTime?.toLocaleString();
@@ -52,10 +54,27 @@ export default forwardRef(function ChatComponent(
       e.preventDefault();
       handleClickSaveButton();
     }
-    if (e.key === "Escape") {
-      handleClickCancelButton();
-    }
   };
+
+  // 채팅 수정 취소 전역설정
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+
+    const handleKeyEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClickCancelButton();
+      }
+    };
+
+    if (chatState.chatEdit) {
+      document.addEventListener("keydown", handleKeyEscape);
+    }
+    return () => {
+      document.removeEventListener("keydown", handleKeyEscape);
+    };
+  }, [chatState.chatEdit]);
 
   const handleClickCancelButton = () => {
     setChatState({ id: undefined, chatMessage: undefined, chatEdit: false });
@@ -66,6 +85,7 @@ export default forwardRef(function ChatComponent(
       const chat: Chat = {
         id: chatState.id,
         username: userState.username,
+        avatarImageSmall: userState.avatar ? userState.avatar : undefined,
         message: chatState.chatMessage,
       };
       const newChatInfoList: ChatInfoList[] = chatListState.map(
@@ -103,55 +123,58 @@ export default forwardRef(function ChatComponent(
     setChatState({ chatEdit: false });
   };
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [chatState.chatEdit]);
-
   const renderPage = () => {
     // 수정중 메시지
     if (chatState.chatEdit && chatState.id === props.chat.id) {
       return (
-        <div
-          className={
-            "mb-2 mt-2 flex flex-col rounded bg-customDark_1 px-4 py-2 text-customText"
-          }
-        >
-          <div className={"mb-0.5 flex items-end"}>
-            <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
-            {props.chat.createTime ? (
-              <div className={"text-xs text-gray-400"}>
-                {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
-                {hour > 12 ? hour - 12 : hour}:{minute}
-              </div>
-            ) : null}
-          </div>
-          <input
-            ref={inputRef}
-            onChange={(e) => setChatState({ chatMessage: e.target.value })}
-            onKeyDown={(e) => handleKey(e)}
-            defaultValue={chatState.message}
-            className={"w-full rounded bg-customDark_5 px-3 py-2 outline-none"}
-          />
-          <div className={"mt-1 flex items-center text-xs"}>
-            <div>
-              Esc 키로{" "}
-              <button
-                className={"mr-1 text-blue-500 hover:underline"}
-                onClick={() => handleClickCancelButton()}
-              >
-                취소
-              </button>
+        <div className={"flex w-full items-start rounded py-2 pl-4"}>
+          <img className={"h-12 w-12 rounded-full"} src={userState.avatar} />
+
+          <div className={"ml-1 flex w-full flex-col bg-customDark_1 px-3"}>
+            <div className={"mb-0.5 flex items-end"}>
+              <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
+              {props.chat.createTime ? (
+                <div className={"text-xs text-gray-400"}>
+                  {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
+                  {hour > 12 ? hour - 12 : hour}:{minute}
+                </div>
+              ) : null}
             </div>
-            <div>
-              • Enter 키로{" "}
-              <button
-                className={"mr-1 text-blue-500 hover:underline"}
-                onClick={() => handleClickSaveButton()}
-              >
-                저장
-              </button>
+
+            <div
+              className={
+                "mb-2 mt-2 flex w-full flex-col rounded text-customText"
+              }
+            >
+              <input
+                ref={inputRef}
+                onChange={(e) => setChatState({ chatMessage: e.target.value })}
+                onKeyDown={(e) => handleKey(e)}
+                defaultValue={chatState.message}
+                className={
+                  "w-full rounded bg-customDark_5 px-3 py-2 outline-none"
+                }
+              />
+              <div className={"mt-1 flex items-center text-xs"}>
+                <div>
+                  Esc 키로{" "}
+                  <button
+                    className={"mr-1 text-blue-500 hover:underline"}
+                    onClick={() => handleClickCancelButton()}
+                  >
+                    취소
+                  </button>
+                </div>
+                <div>
+                  • Enter 키로{" "}
+                  <button
+                    className={"mr-1 text-blue-500 hover:underline"}
+                    onClick={() => handleClickSaveButton()}
+                  >
+                    저장
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -184,11 +207,18 @@ export default forwardRef(function ChatComponent(
 
     // 일반 메시지
     return (
-      <div ref={ref} className={"flex flex-col"}>
+      <div
+        ref={ref}
+        className={"flex w-full rounded px-4 py-2 hover:bg-customDark_1"}
+      >
+        <img
+          className={"h-12 w-12 rounded-full"}
+          src={envState.baseUrl + props.chat.avatarImageSmall}
+        />
         <div
           onContextMenu={(e) => handleContextMenu(e)}
           className={
-            "mb-2 flex flex-col gap-2 rounded px-4 text-customText hover:bg-customDark_1"
+            "flex w-full flex-col items-start gap-2 rounded px-4 text-customText"
           }
         >
           <div className={"flex flex-col"}>

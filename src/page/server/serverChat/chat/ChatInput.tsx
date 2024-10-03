@@ -33,6 +33,7 @@ export default function ChatInput() {
       const chat: Chat = {
         id: Date.now(),
         username: userState.username,
+        avatarImageSmall: userState.avatar ? userState.avatar : undefined,
         message: chatState.chatMessage,
       };
 

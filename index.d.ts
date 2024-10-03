@@ -37,6 +37,7 @@ export interface ChatInfoList {
 export interface Chat {
   id: number;
   username: string;
+  avatarImageSmall?: string;
   message: string;
   error?: boolean;
   enter?: boolean;
@@ -53,6 +54,7 @@ export interface StompChatMessage {
   chatId: number;
   userId: number;
   username: string;
+  avatar: string;
   message: string;
   createTime?: number;
   updateTime?: number;
