@@ -334,6 +334,34 @@ export default function useReceiveStompMessageHandler() {
       return;
     }
 
+    // 유저 온라인
+    if (message.messageType === "USER_ONLINE") {
+      const newServerUserList = serverUserListState.map((userInfo) => {
+        if (userInfo.id === message.userId) {
+          return { ...userInfo, online: true };
+        }
+        return userInfo;
+      });
+
+      devLog(componentName, "USER_ONLINE setServerUserListState");
+      setServerUserListState(newServerUserList);
+      return;
+    }
+
+    // 유저 오프라인
+    if (message.messageType === "USER_OFFLINE") {
+      const newServerUserList = serverUserListState.map((userInfo) => {
+        if (userInfo.id === message.userId) {
+          return { ...userInfo, online: false };
+        }
+        return userInfo;
+      });
+
+      devLog(componentName, "USER_OFFLINE setServerUserListState");
+      setServerUserListState(newServerUserList);
+      return;
+    }
+
     // 아바타 업데이트
     if (message.messageType === "USER_UPDATE_AVATAR") {
       const newServerUserList = serverUserListState.map((userInfo) => {

@@ -26,6 +26,7 @@ export interface UserInfo {
   id: number;
   username: string;
   avatarImageSmall: string;
+  online: boolean;
 }
 
 export interface ChatInfoList {
