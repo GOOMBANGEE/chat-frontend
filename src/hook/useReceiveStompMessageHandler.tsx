@@ -334,6 +334,20 @@ export default function useReceiveStompMessageHandler() {
       return;
     }
 
+    // 아바타 업데이트
+    if (message.messageType === "USER_UPDATE_AVATAR") {
+      const newServerUserList = serverUserListState.map((userInfo) => {
+        if (userInfo.id === message.userId) {
+          return { ...userInfo, avatarImageSmall: message.message };
+        }
+        return userInfo;
+      });
+
+      devLog(componentName, "USER_UPDATE_AVATAR setServerUserListState");
+      setServerUserListState(newServerUserList);
+      return;
+    }
+
     // 친구요청을 받은 경우
     if (message.messageType === "FRIEND_REQUEST") {
       const newFriendRequest = {
@@ -344,8 +358,10 @@ export default function useReceiveStompMessageHandler() {
         ...userFriendWaitingListState,
         newFriendRequest,
       ];
+
       devLog(componentName, "setUserFriendWaitingListState");
       setUserFriendWaitingListState(newFriendRequestList);
+      return;
     }
 
     // 친구요청이 수락된 경우
@@ -355,8 +371,10 @@ export default function useReceiveStompMessageHandler() {
         username: message.username,
       };
       const newFriendList = [...userFriendListState, newFriend];
+
       devLog(componentName, "setUserFriendListState");
       setUserFriendListState(newFriendList);
+      return;
     }
 
     // 친구삭제 요청이 들어온 경우
@@ -364,8 +382,10 @@ export default function useReceiveStompMessageHandler() {
       const newFriendList = userFriendListState.filter(
         (user) => user.id !== message.userId,
       );
+
       devLog(componentName, "setUserFriendListState");
       setUserFriendListState(newFriendList);
+      return;
     }
   };
 
