@@ -10,7 +10,6 @@ export default function useChangeAvatar() {
   const componentName = "useChangeAvatar";
 
   const changeAvatar = async () => {
-    const baseUrl = envState.baseUrl;
     const userUrl = envState.userUrl;
 
     try {
@@ -21,7 +20,7 @@ export default function useChangeAvatar() {
 
       devLog(componentName, "setUserState");
       setUserState({
-        avatar: baseUrl + response.data.avatarImageSmall,
+        avatar: response.data.avatarImageSmall,
         userSettingAvatarChangeModal: false,
         newAvatarImage: undefined,
       });
