@@ -362,6 +362,20 @@ export default function useReceiveStompMessageHandler() {
       return;
     }
 
+    // 유저이름 업데이트
+    if (message.messageType === "USER_UPDATE_USERNAME") {
+      const newServerUserList = serverUserListState.map((userInfo) => {
+        if (userInfo.id === message.userId) {
+          return { ...userInfo, username: message.username };
+        }
+        return userInfo;
+      });
+
+      devLog(componentName, "USER_UPDATE_USERNAME setServerUserListState");
+      setServerUserListState(newServerUserList);
+      return;
+    }
+
     // 아바타 업데이트
     if (message.messageType === "USER_UPDATE_AVATAR") {
       const newServerUserList = serverUserListState.map((userInfo) => {
