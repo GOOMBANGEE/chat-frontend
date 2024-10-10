@@ -272,7 +272,7 @@ export default function ServerChat() {
   return (
     <div
       style={{ maxHeight: "100vh" }}
-      className={"relative flex h-full max-h-full w-full"}
+      className={"relative flex h-full w-full"}
     >
       <div className={"relative flex w-60 flex-col gap-0 bg-customDark_2"}>
         <ServerChatDropdown />
@@ -280,11 +280,25 @@ export default function ServerChat() {
         <UserInfoMenu />
       </div>
 
-      <div className={"flex h-full w-full flex-col"}>
+      <div
+        style={{ maxWidth: "calc(100vw - 320px )" }}
+        className={"flex h-full w-full flex-col"}
+      >
         <ServerChatHeader />
         {serverState.searchOptionMenu ? <ChatSearchOption /> : null}
-        <div className={"flex h-full w-full"}>
-          <div className={"relative flex h-full w-full flex-col"}>
+
+        <div
+          // style={{ maxWidth: "calc(100vw - 320px )" }}
+          className={"flex h-full w-full"}
+        >
+          {/* chat component*/}
+          <div
+            style={{
+              maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 550px)" : "calc(100vw - 320px)"}`,
+              maxHeight: "calc(100vh - 60px)",
+            }}
+            className={"relative flex h-full w-full flex-col"}
+          >
             {chatList &&
             channelState.newMessage &&
             !channelState.newMessageScroll &&
@@ -296,7 +310,7 @@ export default function ServerChat() {
                 chatList={chatList}
               />
             ) : null}
-            {/* chat component*/}
+
             <div
               ref={serverChatRef}
               style={{ maxHeight: "calc(100vh - 120px)" }}
@@ -305,55 +319,55 @@ export default function ServerChat() {
               }
             >
               <div className={"flex w-full flex-col"}>
-                {chatList?.map((chat) => {
-                  const shouldAssignRef =
-                    (channelState.newMessage &&
-                      lastReadMessageId &&
-                      chat.id === lastReadMessageId) ||
-                    (channelState.newMessage &&
-                      lastReadMessageId &&
-                      chat.id === leastFetchChatId &&
-                      leastFetchChatId > lastReadMessageId);
+                {update &&
+                  chatList?.map((chat) => {
+                    const shouldAssignRef =
+                      (channelState.newMessage &&
+                        lastReadMessageId &&
+                        chat.id === lastReadMessageId) ||
+                      (channelState.newMessage &&
+                        lastReadMessageId &&
+                        chat.id === leastFetchChatId &&
+                        leastFetchChatId > lastReadMessageId);
 
-                  return (
-                    <div key={chat.id} className={"relative"}>
-                      {channelState.newMessage &&
-                      lastReadMessageId &&
-                      chat.id === leastFetchChatId &&
-                      leastFetchChatId > lastReadMessageId ? (
-                        <div className={"mt-6"}>
+                    return (
+                      <div key={chat.id} className={"relative h-full"}>
+                        {channelState.newMessage &&
+                        lastReadMessageId &&
+                        chat.id === leastFetchChatId &&
+                        leastFetchChatId > lastReadMessageId ? (
+                          <div className={"mt-6"}>
+                            <NewLine />
+                          </div>
+                        ) : null}
+
+                        <ChatComponent
+                          ref={
+                            shouldAssignRef
+                              ? (el) => (chatRefs.current[chat.id] = el)
+                              : null
+                          }
+                          data-id={chat.id}
+                          chat={chat}
+                          leastFetchChatId={leastFetchChatId}
+                          lastReadMessageId={lastReadMessageId}
+                        />
+
+                        {channelState.newMessage &&
+                        lastReadMessageId &&
+                        chat.id === lastReadMessageId ? (
                           <NewLine />
-                        </div>
-                      ) : null}
-
-                      <ChatComponent
-                        ref={
-                          shouldAssignRef
-                            ? (el) => (chatRefs.current[chat.id] = el)
-                            : null
-                        }
-                        data-id={chat.id}
-                        chat={chat}
-                        leastFetchChatId={leastFetchChatId}
-                        lastReadMessageId={lastReadMessageId}
-                      />
-
-                      {channelState.newMessage &&
-                      lastReadMessageId &&
-                      chat.id === lastReadMessageId ? (
-                        <NewLine />
-                      ) : null}
-                    </div>
-                  );
-                })}
+                        ) : null}
+                      </div>
+                    );
+                  })}
               </div>
             </div>
 
-            <div className={"mb-3 mt-auto"}>
+            <div className={"mt-auto"}>
               <ChatInput />
             </div>
           </div>
-
           {serverState.serverUserList ? <ServerChatUserList /> : null}
           {serverState.searchList ? <ServerChatSearchList /> : null}
         </div>

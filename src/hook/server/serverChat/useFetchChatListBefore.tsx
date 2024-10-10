@@ -25,7 +25,7 @@ export default function useFetchChatListBefore() {
       if (!chatId) return;
 
       const response = await axios.get(
-        `${chatUrl}/${serverState.id}/${channelState.id}/${chatId}/list`,
+        `${chatUrl}/${channelState.id}/${chatId}/list`,
       );
 
       const newChatList = response.data.chatList.sort(

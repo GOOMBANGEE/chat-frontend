@@ -21,6 +21,11 @@ interface ChatState {
 
   focusInput: boolean;
   chatMessage: string | undefined;
+  attachmentType: string | undefined;
+  attachment: string | undefined;
+  attachmentFileName: string | undefined;
+  attachmentWidth: number | undefined;
+  attachmentHeight: number | undefined;
   // send message 후 scroll 최하단위치
   sendMessage: boolean;
 
@@ -40,6 +45,11 @@ const initialChatState: ChatState = {
 
   focusInput: false,
   chatMessage: undefined,
+  attachmentType: undefined,
+  attachment: undefined,
+  attachmentFileName: undefined,
+  attachmentWidth: undefined,
+  attachmentHeight: undefined,
   // send message 후 scroll 최하단위치
   sendMessage: false,
 

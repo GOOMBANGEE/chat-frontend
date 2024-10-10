@@ -2,7 +2,7 @@ import useSendChatMessage from "../../../../hook/server/serverChat/useSendChatMe
 import { useUserStore } from "../../../../store/UserStore.tsx";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
-import React, { useEffect, useRef } from "react";
+import React, { ChangeEvent, useEffect, useRef } from "react";
 import { Chat, ChatInfoList } from "../../../../../index";
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 
@@ -15,7 +15,40 @@ export default function ChatInput() {
     useChatStore();
   const { userState } = useUserStore();
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
+
+  // 버튼클릭시 input 클릭하는 효과
+  const handleClickFileInputButton = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+
+      if (file.type.startsWith("image")) {
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          const image = new Image();
+          image.src = reader.result as string;
+
+          image.onload = () => {
+            setChatState({
+              attachmentType: "image",
+              attachment: reader.result as string,
+              attachmentFileName: file.name,
+            });
+          };
+        };
+      }
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   // send message -> Enter key / Click send button
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -29,12 +62,15 @@ export default function ChatInput() {
   };
 
   const sendMessage = () => {
-    if (userState.username && chatState.chatMessage) {
+    if (userState.username && (chatState.chatMessage || chatState.attachment)) {
       const chat: Chat = {
         id: Date.now(),
         username: userState.username,
         avatarImageSmall: userState.avatar ? userState.avatar : undefined,
         message: chatState.chatMessage,
+        attachment: chatState.attachment,
+        attachmentWidth: chatState.attachmentWidth,
+        attachmentHeight: chatState.attachmentHeight,
       };
 
       const newChatInfoList: ChatInfoList[] = chatListState.map(
@@ -57,69 +93,225 @@ export default function ChatInput() {
       sendChatMessage({ chat: chat, chatList: newChatInfoList });
     }
 
-    setChatState({ chatMessage: undefined });
-    if (inputRef.current) {
-      inputRef.current.value = "";
-      inputRef.current.innerText = "";
+    setChatState({
+      chatMessage: undefined,
+      attachmentType: undefined,
+      attachment: undefined,
+      attachmentFileName: undefined,
+    });
+    if (chatInputRef.current) {
+      chatInputRef.current.value = "";
+      chatInputRef.current.innerText = "";
     }
   };
 
   // div chat input
-  const handleInput = () => {
-    if (inputRef.current) {
+  const handleChatInput = (e: React.FormEvent<HTMLDivElement>) => {
+    const divElement = e.currentTarget;
+    if (chatInputRef.current) {
+      // html 코드가 들어오는경우 innerText와 값이 달라짐
+      // innerHTML을 순수 텍스트만 남김
+      if (divElement.innerHTML !== chatInputRef.current.innerText) {
+        divElement.innerHTML = chatInputRef.current.innerText;
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(chatInputRef.current);
+        range.collapse(false);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
       setChatState({
-        chatMessage: inputRef.current.innerText,
+        chatMessage: chatInputRef.current.innerText,
       });
     }
   };
 
+  // image paste logic
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const item = e.clipboardData?.items[0];
+
+      if (item && item.type === "text/html") {
+        item.getAsString(async (htmlString) => {
+          // html에서 img 추출
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(htmlString, "text/html");
+          const image = htmlDoc.querySelector("img");
+          if (image && image.src) {
+            // fetch로 이미지 데이터를 가져와서 blob으로 변환
+            const response = await fetch(image.src);
+            const blob = await response.blob();
+
+            // blob을 file로 변환
+            const file = new File([blob], "pasted-image-from-html", {
+              type: blob.type,
+            });
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+              setChatState({
+                attachmentType: "image",
+                attachment: reader.result as string,
+                attachmentFileName: file.name,
+              });
+            };
+          }
+        });
+      }
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    };
+
+    document.addEventListener("paste", handlePaste);
+
+    return () => {
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, []);
+
   // div input focus
-  const handleBlurDivInput = () => {
-    setChatState({ focusInput: false });
-  };
-  const handleFocusInput = () => {
+  const handleFocusChatInput = () => {
     setChatState({ focusInput: true });
   };
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (chatInputRef.current) {
+      chatInputRef.current.focus();
     }
   }, [chatState.focusInput]);
 
   return (
     <div className={"relative px-6"}>
+      {chatState.attachment ? (
+        <div
+          className={
+            "rounded border-b-2 border-customGray_0 bg-customDark_5 px-4 py-4"
+          }
+        >
+          <div
+            className={
+              "relative flex h-60 w-60 flex-col items-center justify-center rounded bg-customDark_3 px-3 pt-4"
+            }
+          >
+            <div className={"h-44 w-full rounded bg-customGray_0"}>
+              <img
+                className={"h-full w-full rounded object-contain"}
+                src={chatState.attachment}
+              />
+            </div>
+            <div className={"mt-2 flex h-6 w-full items-center truncate"}>
+              {chatState.attachmentFileName}
+            </div>
+            <button
+              onClick={() => {
+                setChatState({
+                  attachmentType: undefined,
+                  attachment: undefined,
+                  attachmentFileName: undefined,
+                });
+              }}
+            >
+              <div
+                style={{ right: -10, top: -5 }}
+                className={"absolute rounded bg-customDark_0 p-0.5"}
+              >
+                <svg
+                  width="24px"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      className={"stroke-red-500"}
+                      d="M18 6L17.1991 18.0129C17.129 19.065 17.0939 19.5911 16.8667 19.99C16.6666 20.3412 16.3648 20.6235 16.0011 20.7998C15.588 21 15.0607 21 14.0062 21H9.99377C8.93927 21 8.41202 21 7.99889 20.7998C7.63517 20.6235 7.33339 20.3412 7.13332 19.99C6.90607 19.5911 6.871 19.065 6.80086 18.0129L6 6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6M14 10V17M10 10V17"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </g>
+                </svg>
+              </div>
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <div className={"relative flex w-full"}>
         {chatState.focusInput ? (
           <div
-            ref={inputRef}
+            ref={chatInputRef}
             contentEditable
             suppressContentEditableWarning={true}
-            onBlur={() => handleBlurDivInput()}
             onKeyDown={(e) => handleKeyDown(e)}
-            onInput={handleInput}
+            onInput={handleChatInput}
             className={
-              "w-full overflow-hidden rounded bg-customDark_5 px-4 py-2 outline-none"
+              "custom-scrollbar max-h-56 w-full overflow-hidden overflow-y-scroll rounded bg-customDark_5 py-2 pl-12 pr-8 outline-none"
             }
           ></div>
         ) : (
           <input
-            onFocus={() => handleFocusInput()}
+            onFocus={() => handleFocusChatInput()}
             placeholder={`${serverState.name}에 메시지 보내기`}
             className={
-              "w-full overflow-hidden rounded bg-customDark_5 px-4 py-2"
+              "w-full overflow-hidden rounded bg-customDark_5 py-2 pl-12 pr-4"
             }
           />
         )}
 
+        <div className={"absolute left-2 top-1"}>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className={"hidden"}
+          />
+          <button onClick={handleClickFileInputButton}>
+            <svg
+              width="32px"
+              height="32px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                {" "}
+                <path
+                  className={"stroke-customGray_4"}
+                  d="M8 12H16M12 8V16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>{" "}
+              </g>
+            </svg>
+          </button>
+        </div>
+
         <button
-          className={"absolute right-2 top-1.5 rounded-full bg-indigo-500 p-1"}
+          className={"absolute right-2 top-1 rounded-full p-1"}
           onClick={() => {
             handleClickSendButton();
           }}
         >
           <svg
-            width="20px"
-            height="20px"
+            width="24px"
+            height="24px"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

@@ -124,26 +124,71 @@ export default forwardRef(function ChatComponent(
   };
 
   const renderPage = () => {
+    const renderTimestamp = () =>
+      props.chat.createTime ? (
+        <div className="text-xs text-gray-400">
+          {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
+          {hour > 12 ? hour - 12 : hour}:{minute}
+        </div>
+      ) : null;
+
+    const renderAttachment = () => {
+      if (!props.chat.attachment) return null;
+
+      return (
+        <div
+          style={{
+            maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 700px)" : ""}`,
+            width: props.chat.attachmentWidth,
+            height: props.chat.attachmentHeight,
+          }}
+          className="rounded bg-customDark_2"
+        >
+          <img
+            className="rounded"
+            src={envState.baseUrl + props.chat.attachment}
+          />
+        </div>
+      );
+    };
+
+    // 입장 메시지
+    if (props.chat.enter) {
+      return (
+        <div
+          ref={ref}
+          onContextMenu={(e) => handleContextMenu(e)}
+          className={
+            "mb-2 flex gap-2 rounded px-4 text-customText hover:bg-customDark_1"
+          }
+        >
+          <div className={"flex items-end"}>
+            <div className={"font-semibold"}>{props.chat.username}</div>
+            <div className={"mr-2"}>님이 입장하였습니다.</div>
+            {renderTimestamp()}
+          </div>
+        </div>
+      );
+    }
+
     // 수정중 메시지
     if (chatState.chatEdit && chatState.id === props.chat.id) {
       return (
         <div className={"flex w-full items-start rounded py-2 pl-4"}>
-          <img className={"h-12 w-12 rounded-full"} src={userState.avatar} />
+          <img
+            className={"h-12 w-12 rounded-full"}
+            src={envState.baseUrl + userState.avatar}
+          />
 
           <div className={"ml-1 flex w-full flex-col bg-customDark_1 px-3"}>
             <div className={"mb-0.5 flex items-end"}>
               <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
-              {props.chat.createTime ? (
-                <div className={"text-xs text-gray-400"}>
-                  {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
-                  {hour > 12 ? hour - 12 : hour}:{minute}
-                </div>
-              ) : null}
+              {renderTimestamp()}
             </div>
 
             <div
               className={
-                "mb-2 mt-2 flex w-full flex-col rounded text-customText"
+                "mb-1 mt-2 flex w-full flex-col gap-1 rounded text-customText"
               }
             >
               <input
@@ -175,32 +220,9 @@ export default forwardRef(function ChatComponent(
                   </button>
                 </div>
               </div>
+              {renderAttachment()}
             </div>
           </div>
-        </div>
-      );
-    }
-
-    // 입장 메시지
-    if (props.chat.enter) {
-      return (
-        <div
-          ref={ref}
-          onContextMenu={(e) => handleContextMenu(e)}
-          className={
-            "mb-2 flex gap-2 rounded px-4 text-customText hover:bg-customDark_1"
-          }
-        >
-          <div className={"flex items-end"}>
-            <div className={"font-semibold"}>{props.chat.username}</div>
-            <div className={"mr-2"}>님이 입장하였습니다.</div>
-            {props.chat.createTime ? (
-              <div className={"text-xs text-gray-400"}>
-                {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
-                {hour > 12 ? hour - 12 : hour}:{minute}
-              </div>
-            ) : null}
-          </div>{" "}
         </div>
       );
     }
@@ -209,40 +231,79 @@ export default forwardRef(function ChatComponent(
     return (
       <div
         ref={ref}
+        style={{ minHeight: props.chat.attachment ? "auto" : "none" }}
         className={"flex w-full rounded px-4 py-2 hover:bg-customDark_1"}
       >
-        <img
-          className={"h-12 w-12 rounded-full"}
-          src={envState.baseUrl + props.chat.avatarImageSmall}
-        />
+        {props.chat.avatarImageSmall ? (
+          <img
+            className={"h-12 w-12 rounded-full"}
+            src={envState.baseUrl + props.chat.avatarImageSmall}
+          />
+        ) : (
+          <div
+            className={
+              "flex h-12 w-12 items-center justify-center rounded-full bg-customDark_5"
+            }
+          >
+            <svg
+              width="32px"
+              height="32px"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                  className={"stroke-customGray_4"}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                ></path>
+              </g>
+            </svg>
+          </div>
+        )}
         <div
           onContextMenu={(e) => handleContextMenu(e)}
           className={
-            "flex w-full flex-col items-start gap-2 rounded px-4 text-customText"
+            "flex w-full flex-col items-start gap-1 rounded px-4 text-customText"
           }
         >
           <div className={"flex flex-col"}>
             <div className={"mb-0.5 flex items-end"}>
               <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
-              {props.chat.createTime ? (
-                <div className={"text-xs text-gray-400"}>
-                  {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
-                  {hour > 12 ? hour - 12 : hour}:{minute}
-                </div>
-              ) : null}
+              {renderTimestamp()}
             </div>
 
-            <div className={"flex items-end"}>
-              <div className={`${props.chat.error ? "text-red-600" : ""} mr-2`}>
-                {props.chat.message}
-              </div>
-              <div className={"text-xs text-gray-400"}>
-                {props.chat.createTime !== props.chat.updateTime
-                  ? "(수정됨)"
-                  : null}
+            <div className={"flex"}>
+              <div className={"mb-1 flex w-full"}>
+                <div
+                  // style={{ maxWidth: "calc(100vw - 480px)" }}
+                  style={{
+                    maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 700px)" : "calc(100vw - 480px)"}`,
+                  }}
+                  className={`${props.chat.error ? "text-red-600" : ""} mr-2 break-words`}
+                >
+                  {props.chat.message}
+                  {props.chat.createTime !== props.chat.updateTime ? (
+                    <span
+                      className={"ml-1 align-baseline text-xs text-gray-400"}
+                    >
+                      (수정됨)
+                    </span>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>
+          {renderAttachment()}
         </div>
       </div>
     );

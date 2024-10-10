@@ -24,6 +24,7 @@ export default function useSendChatMessage() {
       channelId: channelId,
       username: props.chat.username,
       message: props.chat.message,
+      attachment: props.chat.attachment,
     };
 
     try {
@@ -43,6 +44,9 @@ export default function useSendChatMessage() {
                   id: response.data.id,
                   createTime: response.data.createTime,
                   updateTime: response.data.createTime,
+                  attachment: response.data.attachment,
+                  attachmentWidth: response.data.attachmentWidth,
+                  attachmentHeight: response.data.attachmentHeight,
                 };
               }
               return chat;

@@ -39,7 +39,12 @@ export interface Chat {
   id: number;
   username: string;
   avatarImageSmall?: string;
-  message: string;
+  message?: string;
+  attachmentType?: string;
+  attachment?: string;
+  attachmentFileName?: string;
+  attachmentWidth?: number;
+  attachmentHeight?: number;
   error?: boolean;
   enter?: boolean;
   leave?: boolean;
@@ -59,4 +64,8 @@ export interface StompChatMessage {
   message: string;
   createTime?: number;
   updateTime?: number;
+
+  attachment?: string;
+  attachmentWidth?: number;
+  attachmentHeight?: number;
 }

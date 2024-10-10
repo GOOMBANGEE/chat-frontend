@@ -54,6 +54,12 @@ export default function useReceiveStompMessageHandler() {
       message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
+      const attachmentWidth = Number(
+        message.attachment?.split("&width=")[1].split("&")[0],
+      );
+      const attachmentHeight = Number(
+        message.attachment?.split("&height=")[1].split(".")[0],
+      );
       const newChat: Chat = {
         id: message.chatId,
         username: message.username,
@@ -61,6 +67,9 @@ export default function useReceiveStompMessageHandler() {
         message: message.message,
         createTime: message.createTime,
         updateTime: message.createTime,
+        attachment: message.attachment,
+        attachmentWidth: attachmentWidth,
+        attachmentHeight: attachmentHeight,
       };
 
       newChatInfoList = chatListState.map((chatInfoList) => {

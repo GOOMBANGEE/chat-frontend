@@ -18,11 +18,9 @@ export default function useFetchChatList() {
 
   const fetchChatList = async (props: Props) => {
     const chatUrl = envState.chatUrl;
-    const response = await axios.get(
-      `${chatUrl}/${props.serverId}/${props.channelId}/list`,
-    );
+    const response = await axios.get(`${chatUrl}/${props.channelId}/list`);
 
-    const newChatList = response.data.chatList.sort(
+    const newChatList: Chat[] = response.data.chatList.sort(
       (a: Chat, b: Chat) => a.id - b.id,
     );
 
