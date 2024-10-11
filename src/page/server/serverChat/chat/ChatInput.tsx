@@ -75,10 +75,7 @@ export default function ChatInput() {
 
       const newChatInfoList: ChatInfoList[] = chatListState.map(
         (chatInfoList) => {
-          if (
-            chatInfoList.serverId === serverState.id &&
-            chatInfoList.channelId === channelState.id
-          ) {
+          if (chatInfoList.channelId === channelState.id) {
             return {
               ...chatInfoList,
               chatList: [...chatInfoList.chatList, chat],

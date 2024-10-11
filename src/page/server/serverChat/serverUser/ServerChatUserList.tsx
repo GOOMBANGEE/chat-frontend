@@ -1,8 +1,8 @@
-import { useServerStore } from "../../../store/ServerStore.tsx";
-import { useUserStore } from "../../../store/UserStore.tsx";
-import { UserInfo } from "../../../../index";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
+import { useUserStore } from "../../../../store/UserStore.tsx";
+import { UserInfo } from "../../../../../index";
 import React, { useEffect, useState } from "react";
-import { useEnvStore } from "../../../store/EnvStore.tsx";
+import { useEnvStore } from "../../../../store/EnvStore.tsx";
 
 export default function ServerChatUserList() {
   const { envState } = useEnvStore();
@@ -12,6 +12,19 @@ export default function ServerChatUserList() {
   const [onlineUser, setOnlineUser] = useState<UserInfo[]>();
   const [offlineUser, setOfflineUser] = useState<UserInfo[]>();
 
+  const handleClick = (e: React.MouseEvent, userInfo: UserInfo) => {
+    e.preventDefault();
+    if (userInfo.id !== userState.id)
+      setUserState({
+        userInfoMenu: true,
+        focusUserId: userInfo.id,
+        focusUsername: userInfo.username,
+        focusUserAvatar: userInfo.avatarImageSmall,
+        menuPositionX: e.clientX,
+        menuPositionY: e.clientY,
+      });
+  };
+
   const handleContextMenu = (e: React.MouseEvent, userInfo: UserInfo) => {
     e.preventDefault();
     if (userInfo.id !== userState.id) {
@@ -19,6 +32,9 @@ export default function ServerChatUserList() {
         userContextMenu: true,
         focusUserId: userInfo.id,
         focusUsername: userInfo.username,
+        focusUserAvatar: userInfo.avatarImageSmall,
+        menuPositionX: e.clientX,
+        menuPositionY: e.clientY,
       });
     }
   };
@@ -49,6 +65,7 @@ export default function ServerChatUserList() {
           {onlineUser.map((userInfo) => (
             <button
               key={userInfo.id}
+              onClick={(e) => handleClick(e, userInfo)}
               onContextMenu={(e) => handleContextMenu(e, userInfo)}
               className={
                 "flex w-full items-center rounded px-2 py-2 hover:bg-customDark_5"

@@ -4,12 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useChatStore } from "../../store/ChatStore.tsx";
-import useFetchChatList from "../../hook/server/serverChat/useFetchChatList.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 
 export default function ServerList() {
-  const { fetchChatList } = useFetchChatList();
-
   const { resetChatListState } = useChatStore();
   const { serverState, setServerState, serverListState } = useServerStore();
   const { setServerAddState } = useServerAddStore();
@@ -27,6 +24,7 @@ export default function ServerList() {
   };
 
   const handleClickServerIcon = async (server: ServerInfo) => {
+    if (serverState.id === server.id) return;
     setServerState({
       id: server.id,
       name: server.name,
@@ -43,14 +41,16 @@ export default function ServerList() {
     // 해당 서버의 채널 리스트를 필터링하고 displayOrder에 따라 정렬
     const sortedChannels = channelListState
       .filter((channel) => channel.serverId === server.id)
-      .sort((a, b) => a.displayOrder - b.displayOrder);
+      .sort((a, b) => {
+        const orderA = a.displayOrder ?? Number.MAX_SAFE_INTEGER;
+        const orderB = b.displayOrder ?? Number.MAX_SAFE_INTEGER;
+        return orderA - orderB;
+      });
 
     // displayOrder가 가장 작은 채널로 이동
     const firstChannel = sortedChannels[0];
     setChannelState({ id: firstChannel.id, name: firstChannel.name });
 
-    // fetch serverChat log limit 50
-    await fetchChatList({ serverId: server.id, channelId: firstChannel.id });
     navigate(`/server/${server.id}/${firstChannel.id}`);
   };
 

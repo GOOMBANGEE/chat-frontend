@@ -6,7 +6,6 @@ import devLog from "../../../devLog.ts";
 import { useChannelStore } from "../../../store/ChannelStore.tsx";
 
 interface Props {
-  serverId: number;
   channelId: number;
 }
 
@@ -25,7 +24,6 @@ export default function useFetchChatList() {
     );
 
     const newChatInfo: ChatInfoList = {
-      serverId: props.serverId,
       channelId: props.channelId,
       chatList: newChatList,
     };

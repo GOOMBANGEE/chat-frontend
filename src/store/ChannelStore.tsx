@@ -19,6 +19,8 @@ interface ChannelState {
   lastMessageId: number | undefined;
   serverId: number | undefined;
   categoryId: number | undefined;
+  userDirectMessageId: number | undefined;
+  userDirectMessageAvatar: string | undefined;
 
   // channel focus -> 채팅을 수신했을때, 읽음처리할지 결정
   windowFocus: boolean;
@@ -60,6 +62,8 @@ const initialChannelState: ChannelState = {
   lastMessageId: undefined,
   serverId: undefined,
   categoryId: undefined,
+  userDirectMessageId: undefined,
+  userDirectMessageAvatar: undefined,
 
   // channel focus -> 채팅을 수신했을때, 읽음처리할지 결정
   windowFocus: false,

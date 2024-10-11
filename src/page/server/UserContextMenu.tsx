@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useUserStore } from "../../store/UserStore.tsx";
 import useFriendRequest from "../../hook/user/useFriendRequest.tsx";
 import useFriendDelete from "../../hook/user/useFriendDelete.tsx";
@@ -7,7 +7,6 @@ export default function UserContextMenu() {
   const { friendRequest } = useFriendRequest();
   const { friendDelete } = useFriendDelete();
   const { userState, setUserState, userFriendListState } = useUserStore();
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const friend = userFriendListState.some(
     (user) => user.id === userState.focusUserId,
@@ -39,19 +38,15 @@ export default function UserContextMenu() {
           userContextMenu: false,
           focusUserId: undefined,
           focusUsername: undefined,
+          menuPositionX: undefined,
+          menuPositionY: undefined,
         });
       }
     };
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-      setMenuPosition({ x: e.clientX, y: e.clientY });
-    };
 
     document.addEventListener("mouseup", handleClickOutside);
-    document.addEventListener("contextmenu", handleContextMenu);
     return () => {
       document.removeEventListener("mouseup", handleClickOutside);
-      document.removeEventListener("contextmenu", handleContextMenu);
     };
   }, [userState, setUserState]);
 
@@ -59,10 +54,10 @@ export default function UserContextMenu() {
     <div
       style={{
         position: "fixed",
-        top: `${menuPosition.y}px`,
-        ...(location.pathname !== "/server"
-          ? { left: `${menuPosition.x - 120}px` }
-          : { left: `${menuPosition.x}px` }),
+        top: `${userState.menuPositionY}px`,
+        ...(location.pathname !== "/server" && userState.menuPositionX
+          ? { left: `${userState.menuPositionX - 120}px` }
+          : { left: `${userState.menuPositionX}px` }),
       }}
       className={
         "server-chat-user-list-context-menu flex flex-col gap-2 rounded bg-black px-2 py-2 text-customText"

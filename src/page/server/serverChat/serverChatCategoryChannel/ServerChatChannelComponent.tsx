@@ -15,8 +15,10 @@ export default function ServerChatChannelComponent(props: Readonly<Props>) {
   const navigate = useNavigate();
 
   const handleChannelClick = () => {
-    resetChannelState();
-    navigate(`/server/${serverState.id}/${props.channel.id}`);
+    if (channelState.id !== props.channel.id) {
+      resetChannelState();
+      navigate(`/server/${serverState.id}/${props.channel.id}`);
+    }
   };
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();

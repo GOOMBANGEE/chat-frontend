@@ -47,9 +47,14 @@ interface UserState {
   userSettingAvatarChangeModal: boolean;
   newAvatarImage: string | undefined;
 
+  // serverUser info
+  userInfoMenu: boolean;
   userContextMenu: boolean;
   focusUserId: number | undefined;
   focusUsername: string | undefined;
+  focusUserAvatar: string | undefined;
+  menuPositionX: number | undefined;
+  menuPositionY: number | undefined;
 
   // index page friend list
   indexPageFriendList: boolean;
@@ -97,9 +102,14 @@ const initialUserState = {
   userSettingAvatarChangeModal: false,
   newAvatarImage: undefined,
 
+  // serverUser info
+  userInfoMenu: false,
   userContextMenu: false,
   focusUserId: undefined,
   focusUsername: undefined,
+  focusUserAvatar: undefined,
+  menuPositionX: undefined,
+  menuPositionY: undefined,
 
   indexPageFriendList: true,
   indexPageFriendRequestList: false,

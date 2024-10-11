@@ -14,23 +14,16 @@ export interface CategoryInfo {
 
 export interface ChannelInfo {
   id: number;
-  name: string;
-  displayOrder: number;
-  lastReadMessageId: number | null;
-  lastMessageId: number | null;
-  serverId: number;
-  categoryId: number | null;
-}
-
-export interface UserInfo {
-  id: number;
-  username: string;
-  avatarImageSmall: string;
-  online: boolean;
+  name: string | undefined;
+  displayOrder: number | undefined;
+  lastReadMessageId: number | undefined;
+  lastMessageId: number | undefined;
+  serverId: number | undefined;
+  categoryId: number | undefined;
+  userDirectMessageId: number | undefined;
 }
 
 export interface ChatInfoList {
-  serverId: number;
   channelId: number;
   chatList: Chat[];
 }
@@ -50,6 +43,13 @@ export interface Chat {
   leave?: boolean;
   createTime?: number;
   updateTime?: number;
+}
+
+export interface UserInfo {
+  id: number;
+  username: string;
+  avatarImageSmall: string;
+  online: boolean;
 }
 
 export interface StompChatMessage {

@@ -90,10 +90,7 @@ export default forwardRef(function ChatComponent(
       };
       const newChatInfoList: ChatInfoList[] = chatListState.map(
         (chatInfoList) => {
-          if (
-            chatInfoList.serverId === serverState.id &&
-            chatInfoList.channelId === channelState.id
-          ) {
+          if (chatInfoList.channelId === channelState.id) {
             return {
               ...chatInfoList,
               chatList: chatInfoList.chatList.map((chat: Chat) => {
@@ -285,7 +282,6 @@ export default forwardRef(function ChatComponent(
             <div className={"flex"}>
               <div className={"mb-1 flex w-full"}>
                 <div
-                  // style={{ maxWidth: "calc(100vw - 480px)" }}
                   style={{
                     maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 700px)" : "calc(100vw - 480px)"}`,
                   }}

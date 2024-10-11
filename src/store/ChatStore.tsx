@@ -29,6 +29,8 @@ interface ChatState {
   // send message 후 scroll 최하단위치
   sendMessage: boolean;
 
+  focusDmInput: boolean;
+
   chatContextMenuOpen: boolean;
   chatEdit: boolean;
   chatDeleteModalOpen: boolean;
@@ -52,6 +54,8 @@ const initialChatState: ChatState = {
   attachmentHeight: undefined,
   // send message 후 scroll 최하단위치
   sendMessage: false,
+
+  focusDmInput: false,
 
   chatContextMenuOpen: false,
   chatEdit: false,

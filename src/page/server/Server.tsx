@@ -48,7 +48,7 @@ export default function Server() {
 
   const componentName = "Server";
   const rootPath = "/server";
-  const routePathList = ["/", "/:serverId", "/:serverId/:channelId"];
+  const routePathList = ["/", "/:serverId/:channelId", "/dm/:channelId"];
 
   // 로그인해서 userState.username 변경된 경우
   useEffect(() => {
@@ -61,21 +61,19 @@ export default function Server() {
 
   // server 바뀔때 fetch server chat, user list
   useEffect(() => {
-    if (serverState.id && channelState.id) {
+    if (channelState.id) {
       // chatListState에 해당 serverId, channelId인 chatList가 있는지 확인
       const chatInfoExists = chatListState.some(
-        (chatInfo) =>
-          chatInfo.serverId === serverState.id &&
-          chatInfo.channelId === channelState.id,
+        (chatInfo) => chatInfo.channelId === channelState.id,
       );
 
       // chatList가 없는경우
       if (!chatInfoExists) {
-        fetchChatList({ serverId: serverState.id, channelId: channelState.id });
+        fetchChatList({ channelId: channelState.id });
       }
-      fetchServerUserList({ serverId: serverState.id });
+      if (serverState.id) fetchServerUserList({ serverId: serverState.id });
     }
-  }, [serverState.id, channelState.id]);
+  }, [channelState.id]);
 
   // 초기 stomp 연결
   const initializeStompClient = () => {
@@ -111,42 +109,54 @@ export default function Server() {
   }, [stompState.chatMessage]);
 
   // 새로고침, 경로변경시 -> server, channel 상태 저장 , stomp sub
-  const serverId = Number(location.pathname.split("/")[2]);
-  const channelId = Number(location.pathname.split("/")[3]);
   useEffect(() => {
+    let serverId;
+    let channelId;
+    if (location.pathname.includes("dm")) {
+      channelId = Number(location.pathname.split("/")[3]);
+    } else {
+      serverId = Number(location.pathname.split("/")[2]);
+      channelId = Number(location.pathname.split("/")[3]);
+    }
+
     checkPath({ rootPath, routePathList });
-    if (userState.username && serverId && channelId) {
+    if (userState.username && channelId) {
       // subscribe user
       const userSubscriptionUrl = `/sub/user/${userState.id}`;
       stompSubscribe(userSubscriptionUrl);
 
       // subscribe server
-      const server = serverListState.find((server) => server.id === serverId);
-      if (server) {
-        devLog(componentName, "setServerState");
-        setServerState({ id: server.id, name: server.name });
-        const serverSubscriptionUrl = `/sub/server/${server.id}`;
-        stompSubscribe(serverSubscriptionUrl);
+      if (serverId) {
+        const server = serverListState.find((server) => server.id === serverId);
+        if (server) {
+          devLog(componentName, "setServerState");
+          setServerState({ id: server.id, name: server.name });
+          const serverSubscriptionUrl = `/sub/server/${server.id}`;
+          stompSubscribe(serverSubscriptionUrl);
+        }
       }
 
       // subscribe channel
       const channel = channelListState.find(
         (channel) => channel.id === channelId,
       );
-      if (server && channel) {
+      if (channel) {
         devLog(componentName, "setChannelState");
         setChannelState({
           id: channel.id,
-          name: channel.name,
-          displayOrder: channel.displayOrder,
+          name: channel.name ? channel.name : undefined,
+          displayOrder: channel.displayOrder ? channel.displayOrder : undefined,
           lastReadMessageId: channel.lastReadMessageId
             ? channel.lastReadMessageId
             : undefined,
           lastMessageId: channel.lastMessageId
             ? channel.lastMessageId
             : undefined,
-          serverId: channel.serverId,
+          serverId: channel.serverId ? channel.serverId : undefined,
           categoryId: channel.categoryId ? channel.categoryId : undefined,
+          userDirectMessageId: channel.userDirectMessageId
+            ? channel.userDirectMessageId
+            : undefined,
           newMessage: channel.lastMessageId !== channel.lastReadMessageId,
         });
         const channelSubscriptionUrl = `/sub/channel/${channel.id}`;
@@ -173,6 +183,7 @@ export default function Server() {
           <Routes>
             <Route index element={<ServerIndex />} />
             <Route path={":serverId/:channelId"} element={<ServerChat />} />
+            <Route path={"dm/:channelId"} element={<ServerChat />} />
           </Routes>
         </div>
 

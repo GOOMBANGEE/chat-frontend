@@ -53,7 +53,7 @@ export default function ServerIndexFriendHeader() {
   };
 
   return (
-    <div className={"flex w-full flex-col px-6 py-3 text-customText shadow-md"}>
+    <div className={"flex w-full flex-col px-6 py-4 text-customText shadow-md"}>
       <div className={"flex items-center gap-x-6"}>
         <div className={"flex font-semibold"}>
           <svg

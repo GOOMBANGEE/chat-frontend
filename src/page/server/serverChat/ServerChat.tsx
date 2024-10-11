@@ -7,7 +7,7 @@ import UserInfoMenu from "../UserInfoMenu.tsx";
 import ChatContextMenu from "./chat/ChatContextMenu.tsx";
 import ChatDeleteModal from "./chat/ChatDeleteModal.tsx";
 import { useServerStore } from "../../../store/ServerStore.tsx";
-import ServerChatUserList from "./ServerChatUserList.tsx";
+import ServerChatUserList from "./serverUser/ServerChatUserList.tsx";
 import ChatSearchOption from "./chat/ChatSearchOption.tsx";
 import ServerChatSearchList from "./ServerChatSearchList.tsx";
 import { useUserStore } from "../../../store/UserStore.tsx";
@@ -29,14 +29,17 @@ import useFetchChatListBefore from "../../../hook/server/serverChat/useFetchChat
 import { Chat } from "../../../../index";
 import NewLine from "./NewLine.tsx";
 import { throttle } from "lodash";
+import ServerUserInfoMenu from "./serverUser/ServerUserInfoMenu.tsx";
+import ServerIndexDMList from "../serverIndex/ServerIndexDMList.tsx";
 
 export default function ServerChat() {
   const { readMessage } = useReadMessage();
   const { fetchChatListBefore } = useFetchChatListBefore();
 
-  const { serverState } = useServerStore();
-  const { categoryState } = useCategoryStore();
-  const { channelState, setChannelState, channelListState } = useChannelStore();
+  const { serverState, resetServerState } = useServerStore();
+  const { categoryState, resetCategoryState } = useCategoryStore();
+  const { channelState, setChannelState, channelListState, resetChannelState } =
+    useChannelStore();
   const { chatState, setChatState, chatListState } = useChatStore();
   const { userState } = useUserStore();
 
@@ -75,7 +78,10 @@ export default function ServerChat() {
   // 해당 채널에 맞는 chatList 생성 -> 생성완료되면 아래 이벤트들 트리거로 사용
   useEffect(() => {
     setUpdate(false);
-    if (channelState.id !== channelIdRef.current) {
+    if (
+      channelState.id !== channelIdRef.current ||
+      channelState.userDirectMessageId !== undefined
+    ) {
       // 채널변경시 이전 채널아이디와 다른경우 initialRender true -> 자동으로 읽음처리 되지않도록 트리거설정
       setChannelState({ initialRender: true });
 
@@ -85,19 +91,21 @@ export default function ServerChat() {
       setLastReadMessageId(lastReadMessageId);
 
       const filteredChatInfoList = chatListState.filter(
-        (chatInfoList) =>
-          chatInfoList.serverId === serverState.id &&
-          chatInfoList.channelId === channelState.id,
+        (chatInfoList) => chatInfoList.channelId === channelState.id,
       );
       const filteredChatList = filteredChatInfoList.flatMap(
         (chatInfoList) => chatInfoList.chatList,
       );
-
       setLeastFetchChatId(filteredChatList[0]?.id);
       leastFetchChatIdRef.current = leastFetchChatId;
       setChatList(filteredChatList);
       setUpdate(true);
     }
+
+    return () => {
+      setChatList(undefined);
+      channelIdRef.current = undefined;
+    };
   }, [channelState.id, chatListState]);
 
   // 채팅 가져왔을때, 스크롤 이벤트
@@ -269,16 +277,31 @@ export default function ServerChat() {
     };
   }, [setChannelState]);
 
+  useEffect(() => {
+    return () => {
+      resetServerState();
+      resetCategoryState();
+      resetChannelState();
+    };
+  }, []);
+
   return (
     <div
       style={{ maxHeight: "100vh" }}
       className={"relative flex h-full w-full"}
     >
-      <div className={"relative flex w-60 flex-col gap-0 bg-customDark_2"}>
-        <ServerChatDropdown />
-        <ServerChatCategoryChannelList />
-        <UserInfoMenu />
-      </div>
+      {serverState.id ? (
+        <div className={"relative flex w-60 flex-col gap-0 bg-customDark_2"}>
+          <ServerChatDropdown />
+          <ServerChatCategoryChannelList />
+          <UserInfoMenu />
+        </div>
+      ) : (
+        <div className={"relative h-full w-72 bg-customDark_2"}>
+          <ServerIndexDMList />
+          <UserInfoMenu />
+        </div>
+      )}
 
       <div
         style={{ maxWidth: "calc(100vw - 320px )" }}
@@ -287,15 +310,12 @@ export default function ServerChat() {
         <ServerChatHeader />
         {serverState.searchOptionMenu ? <ChatSearchOption /> : null}
 
-        <div
-          // style={{ maxWidth: "calc(100vw - 320px )" }}
-          className={"flex h-full w-full"}
-        >
+        <div className={"flex h-full w-full"}>
           {/* chat component*/}
           <div
             style={{
               maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 550px)" : "calc(100vw - 320px)"}`,
-              maxHeight: "calc(100vh - 60px)",
+              maxHeight: "calc(100vh - 70px)",
             }}
             className={"relative flex h-full w-full flex-col"}
           >
@@ -368,6 +388,8 @@ export default function ServerChat() {
               <ChatInput />
             </div>
           </div>
+
+          {userState.userInfoMenu ? <ServerUserInfoMenu /> : null}
           {serverState.serverUserList ? <ServerChatUserList /> : null}
           {serverState.searchList ? <ServerChatSearchList /> : null}
         </div>

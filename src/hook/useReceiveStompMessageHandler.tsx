@@ -5,6 +5,7 @@ import {
   ChatInfoList,
   ServerInfo,
   StompChatMessage,
+  UserInfo,
 } from "../../index";
 import { useChatStore } from "../store/ChatStore.tsx";
 import { useUserStore } from "../store/UserStore.tsx";
@@ -48,10 +49,10 @@ export default function useReceiveStompMessageHandler() {
   let newUserList = [];
 
   const receiveStompMessageHandler = (message: StompChatMessage) => {
-    // 들어온 메세지가 현재 들어가있는 serverId와 같은경우 chatList 갱신
+    // 들어온 메세지가 현재 들어가있는 channelId 같은경우 chatList 갱신
     if (
       message.messageType === "CHAT_SEND" &&
-      message.serverId === serverState.id &&
+      message.channelId === channelState.id &&
       message.username !== userState.username
     ) {
       const attachmentWidth = Number(
@@ -73,10 +74,7 @@ export default function useReceiveStompMessageHandler() {
       };
 
       newChatInfoList = chatListState.map((chatInfoList) => {
-        if (
-          chatInfoList.serverId === message.serverId &&
-          chatInfoList.channelId === message.channelId
-        ) {
+        if (chatInfoList.channelId === message.channelId) {
           return {
             ...chatInfoList,
             chatList: [...chatInfoList.chatList, newChat], // 기존 채팅에 새 채팅추가
@@ -144,10 +142,7 @@ export default function useReceiveStompMessageHandler() {
       message.username !== userState.username
     ) {
       newChatInfoList = chatListState.map((chatInfoList) => {
-        if (
-          chatInfoList.serverId === message.serverId &&
-          chatInfoList.channelId === message.channelId
-        ) {
+        if (chatInfoList.channelId === message.channelId) {
           return {
             ...chatInfoList,
             chatList: chatInfoList.chatList.map((chat: Chat) => {
@@ -176,10 +171,7 @@ export default function useReceiveStompMessageHandler() {
       message.username !== userState.username
     ) {
       newChatInfoList = chatListState.map((chatInfoList) => {
-        if (
-          chatInfoList.serverId === message.serverId &&
-          chatInfoList.channelId === message.channelId
-        ) {
+        if (chatInfoList.channelId === message.channelId) {
           return {
             ...chatInfoList,
             chatList: chatInfoList.chatList.filter(
@@ -213,10 +205,7 @@ export default function useReceiveStompMessageHandler() {
       };
 
       newChatInfoList = chatListState.map((chatInfoList) => {
-        if (
-          chatInfoList.serverId === message.serverId &&
-          chatInfoList.channelId === message.channelId
-        ) {
+        if (chatInfoList.channelId === message.channelId) {
           return {
             ...chatInfoList,
             chatList: [...chatInfoList.chatList, newChat], // 기존 채팅에 새 채팅추가
