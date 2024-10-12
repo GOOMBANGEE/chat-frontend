@@ -52,7 +52,6 @@ export default function useReceiveStompMessageHandler() {
     // 들어온 메세지가 현재 들어가있는 channelId 같은경우 chatList 갱신
     if (
       message.messageType === "CHAT_SEND" &&
-      message.channelId === channelState.id &&
       message.username !== userState.username
     ) {
       const attachmentWidth = Number(
@@ -217,9 +216,10 @@ export default function useReceiveStompMessageHandler() {
       devLog(componentName, "SERVER_ENTER setChatListState newChatList");
       setChatListState(newChatInfoList);
 
-      const newUser = {
+      const newUser: UserInfo = {
         id: message.userId,
         username: message.username,
+        // avatarImageSmall:message.avatar
       };
       newUserList = [...serverUserListState, newUser];
       devLog(componentName, "ENTER setChatListState newChatList");

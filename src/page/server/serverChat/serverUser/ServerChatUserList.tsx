@@ -115,6 +115,7 @@ export default function ServerChatUserList() {
           {offlineUser.map((userInfo) => (
             <button
               key={userInfo.id}
+              onClick={(e) => handleClick(e, userInfo)}
               onContextMenu={(e) => handleContextMenu(e, userInfo)}
               className={
                 "flex w-full items-center rounded px-2 py-2 hover:bg-customDark_5"

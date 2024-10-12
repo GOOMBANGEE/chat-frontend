@@ -1,19 +1,25 @@
 import React, { useEffect, useRef } from "react";
 import { useUserStore } from "../../../../store/UserStore.tsx";
 import { useEnvStore } from "../../../../store/EnvStore.tsx";
-import { Chat, ChatInfoList } from "../../../../../index";
+import { ChannelInfo, Chat, ChatInfoList } from "../../../../../index";
 import useSendChatMessage from "../../../../hook/server/serverChat/useSendChatMessage.tsx";
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
+import { useNavigate } from "react-router-dom";
+import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
+import { useServerStore } from "../../../../store/ServerStore.tsx";
 
 export default function ServerUserInfoMenu() {
   const { sendChatMessage } = useSendChatMessage();
 
-  const { channelState } = useChannelStore();
+  const { resetServerState } = useServerStore();
+  const { resetCategoryState } = useCategoryStore();
+  const { resetChannelState, channelListState } = useChannelStore();
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
   const { userState, setUserState } = useUserStore();
   const { envState } = useEnvStore();
+  const navigate = useNavigate();
 
   const chatInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,20 +35,23 @@ export default function ServerUserInfoMenu() {
   };
 
   const sendMessage = () => {
-    if (userState.username && (chatState.chatMessage || chatState.attachment)) {
+    if (userState.username && chatState.chatMessage) {
       const chat: Chat = {
         id: Date.now(),
         username: userState.username,
         avatarImageSmall: userState.avatar ? userState.avatar : undefined,
         message: chatState.chatMessage,
-        attachment: chatState.attachment,
-        attachmentWidth: chatState.attachmentWidth,
-        attachmentHeight: chatState.attachmentHeight,
       };
 
+      const channel = channelListState.find(
+        (channel: ChannelInfo) =>
+          channel.userDirectMessageId === userState.focusUserId,
+      );
+      if (!channel) return;
+      // 해당되는 채널ID 수집 후 해당 채널에 추가
       const newChatInfoList: ChatInfoList[] = chatListState.map(
         (chatInfoList) => {
-          if (chatInfoList.channelId === channelState.id) {
+          if (chatInfoList.channelId === channel.id) {
             return {
               ...chatInfoList,
               chatList: [...chatInfoList.chatList, chat],
@@ -54,14 +63,27 @@ export default function ServerUserInfoMenu() {
       setChatState({ sendMessage: true });
       setChatListState(newChatInfoList);
 
-      sendChatMessage({ chat: chat, chatList: newChatInfoList });
+      sendChatMessage({
+        channelId: channel.id,
+        chat: chat,
+        chatList: newChatInfoList,
+      });
+
+      resetServerState();
+      resetCategoryState();
+      resetChannelState();
+      setUserState({
+        userInfoMenu: false,
+        focusUserId: undefined,
+        focusUsername: undefined,
+        menuPositionX: undefined,
+        menuPositionY: undefined,
+      });
+      navigate(`/server/dm/${channel.id}`);
     }
 
     setChatState({
       chatMessage: undefined,
-      attachmentType: undefined,
-      attachment: undefined,
-      attachmentFileName: undefined,
     });
     if (chatInputRef.current) {
       chatInputRef.current.value = "";
@@ -70,20 +92,8 @@ export default function ServerUserInfoMenu() {
   };
 
   // div chat input
-  const handleChatInput = (e: React.FormEvent<HTMLDivElement>) => {
-    const divElement = e.currentTarget;
+  const handleChatInput = () => {
     if (chatInputRef.current) {
-      // html 코드가 들어오는경우 innerText와 값이 달라짐
-      // innerHTML을 순수 텍스트만 남김
-      if (divElement.innerHTML !== chatInputRef.current.innerText) {
-        divElement.innerHTML = chatInputRef.current.innerText;
-        const range = document.createRange();
-        const selection = window.getSelection();
-        range.selectNodeContents(chatInputRef.current);
-        range.collapse(false);
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-      }
       setChatState({
         chatMessage: chatInputRef.current.innerText,
       });

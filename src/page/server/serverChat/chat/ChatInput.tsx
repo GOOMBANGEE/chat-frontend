@@ -87,7 +87,13 @@ export default function ChatInput() {
       setChatState({ sendMessage: true });
       setChatListState(newChatInfoList);
 
-      sendChatMessage({ chat: chat, chatList: newChatInfoList });
+      if (channelState.id)
+        sendChatMessage({
+          serverId: serverState.id,
+          channelId: channelState.id,
+          chat: chat,
+          chatList: newChatInfoList,
+        });
     }
 
     setChatState({

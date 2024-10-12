@@ -27,7 +27,7 @@ export default function ServerChatCategoryChannelList() {
       );
       setCategoryList(filteredCategoryList);
     }
-  }, [serverState.id]);
+  }, [serverState.id, channelListState]);
 
   return (
     <div
@@ -45,37 +45,32 @@ export default function ServerChatCategoryChannelList() {
           );
         }
       })}
+      {categoryList?.map((category) => {
+        const filteredChannelList = channelListState
+          .filter(
+            (channel: ChannelInfo) =>
+              channel.serverId === serverState.id &&
+              channel.categoryId === category.id,
+          )
+          .sort((a, b) => {
+            const orderA = a.displayOrder ?? Number.MAX_SAFE_INTEGER;
+            const orderB = b.displayOrder ?? Number.MAX_SAFE_INTEGER;
+            return orderA - orderB;
+          });
 
-      {categoryList &&
-        categoryList.map((category) => {
-          const filteredChannelList = channelListState
-            .filter(
-              (channel: ChannelInfo) =>
-                channel.serverId === serverState.id &&
-                channel.categoryId === category.id,
-            )
-            .sort((a, b) => {
-              const orderA = a.displayOrder ?? Number.MAX_SAFE_INTEGER;
-              const orderB = b.displayOrder ?? Number.MAX_SAFE_INTEGER;
-              return orderA - orderB;
-            });
-
-          return (
-            <div key={category.id}>
-              <div
-                className={"py-1"}
-                onContextMenu={(e) => handleContextMenu(e)}
-              ></div>
-              <ServerChatCategoryComponent category={category} />
-              {filteredChannelList.map((channel: ChannelInfo) => (
-                <ServerChatChannelComponent
-                  key={channel.id}
-                  channel={channel}
-                />
-              ))}
-            </div>
-          );
-        })}
+        return (
+          <div key={category.id}>
+            <div
+              className={"py-1"}
+              onContextMenu={(e) => handleContextMenu(e)}
+            ></div>
+            <ServerChatCategoryComponent category={category} />
+            {filteredChannelList.map((channel: ChannelInfo) => (
+              <ServerChatChannelComponent key={channel.id} channel={channel} />
+            ))}
+          </div>
+        );
+      })}
       <div
         className={"flex-grow"}
         onContextMenu={(e) => handleContextMenu(e)}

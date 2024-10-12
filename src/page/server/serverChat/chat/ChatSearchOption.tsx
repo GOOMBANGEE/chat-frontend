@@ -22,7 +22,7 @@ export default function ChatSearchOption() {
   return (
     <div
       className={
-        "server-search-bar absolute right-10 top-12 flex w-48 flex-col justify-center rounded bg-black px-2 py-4"
+        "server-search-bar absolute right-10 top-12 z-10 flex w-48 flex-col justify-center rounded bg-black px-2 py-4"
       }
     >
       <div className={"mb-1 px-2 text-xs text-gray-500"}>검색옵션</div>

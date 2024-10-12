@@ -1,11 +1,12 @@
 import { useChatStore } from "../../../store/ChatStore.tsx";
-import { useParams } from "react-router-dom";
 import axios, { isAxiosError } from "axios";
 import { useEnvStore } from "../../../store/EnvStore.tsx";
 import { Chat, ChatInfoList } from "../../../../index";
 import devLog from "../../../devLog.ts";
 
 interface Props {
+  serverId?: number;
+  channelId: number;
   chat: Chat;
   chatList: ChatInfoList[];
 }
@@ -13,15 +14,14 @@ interface Props {
 export default function useSendChatMessage() {
   const { setChatListState } = useChatStore();
   const { envState } = useEnvStore();
-  const { serverId, channelId } = useParams();
   const componentName = "useSendChatMessage";
 
   const sendChatMessage = async (props: Props) => {
     const chatUrl = envState.chatUrl;
     const message = {
       messageType: "CHAT_SEND",
-      serverId: serverId,
-      channelId: channelId,
+      serverId: props.serverId,
+      channelId: props.channelId,
       username: props.chat.username,
       message: props.chat.message,
       attachment: props.chat.attachment,
@@ -31,10 +31,7 @@ export default function useSendChatMessage() {
       const response = await axios.post(chatUrl, message);
       // response 들어오면 해당 id를 찾아서 서버의 serverChat id 부여
       const newChatInfoList = props.chatList.map((chatInfoList) => {
-        if (
-          chatInfoList.serverId === Number(serverId) &&
-          chatInfoList.channelId === Number(channelId)
-        ) {
+        if (chatInfoList.channelId === Number(props.channelId)) {
           return {
             ...chatInfoList,
             chatList: chatInfoList.chatList.map((chat: Chat) => {
@@ -62,10 +59,7 @@ export default function useSendChatMessage() {
       if (isAxiosError(error)) {
         // 해당 id를 찾아서 발송문제를 표시
         const newChatInfoList = props.chatList.map((chatInfoList) => {
-          if (
-            chatInfoList.serverId === Number(serverId) &&
-            chatInfoList.channelId === Number(channelId)
-          ) {
+          if (chatInfoList.channelId === Number(props.channelId)) {
             return {
               ...chatInfoList,
               chatList: chatInfoList.chatList.map((chat: Chat) => {
