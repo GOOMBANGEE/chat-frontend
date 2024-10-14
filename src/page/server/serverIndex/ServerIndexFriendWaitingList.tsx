@@ -2,6 +2,7 @@ import { useUserStore } from "../../../store/UserStore.tsx";
 import { useEffect } from "react";
 import useFriendRequestAccept from "../../../hook/user/useFriendRequestAccept.tsx";
 import useFriendRequestReject from "../../../hook/user/useFriendRequestReject.tsx";
+import { UserInfo } from "../../../../index";
 
 export default function ServerIndexFriendWaitingList() {
   const { friendRequestAccept } = useFriendRequestAccept();
@@ -30,10 +31,7 @@ export default function ServerIndexFriendWaitingList() {
   }, [userState.searchUsername]);
 
   // accept & reject
-  const handleClickAccept = async (
-    friendId: number,
-    friendUsername: string,
-  ) => {
+  const handleClickAccept = async (friend: UserInfo) => {
     if (userState.id && userState.username) {
       setUserState({
         isHoverAcceptButton: false,
@@ -42,8 +40,10 @@ export default function ServerIndexFriendWaitingList() {
       await friendRequestAccept({
         id: userState.id,
         username: userState.username,
-        friendId,
-        friendUsername,
+        friendId: friend.id,
+        friendUsername: friend.username,
+        friendAvatarImageSmall: friend.avatarImageSmall,
+        friendOnline: friend.online,
       });
     }
   };
@@ -96,7 +96,7 @@ export default function ServerIndexFriendWaitingList() {
           </div>
           <div className={"w-full"}>
             {/* friend waiting list */}
-            {displayFriendWaitingList.map((user) => (
+            {displayFriendWaitingList.map((user: UserInfo) => (
               <div
                 key={user.id}
                 className={
@@ -107,7 +107,7 @@ export default function ServerIndexFriendWaitingList() {
                 <div className={"ml-auto flex gap-x-2"}>
                   {/* accept button */}
                   <button
-                    onClick={() => handleClickAccept(user.id, user.username)}
+                    onClick={() => handleClickAccept(user)}
                     onMouseOver={(e) =>
                       setUserState({
                         isHoverAcceptButton: true,

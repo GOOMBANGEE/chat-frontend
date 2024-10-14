@@ -16,9 +16,7 @@ export default function useFetchChatListBefore() {
     const chatUrl = envState.chatUrl;
     if (serverState.id && channelState.id) {
       const chatInfoList = chatListState.find(
-        (chatInfoList) =>
-          chatInfoList.serverId === serverState.id &&
-          chatInfoList.channelId === channelState.id,
+        (chatInfoList) => chatInfoList.channelId === channelState.id,
       );
       if (!chatInfoList) return;
       const chatId = chatInfoList?.chatList[0]?.id;
@@ -33,10 +31,7 @@ export default function useFetchChatListBefore() {
       );
 
       const newChatInfoList = chatListState.map((chatInfoList) => {
-        if (
-          chatInfoList.serverId === serverState.id &&
-          chatInfoList.channelId === channelState.id
-        ) {
+        if (chatInfoList.channelId === channelState.id) {
           return {
             ...chatInfoList,
             chatList: [...newChatList, ...chatInfoList.chatList],

@@ -6,6 +6,7 @@ import { useServerStore } from "../../store/ServerStore.tsx";
 import devLog from "../../devLog.ts";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import { useCategoryStore } from "../../store/CategoryStore.tsx";
+import { ChannelInfo, ServerInfo } from "../../../index";
 
 export default function useServerCreate() {
   const { serverAddState, resetServerAddState } = useServerAddStore();
@@ -26,7 +27,7 @@ export default function useServerCreate() {
       name: serverAddState.name,
     });
 
-    const newServer = {
+    const newServer: ServerInfo = {
       id: response.data.id,
       name: response.data.name,
     };
@@ -56,12 +57,15 @@ export default function useServerCreate() {
       name: response.data.channelName,
     });
 
-    const newChannel = {
+    const newChannel: ChannelInfo = {
       id: response.data.channelId,
       name: response.data.channelName,
       displayOrder: response.data.channelDisplayOrder,
+      lastReadMessageId: undefined,
+      lastMessageId: undefined,
       serverId: response.data.id,
       categoryId: response.data.categoryId,
+      userDirectMessageId: undefined,
     };
     const newChannelList = [...channelListState, newChannel];
     devLog(componentName, "setChannelListState newChannelList");

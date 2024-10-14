@@ -35,10 +35,7 @@ export default function useChatEdit() {
         // 해당 id를 찾아서 발송문제를 표시
         const newChatInfoList: ChatInfoList[] = props.chatInfoList.map(
           (chatInfoList) => {
-            if (
-              chatInfoList.serverId === serverState.id &&
-              chatInfoList.channelId === channelState.id
-            ) {
+            if (chatInfoList.channelId === channelState.id) {
               return {
                 ...chatInfoList,
                 chatList: chatInfoList.chatList.map((chat: Chat) => {

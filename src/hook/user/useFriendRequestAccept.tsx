@@ -3,12 +3,15 @@ import { useEnvStore } from "../../store/EnvStore.tsx";
 import axios, { isAxiosError } from "axios";
 import { toast } from "react-toastify";
 import devLog from "../../devLog.ts";
+import { UserInfo } from "../../../index";
 
 interface Props {
   id: number;
   username: string;
   friendId: number;
   friendUsername: string;
+  friendAvatarImageSmall: string;
+  friendOnline: boolean;
 }
 
 export default function useFriendRequestAccept() {
@@ -31,9 +34,11 @@ export default function useFriendRequestAccept() {
         friendId: props.friendId,
       });
 
-      const newFriend = {
+      const newFriend: UserInfo = {
         id: props.friendId,
         username: props.friendUsername,
+        avatarImageSmall: props.friendAvatarImageSmall,
+        online: props.friendOnline,
       };
 
       const newFriendList = [...userFriendListState, newFriend];

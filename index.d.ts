@@ -1,8 +1,6 @@
 export interface ServerInfo {
   id: number;
   name: string;
-  lastRead: number;
-  lastMessage: number;
 }
 
 export interface CategoryInfo {
