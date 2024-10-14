@@ -16,6 +16,7 @@ export default function useFriendRequest() {
       await axios.post(`${userUrl}/friend`, {
         id: userState.id,
         username: userState.username,
+        avatar: userState.avatar,
         friendName: userState.focusUsername,
       });
       toast.success("친구신청을 보냈습니다");

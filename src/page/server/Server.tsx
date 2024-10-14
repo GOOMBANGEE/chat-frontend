@@ -97,6 +97,7 @@ export default function Server() {
   };
   useEffect(() => {
     initializeStompClient();
+
     return () => {
       if (stompState.client) {
         stompState.client.deactivate();
@@ -123,11 +124,11 @@ export default function Server() {
     }
 
     checkPath({ rootPath, routePathList });
-    if (userState.username && channelId) {
-      // subscribe user
-      const userSubscriptionUrl = `/sub/user/${userState.id}`;
-      stompSubscribe(userSubscriptionUrl);
+    // subscribe user
+    const userSubscriptionUrl = `/sub/user/${userState.id}`;
+    stompSubscribe(userSubscriptionUrl);
 
+    if (userState.username && channelId) {
       // subscribe server
       if (serverId) {
         const server = serverListState.find((server) => server.id === serverId);
