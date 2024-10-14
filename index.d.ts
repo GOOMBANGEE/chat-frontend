@@ -52,6 +52,26 @@ export interface UserInfo {
   online: boolean;
 }
 
+export interface NotificationInfoList {
+  notificationDirectMessageInfoDtoList: NotificationInfo[];
+  notificationServerInfoDtoList: NotificationInfo[];
+}
+
+export interface NotificationInfo {
+  serverId?: number;
+  serverName?: string;
+  channelId: number;
+  channelName: string | null;
+  chatId: number;
+  chatMessage: string | null;
+  chatAttachment: string | null;
+  chatCreateTime: number | null;
+  chatUpdateTime: number | null;
+  userId: number;
+  username: string;
+  avatarImageSmall: string | null;
+}
+
 export interface StompChatMessage {
   messageType: string;
   serverId: number;
@@ -61,6 +81,7 @@ export interface StompChatMessage {
   userId: number;
   username: string;
   avatar: string;
+  online: boolean;
   message: string;
   createTime?: number;
   updateTime?: number;

@@ -3,6 +3,7 @@ import {
   ChannelInfo,
   Chat,
   ChatInfoList,
+  NotificationInfo,
   ServerInfo,
   StompChatMessage,
   UserInfo,
@@ -37,6 +38,8 @@ export default function useReceiveStompMessageHandler() {
     setUserFriendListState,
     userFriendWaitingListState,
     setUserFriendWaitingListState,
+    userNotificationListState,
+    setUserNotificationListState,
   } = useUserStore();
   const navigate = useNavigate();
 
@@ -130,6 +133,36 @@ export default function useReceiveStompMessageHandler() {
         setChannelListState(newChannelList);
       }
 
+      // dm채널에 들어오는 메시지의 경우 userNotification update
+      const directMessageChannel = channelListState.find(
+        (channelInfo) =>
+          channelInfo.id === message.channelId &&
+          channelInfo.userDirectMessageId,
+      );
+
+      if (directMessageChannel) {
+        console.log(message);
+        const newNotification: NotificationInfo = {
+          channelId: message.channelId,
+          channelName: null,
+          chatId: message.chatId,
+          chatMessage: message.message,
+          chatAttachment: message.attachment ? message.attachment : null,
+          chatCreateTime: message.createTime ? message.createTime : null,
+          chatUpdateTime: message.createTime ? message.createTime : null,
+          userId: message.chatId,
+          username: message.username,
+          avatarImageSmall: message.avatar,
+        };
+        const newNotificationDirectMessage: NotificationInfo[] = [
+          newNotification,
+          ...userNotificationListState.notificationDirectMessageInfoDtoList,
+        ];
+        setUserNotificationListState({
+          notificationDirectMessageInfoDtoList: newNotificationDirectMessage,
+        });
+      }
+
       devLog(componentName, "CHAT_SEND setChatListState newChatList");
       setChatListState(newChatInfoList);
       return;
@@ -219,7 +252,8 @@ export default function useReceiveStompMessageHandler() {
       const newUser: UserInfo = {
         id: message.userId,
         username: message.username,
-        // avatarImageSmall:message.avatar
+        avatarImageSmall: message.avatar,
+        online: message.online,
       };
       newUserList = [...serverUserListState, newUser];
       devLog(componentName, "ENTER setChatListState newChatList");
@@ -293,7 +327,7 @@ export default function useReceiveStompMessageHandler() {
       );
       newChannelList = channelListState.map((channel: ChannelInfo) => {
         if (channel.categoryId === message.categoryId) {
-          return { ...channel, categoryId: null };
+          return { ...channel, categoryId: undefined };
         }
         return channel;
       });
@@ -313,14 +347,15 @@ export default function useReceiveStompMessageHandler() {
     if (message.messageType === "CHANNEL_CREATE") {
       const channelData = JSON.parse(message.message);
 
-      const newChannel = {
+      const newChannel: ChannelInfo = {
         id: channelData.id,
         name: channelData.name,
         displayOrder: channelData.displayOrder,
-        lastReadMessageId: null,
-        lastMessageId: null,
+        lastReadMessageId: undefined,
+        lastMessageId: undefined,
         serverId: channelData.serverId,
         categoryId: channelData.categoryId,
+        userDirectMessageId: undefined,
       };
       newChannelList = [...channelListState, newChannel];
 
@@ -393,6 +428,8 @@ export default function useReceiveStompMessageHandler() {
       const newFriendRequest = {
         id: message.userId,
         username: message.username,
+        avatarImageSmall: message.avatar,
+        online: message.online,
       };
       const newFriendRequestList = [
         ...userFriendWaitingListState,
@@ -409,6 +446,8 @@ export default function useReceiveStompMessageHandler() {
       const newFriend = {
         id: message.userId,
         username: message.username,
+        avatarImageSmall: message.avatar,
+        online: message.online,
       };
       const newFriendList = [...userFriendListState, newFriend];
 

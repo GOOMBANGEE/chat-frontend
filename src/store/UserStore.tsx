@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { UserInfo } from "../../index";
+import { NotificationInfoList, UserInfo } from "../../index";
 
 interface UserStore {
   userState: UserState;
@@ -10,6 +10,8 @@ interface UserStore {
   setUserFriendWaitingListState: (state: UserInfo[]) => void;
   userFriendSearchListState: UserInfo[];
   setUserFriendSearchListState: (state: UserInfo[]) => void;
+  userNotificationListState: NotificationInfoList;
+  setUserNotificationListState: (state: Partial<NotificationInfoList>) => void;
   resetUserState: () => void;
 }
 
@@ -122,6 +124,11 @@ const initialUserState = {
   hoverButtonY: undefined,
 };
 
+const initialUserNotificationListState = {
+  notificationDirectMessageInfoDtoList: [],
+  notificationServerInfoDtoList: [],
+};
+
 export const useUserStore = create<UserStore>((set) => ({
   userState: initialUserState,
   setUserState: (state) =>
@@ -134,5 +141,13 @@ export const useUserStore = create<UserStore>((set) => ({
   userFriendSearchListState: [],
   setUserFriendSearchListState: (state) =>
     set({ userFriendSearchListState: state }),
+  userNotificationListState: initialUserNotificationListState,
+  setUserNotificationListState: (state) =>
+    set((prev) => ({
+      userNotificationListState: {
+        ...prev.userNotificationListState,
+        ...state,
+      },
+    })),
   resetUserState: () => set({ userState: initialUserState }),
 }));

@@ -25,6 +25,7 @@ import { useChannelStore } from "../../store/ChannelStore.tsx";
 import devLog from "../../devLog.ts";
 import useStompSubscribe from "../../hook/useStompSubscribe.tsx";
 import { useChatStore } from "../../store/ChatStore.tsx";
+import useFetchNotification from "../../hook/user/useFetchNotification.tsx";
 
 export default function Server() {
   const { stompSubscribe } = useStompSubscribe();
@@ -35,6 +36,7 @@ export default function Server() {
   const { fetchServerUserList } = useFetchServerUserList();
   const { checkPath } = useCheckPath();
   const { fetchChatList } = useFetchChatList();
+  const { fetchNotification } = useFetchNotification();
 
   const { userState } = useUserStore();
   const { serverAddState } = useServerAddStore();
@@ -56,6 +58,7 @@ export default function Server() {
       fetchServerList();
       fetchFriendList();
       fetchFriendWaitingList();
+      fetchNotification();
     }
   }, [userState.username]);
 

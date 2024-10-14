@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useUserStore } from "../../../store/UserStore.tsx";
 import { UserInfo } from "../../../../index";
 import { useEnvStore } from "../../../store/EnvStore.tsx";
+import NotificationIcon from "../../../component/NotificationIcon.tsx";
 
 export default function ServerChatHeader() {
   const { serverState, setServerState } = useServerStore();
@@ -119,7 +120,7 @@ export default function ServerChatHeader() {
           </div>
         </div>
       )}
-
+      <NotificationIcon />
       <ChatSearchbar />
     </div>
   );

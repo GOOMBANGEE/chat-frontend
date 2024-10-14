@@ -1,4 +1,5 @@
 import { useUserStore } from "../../../store/UserStore.tsx";
+import NotificationIcon from "../../../component/NotificationIcon.tsx";
 
 export default function ServerIndexFriendHeader() {
   const {
@@ -140,6 +141,9 @@ export default function ServerIndexFriendHeader() {
             친구 추가하기
           </button>
         )}
+        <div className={"ml-auto"}>
+          <NotificationIcon />
+        </div>
       </div>
     </div>
   );

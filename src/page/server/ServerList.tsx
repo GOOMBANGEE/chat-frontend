@@ -5,6 +5,7 @@ import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useChatStore } from "../../store/ChatStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
+import useFetchNotification from "../../hook/user/useFetchNotification.tsx";
 
 export default function ServerList() {
   const { resetChatListState } = useChatStore();
@@ -14,8 +15,9 @@ export default function ServerList() {
   const { userState } = useUserStore();
 
   const navigate = useNavigate();
-
+  const { fetchNotification } = useFetchNotification();
   const handleClickMainButton = () => {
+    fetchNotification();
     setServerState({
       isHoverDmButton: false,
       hoverButtonY: undefined,
