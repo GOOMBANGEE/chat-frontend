@@ -91,9 +91,12 @@ export default function NotificationIcon() {
       </button>
       {isOpen ? (
         <div
-          style={{ left: "-350px" }}
+          style={{
+            maxHeight: "calc(100vh - 200px)",
+            left: "-350px",
+          }}
           className={
-            "absolute top-10 z-10 flex w-96 flex-col gap-y-4 rounded border-2 border-customDark_4 bg-customDark_0 py-4 text-customText"
+            "custom-scrollbar absolute top-10 z-10 flex w-96 flex-col gap-y-4 overflow-y-auto rounded border-2 border-customDark_4 bg-customDark_0 py-4 text-customText"
           }
         >
           <div className={"flex"}>
@@ -127,15 +130,15 @@ export default function NotificationIcon() {
                     <div>{notification.channelName}</div>
                     <div
                       className={
-                        "mx-4 flex items-center gap-x-4 rounded bg-customDark_4 px-4 py-4"
+                        "mx-4 flex gap-x-4 rounded bg-customDark_4 px-4 py-4"
                       }
                     >
                       <img
                         src={envState.baseUrl + notification.avatarImageSmall}
                         className={"h-10 w-10 rounded-full"}
-                      ></img>
+                      />
                       <div className={"flex flex-col"}>
-                        <div className={"flex items-center font-semibold"}>
+                        <div className={"mb-2 flex items-center font-semibold"}>
                           {notification.username}
                           <div className="ml-2 text-xs text-gray-400">
                             {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
@@ -153,6 +156,12 @@ export default function NotificationIcon() {
                           </div>
                         </div>
                         <div>{notification.chatMessage}</div>
+                        {notification.chatAttachment ? (
+                          <img
+                            src={envState.baseUrl + notification.chatAttachment}
+                            className={"rounded"}
+                          />
+                        ) : null}
                       </div>
                     </div>
                   </div>

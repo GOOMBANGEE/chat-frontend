@@ -57,12 +57,6 @@ export default function useReceiveStompMessageHandler() {
       message.messageType === "CHAT_SEND" &&
       message.username !== userState.username
     ) {
-      const attachmentWidth = Number(
-        message.attachment?.split("&width=")[1].split("&")[0],
-      );
-      const attachmentHeight = Number(
-        message.attachment?.split("&height=")[1].split(".")[0],
-      );
       const newChat: Chat = {
         id: message.chatId,
         username: message.username,
@@ -71,8 +65,8 @@ export default function useReceiveStompMessageHandler() {
         createTime: message.createTime,
         updateTime: message.createTime,
         attachment: message.attachment,
-        attachmentWidth: attachmentWidth,
-        attachmentHeight: attachmentHeight,
+        attachmentWidth: message.attachmentWidth,
+        attachmentHeight: message.attachmentHeight,
       };
 
       newChatInfoList = chatListState.map((chatInfoList) => {
@@ -141,7 +135,6 @@ export default function useReceiveStompMessageHandler() {
       );
 
       if (directMessageChannel) {
-        console.log(message);
         const newNotification: NotificationInfo = {
           channelId: message.channelId,
           channelName: null,
