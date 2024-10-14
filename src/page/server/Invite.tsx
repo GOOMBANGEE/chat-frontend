@@ -6,10 +6,12 @@ import ErrorPage from "../ErrorPage.tsx";
 import Loading from "../../component/Loading.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useNavigate, useParams } from "react-router-dom";
+import useFetchServerList from "../../hook/server/useFetchServerList.tsx";
 
 export default function Invite() {
   const { fetchServerInfo } = useFetchServerInfo();
   const { serverJoin } = useServerJoin();
+  const { fetchServerList } = useFetchServerList();
 
   const { serverState, setServerState } = useServerStore();
   const { userState } = useUserStore();
@@ -18,13 +20,14 @@ export default function Invite() {
 
   const handleClickJoinButton = async () => {
     if (code) {
-      const serverId = await serverJoin({ code });
-      navigate(`/server/${serverId}`);
+      const response = await serverJoin({ code });
+      await fetchServerList();
+      navigate(`/server/${response?.id}/${response?.channelId}`);
     }
   };
 
   useEffect(() => {
-    fetchServerInfo();
+    if (userState.username) fetchServerInfo();
 
     return () => {
       setServerState({ fetchServerInfo: false });

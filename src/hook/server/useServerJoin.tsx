@@ -14,9 +14,7 @@ export default function useServerJoin() {
   const { envState } = useEnvStore();
   const componentName = "useServerJoin";
 
-  const serverJoin = async (
-    prop: Props,
-  ): Promise<{ serverId: string; refreshToken: string } | undefined> => {
+  const serverJoin = async (prop: Props) => {
     try {
       const serverUrl = envState.serverUrl;
       const response = await axios.post(`${serverUrl}/${prop.code}/join`);
@@ -24,7 +22,6 @@ export default function useServerJoin() {
       const newServer = {
         id: response.data.id,
         name: response.data.name,
-        icon: "",
       };
       const newServerList = [...serverListState, newServer];
 
@@ -33,7 +30,7 @@ export default function useServerJoin() {
       devLog(componentName, "resetServerAddState");
       resetServerAddState();
 
-      return response.data.id;
+      return { id: response.data.id, channelId: response.data.channelId };
     } catch (error) {
       if (isAxiosError(error)) {
         devLog(componentName, "setServerAddState");

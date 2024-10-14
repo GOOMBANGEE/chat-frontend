@@ -2,9 +2,11 @@ import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useEnvStore } from "../../store/EnvStore.tsx";
 import useServerJoin from "../../hook/server/useServerJoin.tsx";
 import { useNavigate } from "react-router-dom";
+import useFetchServerList from "../../hook/server/useFetchServerList.tsx";
 
 export default function ServerAddModalJoin() {
   const { serverJoin } = useServerJoin();
+  const { fetchServerList } = useFetchServerList();
   const { serverAddState, setServerAddState, resetServerAddState } =
     useServerAddStore();
   const { envState } = useEnvStore();
@@ -22,8 +24,9 @@ export default function ServerAddModalJoin() {
       code = serverAddState.code;
     }
 
-    const serverId = await serverJoin({ code });
-    navigate(`/server/${serverId}`);
+    const response = await serverJoin({ code });
+    await fetchServerList();
+    navigate(`/server/${response?.id}/${response?.channelId}`);
   };
 
   return (
