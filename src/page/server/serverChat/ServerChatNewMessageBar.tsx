@@ -42,7 +42,10 @@ export default function ServerChatNewMessageBar(props: Readonly<Props>) {
   };
 
   return (
-    <div className={"absolute z-10 w-full px-2 text-customText"}>
+    <div
+      style={{ zIndex: "5" }}
+      className={"absolute w-full px-2 text-customText"}
+    >
       <div className={"mx-4 flex rounded-b bg-indigo-500 px-2 py-1"}>
         <button
           onClick={handleClickFetchChatListBefore}

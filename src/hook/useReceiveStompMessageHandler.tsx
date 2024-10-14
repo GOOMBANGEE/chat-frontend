@@ -163,7 +163,6 @@ export default function useReceiveStompMessageHandler() {
 
     if (
       message.messageType === "CHAT_UPDATE" &&
-      message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
       newChatInfoList = chatListState.map((chatInfoList) => {
@@ -192,7 +191,6 @@ export default function useReceiveStompMessageHandler() {
 
     if (
       message.messageType === "CHAT_DELETE" &&
-      message.serverId === serverState.id &&
       message.username !== userState.username
     ) {
       newChatInfoList = chatListState.map((chatInfoList) => {

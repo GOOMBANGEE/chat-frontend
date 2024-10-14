@@ -123,7 +123,7 @@ export default function ServerChatDropdown() {
       {serverChatDropdownState.open ? (
         <div
           className={
-            "server-serverChat-dropdown absolute left-2 top-14 w-48 rounded bg-black px-2 py-4 text-gray-300"
+            "server-serverChat-dropdown absolute left-2 top-14 z-10 w-48 rounded bg-black px-2 py-4 text-gray-300"
           }
         >
           <div className={"flex flex-col"}>

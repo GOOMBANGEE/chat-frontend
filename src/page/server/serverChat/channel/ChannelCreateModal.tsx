@@ -31,7 +31,7 @@ export default function ChannelCreateModal() {
 
   const handleCreateButtonClick = async () => {
     const channelId = await channelCreate();
-    navigate(`/server/${serverState.id}/${channelId}`);
+    if (channelId) navigate(`/server/${serverState.id}/${channelId}`);
   };
 
   const handleCheckboxChange = () => {

@@ -60,9 +60,7 @@ export default function NotificationIcon() {
   }, [isOpen]);
 
   return (
-    <div
-      className={"notification-modal relative z-20 flex items-center rounded"}
-    >
+    <div className={"notification-modal relative flex items-center rounded"}>
       <button onClick={handleClickNotificationOpen} className={"group"}>
         <svg
           width="28px"

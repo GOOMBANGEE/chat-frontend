@@ -44,6 +44,11 @@ export default forwardRef(function ChatComponent(
       enter: props.chat.enter,
       createTime: props.chat.createTime,
       updateTime: props.chat.updateTime,
+      focusUsername: props.chat.username,
+      focusUserAvatarImageSmall: props.chat.avatarImageSmall,
+      focusAttachment: props.chat.attachment,
+      focusAttachmentWidth: props.chat.attachmentWidth,
+      focusAttachmentHeight: props.chat.attachmentHeight,
     });
   };
 

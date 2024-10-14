@@ -33,6 +33,12 @@ interface ChatState {
 
   chatContextMenuOpen: boolean;
   chatEdit: boolean;
+  focusUserId: number | undefined;
+  focusUsername: string | undefined;
+  focusUserAvatarImageSmall: string | undefined;
+  focusAttachment: string | undefined;
+  focusAttachmentWidth: number | undefined;
+  focusAttachmentHeight: number | undefined;
   chatDeleteModalOpen: boolean;
 
   enter: boolean;
@@ -59,6 +65,12 @@ const initialChatState: ChatState = {
 
   chatContextMenuOpen: false,
   chatEdit: false,
+  focusUserId: undefined,
+  focusUsername: undefined,
+  focusUserAvatarImageSmall: undefined,
+  focusAttachment: undefined,
+  focusAttachmentWidth: undefined,
+  focusAttachmentHeight: undefined,
   chatDeleteModalOpen: false,
 
   enter: false,
