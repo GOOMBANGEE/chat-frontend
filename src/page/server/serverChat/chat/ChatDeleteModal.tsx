@@ -2,16 +2,47 @@ import { useEffect } from "react";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
 import useChatDelete from "../../../../hook/server/serverChat/useChatDelete.tsx";
 import { useEnvStore } from "../../../../store/EnvStore.tsx";
+import { useChannelStore } from "../../../../store/ChannelStore.tsx";
+import { Chat, ChatInfoList } from "../../../../../index";
 
 export default function ChatDeleteModal() {
   const { chatDelete } = useChatDelete();
-  const { chatState, resetChatState } = useChatStore();
+  const { channelState } = useChannelStore();
+  const { chatState, chatListState, setChatListState, resetChatState } =
+    useChatStore();
   const { envState } = useEnvStore();
+
   const handleClickCancelButton = () => {
     resetChatState();
   };
 
   const handleClickDeleteButton = async () => {
+    // chatListState에서 해당 chatId를 찾아서, error인 chat이라면 server요청을 하지않고 삭제
+    const chatList = chatListState.find((chatInfoList) => {
+      if (chatInfoList.channelId === channelState.id) {
+        return chatInfoList;
+      }
+    });
+    const chat = chatList?.chatList.find((chatInfo) => {
+      if (chatInfo.id === chatState.id) {
+        return chatInfo;
+      }
+    });
+
+    if (chat?.error) {
+      const newChatList: ChatInfoList[] = chatListState.map((chatInfo) => {
+        return {
+          ...chatInfo,
+          chatList: chatInfo.chatList.filter(
+            (chat: Chat) => chat.id !== chatState.id,
+          ),
+        };
+      });
+      setChatListState(newChatList);
+      resetChatState();
+      return;
+    }
+
     await chatDelete();
     resetChatState();
   };

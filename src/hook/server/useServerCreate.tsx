@@ -66,6 +66,8 @@ export default function useServerCreate() {
       serverId: response.data.id,
       categoryId: response.data.categoryId,
       userDirectMessageId: undefined,
+      username: undefined,
+      avatarImageSmall: undefined,
     };
     const newChannelList = [...channelListState, newChannel];
     devLog(componentName, "setChannelListState newChannelList");

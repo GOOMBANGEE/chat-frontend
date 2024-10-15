@@ -3,12 +3,10 @@ import { ServerInfo } from "../../../index";
 import { useNavigate } from "react-router-dom";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
-import { useChatStore } from "../../store/ChatStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import useFetchNotification from "../../hook/user/useFetchNotification.tsx";
 
 export default function ServerList() {
-  const { resetChatListState } = useChatStore();
   const { serverState, setServerState, serverListState } = useServerStore();
   const { setServerAddState } = useServerAddStore();
   const { setChannelState, channelListState } = useChannelStore();
@@ -38,7 +36,6 @@ export default function ServerList() {
       hoverServerName: undefined,
       hoverButtonY: undefined,
     });
-    resetChatListState();
 
     // 해당 서버의 채널 리스트를 필터링하고 displayOrder에 따라 정렬
     const sortedChannels = channelListState

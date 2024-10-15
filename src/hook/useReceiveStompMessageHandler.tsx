@@ -31,6 +31,8 @@ export default function useReceiveStompMessageHandler() {
     setChannelState,
     channelListState,
     setChannelListState,
+    directMessageChannelListState,
+    setDirectMessageChannelListState,
   } = useChannelStore();
   const {
     userState,
@@ -347,6 +349,8 @@ export default function useReceiveStompMessageHandler() {
         serverId: channelData.serverId,
         categoryId: channelData.categoryId,
         userDirectMessageId: undefined,
+        username: undefined,
+        avatarImageSmall: undefined,
       };
       newChannelList = [...channelListState, newChannel];
 
@@ -355,6 +359,32 @@ export default function useReceiveStompMessageHandler() {
         "CHANNEL_CREATE setChannelListState newChannelList",
       );
       setChannelListState(newChannelList);
+      return;
+    }
+
+    // dm채널 생성
+    if (message.messageType === "CHANNEL_CREATE_DIRECT_MESSAGE") {
+      const channelData = JSON.parse(message.message);
+
+      const newChannel: ChannelInfo = {
+        id: channelData.id,
+        name: undefined,
+        displayOrder: undefined,
+        lastReadMessageId: undefined,
+        lastMessageId: undefined,
+        serverId: undefined,
+        categoryId: undefined,
+        userDirectMessageId: channelData.userId,
+        username: channelData.username,
+        avatarImageSmall: channelData.avatar,
+      };
+      newChannelList = [...directMessageChannelListState, newChannel];
+
+      devLog(
+        componentName,
+        "CHANNEL_CREATE_DIRECT_MESSAGE setDirectMessageChannelListState newChannelList",
+      );
+      setDirectMessageChannelListState(newChannelList);
       return;
     }
 

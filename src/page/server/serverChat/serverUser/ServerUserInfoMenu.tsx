@@ -8,13 +8,16 @@ import { useChatStore } from "../../../../store/ChatStore.tsx";
 import { useNavigate } from "react-router-dom";
 import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
+import useChannelCreate from "../../../../hook/server/serverChat/channel/useChannelCreate.tsx";
 
 export default function ServerUserInfoMenu() {
+  const { channelCreate } = useChannelCreate();
   const { sendChatMessage } = useSendChatMessage();
 
   const { resetServerState } = useServerStore();
   const { resetCategoryState } = useCategoryStore();
-  const { resetChannelState, channelListState } = useChannelStore();
+  const { setChannelState, resetChannelState, directMessageChannelListState } =
+    useChannelStore();
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
   const { userState, setUserState } = useUserStore();
@@ -34,7 +37,7 @@ export default function ServerUserInfoMenu() {
     sendMessage();
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (userState.username && chatState.chatMessage) {
       const chat: Chat = {
         id: Date.now(),
@@ -43,15 +46,27 @@ export default function ServerUserInfoMenu() {
         message: chatState.chatMessage,
       };
 
-      const channel = channelListState.find(
+      const channel = directMessageChannelListState.find(
         (channel: ChannelInfo) =>
           channel.userDirectMessageId === userState.focusUserId,
       );
-      if (!channel) return;
+
+      let channelId;
+      // 해당되는 channel이 없는경우 channelCreate 실행
+      if (channel) {
+        channelId = channel.id;
+      } else {
+        // channelCreate하고난 다음 response로 받은 channelId를 통해서 아래 로직 실행
+        channelId = await channelCreate({
+          serverId: undefined,
+          userId: userState.focusUserId,
+        });
+      }
+
       // 해당되는 채널ID 수집 후 해당 채널에 추가
       const newChatInfoList: ChatInfoList[] = chatListState.map(
         (chatInfoList) => {
-          if (chatInfoList.channelId === channel.id) {
+          if (chatInfoList.channelId === channelId) {
             return {
               ...chatInfoList,
               chatList: [...chatInfoList.chatList, chat],
@@ -64,7 +79,7 @@ export default function ServerUserInfoMenu() {
       setChatListState(newChatInfoList);
 
       sendChatMessage({
-        channelId: channel.id,
+        channelId: channelId,
         chat: chat,
         chatList: newChatInfoList,
       });
@@ -79,7 +94,8 @@ export default function ServerUserInfoMenu() {
         menuPositionX: undefined,
         menuPositionY: undefined,
       });
-      navigate(`/server/dm/${channel.id}`);
+      setChannelState({ id: channelId });
+      navigate(`/server/dm/${channelId}`);
     }
 
     setChatState({

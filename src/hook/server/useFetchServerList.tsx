@@ -9,7 +9,8 @@ import devLog from "../../devLog.ts";
 export default function useFetchServerList() {
   const { setServerListState } = useServerStore();
   const { setCategoryListState } = useCategoryStore();
-  const { setChannelListState } = useChannelStore();
+  const { setChannelListState, setDirectMessageChannelListState } =
+    useChannelStore();
   const { envState } = useEnvStore();
   const { setGlobalState } = useGlobalStore();
   const componentName = "useFetchServerList";
@@ -23,6 +24,8 @@ export default function useFetchServerList() {
       setCategoryListState(response.data.categoryList);
       devLog(componentName, "setChannelListState");
       setChannelListState(response.data.channelList);
+      devLog(componentName, "setDirectMessageChannelListState");
+      setDirectMessageChannelListState(response.data.directMessageChannelList);
     } finally {
       devLog(componentName, "setGlobalState fetchServerList true");
       setGlobalState({ fetchServerList: true });

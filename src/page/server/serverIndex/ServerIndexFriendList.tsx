@@ -41,6 +41,9 @@ export default function ServerIndexFriendList() {
         userContextMenu: true,
         focusUserId: userInfo.id,
         focusUsername: userInfo.username,
+        focusUserAvatar: userInfo.avatarImageSmall,
+        menuPositionX: e.clientX,
+        menuPositionY: e.clientY,
       });
     }
   };
@@ -54,7 +57,10 @@ export default function ServerIndexFriendList() {
 
     // 채널이 없는경우 채널 생성 후 이동
     if (!channel) {
-      const channelId = await channelCreate({ userId: userId });
+      const channelId = await channelCreate({
+        serverId: undefined,
+        userId: userId,
+      });
       navigate(`/server/dm/${channelId}`);
     } else {
       setChannelState({ id: channel.id, userDirectMessageId: userId });

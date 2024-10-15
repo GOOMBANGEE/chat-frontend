@@ -6,8 +6,6 @@ import devLog from "../../devLog.ts";
 import { UserInfo } from "../../../index";
 
 interface Props {
-  id: number;
-  username: string;
   friendId: number;
   friendUsername: string;
   friendAvatarImageSmall: string;
@@ -16,6 +14,7 @@ interface Props {
 
 export default function useFriendRequestAccept() {
   const {
+    userState,
     userFriendListState,
     setUserFriendListState,
     userFriendWaitingListState,
@@ -29,8 +28,9 @@ export default function useFriendRequestAccept() {
 
     try {
       await axios.post(`${userUrl}/friend/accept`, {
-        id: props.id,
-        username: props.username,
+        id: userState.id,
+        username: userState.username,
+        avatar: userState.avatar,
         friendId: props.friendId,
       });
 

@@ -1,6 +1,7 @@
 import { useUserStore } from "../../../store/UserStore.tsx";
 import useFriendRequest from "../../../hook/user/useFriendRequest.tsx";
 import { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ServerIndexFriendAdd() {
   const { friendRequest } = useFriendRequest();
@@ -21,6 +22,10 @@ export default function ServerIndexFriendAdd() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (userState.username === userState.focusUsername) {
+      toast.error("자기 자신에게 신청하는것은 허용되지않습니다");
+      return;
+    }
     if (await friendRequest()) {
       setSendRequest(true);
     }

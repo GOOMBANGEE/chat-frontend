@@ -6,6 +6,8 @@ interface ChannelStore {
   setChannelState: (state: Partial<ChannelState>) => void;
   channelListState: ChannelInfo[];
   setChannelListState: (state: ChannelInfo[]) => void;
+  directMessageChannelListState: ChannelInfo[];
+  setDirectMessageChannelListState: (state: ChannelInfo[]) => void;
   channelUserListState: UserInfo[];
   setChannelUserListState: (state: UserInfo[]) => void;
   resetChannelState: () => void;
@@ -103,6 +105,9 @@ export const useChannelStore = create<ChannelStore>((set) => ({
     set((prev) => ({ channelState: { ...prev.channelState, ...state } })),
   channelListState: [],
   setChannelListState: (state) => set({ channelListState: state }),
+  directMessageChannelListState: [],
+  setDirectMessageChannelListState: (state) =>
+    set({ directMessageChannelListState: state }),
   channelUserListState: [],
   setChannelUserListState: (state) => set({ channelUserListState: state }),
   resetChannelState: () => set({ channelState: initialChannelState }),

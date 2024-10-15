@@ -30,7 +30,10 @@ export default function ChannelCreateModal() {
   }, [channelState, setChannelState]);
 
   const handleCreateButtonClick = async () => {
-    const channelId = await channelCreate();
+    const channelId = await channelCreate({
+      serverId: serverState.id,
+      userId: undefined,
+    });
     if (channelId) navigate(`/server/${serverState.id}/${channelId}`);
   };
 

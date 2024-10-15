@@ -19,6 +19,8 @@ export interface ChannelInfo {
   serverId: number | undefined;
   categoryId: number | undefined;
   userDirectMessageId: number | undefined;
+  username: string | undefined;
+  avatarImageSmall: string | undefined;
 }
 
 export interface ChatInfoList {

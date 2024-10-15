@@ -40,8 +40,6 @@ export default function ServerIndexFriendWaitingList() {
         hoverButtonY: undefined,
       });
       await friendRequestAccept({
-        id: userState.id,
-        username: userState.username,
         friendId: friend.id,
         friendUsername: friend.username,
         friendAvatarImageSmall: friend.avatarImageSmall,

@@ -2,18 +2,17 @@ import { useServerStore } from "../../../store/ServerStore.tsx";
 import ChatSearchbar from "./chat/ChatSearchbar.tsx";
 import { useChannelStore } from "../../../store/ChannelStore.tsx";
 import { useEffect, useState } from "react";
-import { useUserStore } from "../../../store/UserStore.tsx";
-import { UserInfo } from "../../../../index";
+import { ChannelInfo } from "../../../../index";
 import { useEnvStore } from "../../../store/EnvStore.tsx";
 import NotificationIcon from "../../../component/NotificationIcon.tsx";
 
 export default function ServerChatHeader() {
   const { serverState, setServerState } = useServerStore();
-  const { channelState, setChannelState } = useChannelStore();
-  const { userFriendListState } = useUserStore();
+  const { channelState, setChannelState, directMessageChannelListState } =
+    useChannelStore();
   const { envState } = useEnvStore();
 
-  const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [channelInfo, setChannelInfo] = useState<ChannelInfo>();
 
   const handleClickUserListButton = () => {
     setServerState({
@@ -32,14 +31,14 @@ export default function ServerChatHeader() {
   useEffect(() => {
     // dm으로 들어온경우 userDirectMessageId (userId) 에 해당하는 user의 정보를 찾아서 넣어준다
     if (serverState.id === undefined) {
-      const userInfo = userFriendListState.find(
-        (user: UserInfo) => user.id === channelState.userDirectMessageId,
+      const channelInfo = directMessageChannelListState.find(
+        (channelInfo: ChannelInfo) => channelInfo.id === channelState.id,
       );
       setChannelState({
-        name: userInfo?.username,
-        userDirectMessageAvatar: userInfo?.avatarImageSmall,
+        name: channelInfo?.username,
+        userDirectMessageAvatar: channelInfo?.avatarImageSmall,
       });
-      setUserInfo(userInfo);
+      setChannelInfo(channelInfo);
     }
   }, [channelState.id]);
 
@@ -85,9 +84,9 @@ export default function ServerChatHeader() {
         // dm
         <div className={"w-full"}>
           <div className={"my-3 flex w-full items-center py-0.5"}>
-            {userInfo?.avatarImageSmall ? (
+            {channelInfo?.avatarImageSmall ? (
               <img
-                src={envState.baseUrl + userInfo?.avatarImageSmall}
+                src={envState.baseUrl + channelInfo?.avatarImageSmall}
                 className={"h-8 w-8 rounded-full"}
               />
             ) : (
@@ -116,7 +115,7 @@ export default function ServerChatHeader() {
                 </g>
               </svg>
             )}
-            <div className={"ml-4"}>{userInfo?.username}</div>
+            <div className={"ml-4"}>{channelInfo?.username}</div>
           </div>
         </div>
       )}
