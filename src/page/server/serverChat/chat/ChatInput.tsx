@@ -140,7 +140,7 @@ export default function ChatInput() {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(htmlString, "text/html");
           const image = htmlDoc.querySelector("img");
-          if (image && image.src) {
+          if (image?.src) {
             // fetch로 이미지 데이터를 가져와서 blob으로 변환
             const response = await fetch(image.src);
             const blob = await response.blob();
@@ -173,16 +173,6 @@ export default function ChatInput() {
       document.removeEventListener("paste", handlePaste);
     };
   }, []);
-
-  // div input focus
-  const handleFocusChatInput = () => {
-    setChatState({ focusInput: true });
-  };
-  useEffect(() => {
-    if (chatInputRef.current) {
-      chatInputRef.current.focus();
-    }
-  }, [chatState.focusInput]);
 
   return (
     <div className={"relative px-6"}>
@@ -249,26 +239,21 @@ export default function ChatInput() {
       ) : null}
 
       <div className={"relative flex w-full"}>
-        {chatState.focusInput ? (
-          <div
-            ref={chatInputRef}
-            contentEditable
-            suppressContentEditableWarning={true}
-            onKeyDown={(e) => handleKeyDown(e)}
-            onInput={handleChatInput}
-            className={
-              "custom-scrollbar max-h-56 w-full overflow-hidden overflow-y-scroll rounded bg-customDark_5 py-2 pl-12 pr-8 outline-none"
-            }
-          ></div>
-        ) : (
-          <input
-            onFocus={() => handleFocusChatInput()}
-            placeholder={`${serverState.name}에 메시지 보내기`}
-            className={
-              "w-full overflow-hidden rounded bg-customDark_5 py-2 pl-12 pr-4"
-            }
-          />
-        )}
+        <div
+          className={`${chatState.chatMessage ? "hidden" : "absolute"} pointer-events-none left-12 top-2 z-10 px-0.5 text-gray-500`}
+        >
+          {`${channelState.name}에 메시지 보내기`}
+        </div>
+        <div
+          ref={chatInputRef}
+          contentEditable
+          suppressContentEditableWarning={true}
+          onKeyDown={(e) => handleKeyDown(e)}
+          onInput={handleChatInput}
+          className={
+            "custom-scrollbar max-h-56 w-full overflow-hidden overflow-y-scroll rounded bg-customDark_5 py-2 pl-12 pr-8 outline-none"
+          }
+        ></div>
 
         <div className={"absolute left-2 top-1"}>
           <input

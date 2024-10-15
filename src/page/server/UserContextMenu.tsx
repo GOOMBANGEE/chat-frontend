@@ -55,7 +55,7 @@ export default function UserContextMenu() {
       style={{
         position: "fixed",
         top: `${userState.menuPositionY}px`,
-        ...(location.pathname !== "/server" && userState.menuPositionX
+        ...(userState.menuPositionX
           ? { left: `${userState.menuPositionX - 120}px` }
           : { left: `${userState.menuPositionX}px` }),
       }}

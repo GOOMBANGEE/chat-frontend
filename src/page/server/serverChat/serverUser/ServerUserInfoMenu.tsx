@@ -101,14 +101,11 @@ export default function ServerUserInfoMenu() {
   };
 
   // div input focus
-  const handleFocusChatInput = () => {
-    setChatState({ focusDmInput: true });
-  };
   useEffect(() => {
-    if (chatInputRef.current) {
+    if (chatInputRef.current && userState.focusUserId) {
       chatInputRef.current.focus();
     }
-  }, [chatState.focusDmInput]);
+  }, [userState.focusUserId]);
 
   // 바깥쪽 클릭시 close
   useEffect(() => {
@@ -128,6 +125,7 @@ export default function ServerUserInfoMenu() {
         });
         setChatState({
           focusDmInput: false,
+          chatMessage: undefined,
         });
       }
     };
@@ -191,26 +189,21 @@ export default function ServerUserInfoMenu() {
         <div className={"text-lg font-semibold"}>{userState.focusUsername}</div>
       </div>
       <div className={"relative flex w-full"}>
-        {chatState.focusDmInput ? (
-          <div
-            ref={chatInputRef}
-            contentEditable
-            suppressContentEditableWarning={true}
-            onKeyDown={(e) => handleKeyDown(e)}
-            onInput={handleChatInput}
-            className={
-              "custom-scrollbar max-h-56 w-full overflow-hidden overflow-y-scroll rounded bg-customDark_5 py-2 pl-4 pr-4 outline-none"
-            }
-          ></div>
-        ) : (
-          <input
-            onFocus={() => handleFocusChatInput()}
-            placeholder={`${userState.focusUsername}님에게 메시지 보내기`}
-            className={
-              "w-full overflow-hidden rounded bg-customDark_5 py-2 pl-4 pr-4"
-            }
-          />
-        )}
+        <div
+          className={`${chatState.chatMessage ? "hidden" : "absolute"} pointer-events-none left-4 top-2 z-10 px-0.5 text-gray-500`}
+        >
+          {`${userState.focusUsername}님에게 메시지 보내기`}
+        </div>
+        <div
+          ref={chatInputRef}
+          contentEditable
+          suppressContentEditableWarning={true}
+          onKeyDown={(e) => handleKeyDown(e)}
+          onInput={handleChatInput}
+          className={
+            "custom-scrollbar relative max-h-56 w-full overflow-hidden overflow-y-scroll rounded bg-customDark_5 py-2 pl-4 pr-4 outline-none"
+          }
+        ></div>
 
         <button
           className={"absolute right-2 top-1 rounded-full p-1"}

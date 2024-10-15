@@ -3,11 +3,13 @@ import { useUserStore } from "../../../../store/UserStore.tsx";
 import { UserInfo } from "../../../../../index";
 import React, { useEffect, useState } from "react";
 import { useEnvStore } from "../../../../store/EnvStore.tsx";
+import { useChatStore } from "../../../../store/ChatStore.tsx";
 
 export default function ServerChatUserList() {
-  const { envState } = useEnvStore();
-  const { userState, setUserState } = useUserStore();
   const { serverUserListState } = useServerStore();
+  const { setChatState } = useChatStore();
+  const { userState, setUserState } = useUserStore();
+  const { envState } = useEnvStore();
 
   const [onlineUser, setOnlineUser] = useState<UserInfo[]>();
   const [offlineUser, setOfflineUser] = useState<UserInfo[]>();
@@ -36,6 +38,7 @@ export default function ServerChatUserList() {
         menuPositionX: e.clientX,
         menuPositionY: e.clientY,
       });
+      setChatState({ focusDmInput: true });
     }
   };
 
