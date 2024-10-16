@@ -1,10 +1,9 @@
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useState } from "react";
-import { useEnvStore } from "../../store/EnvStore.tsx";
+import AvatarIcon from "../../component/AvatarIcon.tsx";
 
 export default function UserInfoMenu() {
   const { userState, setUserState } = useUserStore();
-  const { envState } = useEnvStore();
   const [isHover, setIsHover] = useState(false);
 
   return (
@@ -14,37 +13,7 @@ export default function UserInfoMenu() {
       }
     >
       <div className={"ml-2 mr-2 flex w-10 justify-center"}>
-        {userState.avatar ? (
-          <img
-            className={"h-10 w-10 rounded-full"}
-            src={envState.baseUrl + userState.avatar}
-          />
-        ) : (
-          <svg
-            className={"mr-2 h-10 w-10"}
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              <path
-                d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                className={"stroke-customGray_4"}
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></path>
-            </g>
-          </svg>
-        )}
+        <AvatarIcon avatar={userState.avatar} size={10} />
       </div>
       <div className={"text-sm font-semibold"}>{userState.username}</div>
       <button

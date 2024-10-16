@@ -2,14 +2,13 @@ import { useServerStore } from "../../../../store/ServerStore.tsx";
 import { useUserStore } from "../../../../store/UserStore.tsx";
 import { UserInfo } from "../../../../../index";
 import React, { useEffect, useState } from "react";
-import { useEnvStore } from "../../../../store/EnvStore.tsx";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
+import AvatarIcon from "../../../../component/AvatarIcon.tsx";
 
 export default function ServerChatUserList() {
   const { serverUserListState } = useServerStore();
   const { setChatState } = useChatStore();
   const { userState, setUserState } = useUserStore();
-  const { envState } = useEnvStore();
 
   const [onlineUser, setOnlineUser] = useState<UserInfo[]>();
   const [offlineUser, setOfflineUser] = useState<UserInfo[]>();
@@ -71,40 +70,11 @@ export default function ServerChatUserList() {
               onClick={(e) => handleClick(e, userInfo)}
               onContextMenu={(e) => handleContextMenu(e, userInfo)}
               className={
-                "flex w-full items-center rounded px-2 py-2 hover:bg-customDark_5"
+                "flex w-full items-center gap-x-2 rounded px-2 py-2 hover:bg-customDark_5"
               }
             >
-              {userInfo.avatarImageSmall ? (
-                <img
-                  className={"mr-2 h-10 w-10 rounded-full"}
-                  src={envState.baseUrl + userInfo.avatarImageSmall}
-                />
-              ) : (
-                <svg
-                  className={"mr-2 w-10"}
-                  width="32px"
-                  height="32px"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    <path
-                      d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                      className={"stroke-customGray_4"}
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                  </g>
-                </svg>
-              )}
+              <AvatarIcon avatar={userInfo.avatarImageSmall} size={10} />
+
               <div>{userInfo.username}</div>
             </button>
           ))}
@@ -121,40 +91,11 @@ export default function ServerChatUserList() {
               onClick={(e) => handleClick(e, userInfo)}
               onContextMenu={(e) => handleContextMenu(e, userInfo)}
               className={
-                "flex w-full items-center rounded px-2 py-2 hover:bg-customDark_5"
+                "flex w-full items-center gap-x-2 rounded px-2 py-2 hover:bg-customDark_5"
               }
             >
-              {userInfo.avatarImageSmall ? (
-                <img
-                  className={"mr-2 h-10 w-10 rounded-full"}
-                  src={envState.baseUrl + userInfo.avatarImageSmall}
-                />
-              ) : (
-                <svg
-                  className={"mr-2 w-10"}
-                  width="32px"
-                  height="32px"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    <path
-                      d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                      className={"stroke-customGray_4"}
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    ></path>
-                  </g>
-                </svg>
-              )}
+              <AvatarIcon avatar={userInfo.avatarImageSmall} size={10} />
+
               <div>{userInfo.username}</div>
             </button>
           ))}

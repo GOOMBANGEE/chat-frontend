@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useUserStore } from "../../../../store/UserStore.tsx";
-import { useEnvStore } from "../../../../store/EnvStore.tsx";
 import { ChannelInfo, Chat, ChatInfoList } from "../../../../../index";
 import useSendChatMessage from "../../../../hook/server/serverChat/useSendChatMessage.tsx";
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
@@ -9,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import useChannelCreate from "../../../../hook/server/serverChat/channel/useChannelCreate.tsx";
+import AvatarIcon from "../../../../component/AvatarIcon.tsx";
 
 export default function ServerUserInfoMenu() {
   const { channelCreate } = useChannelCreate();
@@ -21,7 +21,6 @@ export default function ServerUserInfoMenu() {
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
   const { userState, setUserState } = useUserStore();
-  const { envState } = useEnvStore();
   const navigate = useNavigate();
 
   const chatInputRef = useRef<HTMLInputElement>(null);
@@ -166,42 +165,8 @@ export default function ServerUserInfoMenu() {
       }
     >
       <div className={"flex items-center gap-4"}>
-        {userState.focusUserAvatar ? (
-          <img
-            className={"h-12 w-12 rounded-full"}
-            src={envState.baseUrl + userState.focusUserAvatar}
-          />
-        ) : (
-          <div
-            className={
-              "flex h-12 w-12 items-center justify-center rounded-full bg-customDark_5"
-            }
-          >
-            <svg
-              width="32px"
-              height="32px"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                  className={"stroke-customGray_4"}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                ></path>
-              </g>
-            </svg>
-          </div>
-        )}
+        <AvatarIcon avatar={userState.focusUserAvatar} size={12} />
+
         <div className={"text-lg font-semibold"}>{userState.focusUsername}</div>
       </div>
       <div className={"relative flex w-full"}>
