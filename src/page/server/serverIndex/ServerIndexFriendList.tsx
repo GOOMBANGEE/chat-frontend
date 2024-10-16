@@ -8,7 +8,7 @@ import AvatarIcon from "../../../component/AvatarIcon.tsx";
 
 export default function ServerIndexFriendList() {
   const { channelCreate } = useChannelCreate();
-  const { setChannelState, channelListState } = useChannelStore();
+  const { setChannelState, directMessageChannelListState } = useChannelStore();
   const {
     userState,
     setUserState,
@@ -50,7 +50,7 @@ export default function ServerIndexFriendList() {
   // dm
   const handleClickDirectMessageButton = async (userId: number) => {
     // 해당 유저와의 채널이 있는지 확인
-    const channel = channelListState.find(
+    const channel = directMessageChannelListState.find(
       (channel: ChannelInfo) => channel.userDirectMessageId === userId,
     );
 
@@ -60,7 +60,7 @@ export default function ServerIndexFriendList() {
         serverId: undefined,
         userId: userId,
       });
-      navigate(`/server/dm/${channelId}`);
+      if (channelId != undefined) navigate(`/server/dm/${channelId}`);
     } else {
       setChannelState({ id: channel.id, userDirectMessageId: userId });
       navigate(`/server/dm/${channel.id}`);
