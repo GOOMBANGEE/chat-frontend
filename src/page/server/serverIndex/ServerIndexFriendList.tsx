@@ -4,7 +4,7 @@ import { ChannelInfo, UserInfo } from "../../../../index";
 import { useChannelStore } from "../../../store/ChannelStore.tsx";
 import useChannelCreate from "../../../hook/server/serverChat/channel/useChannelCreate.tsx";
 import { useNavigate } from "react-router-dom";
-import AvatarIcon from "../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../component/IconComponent.tsx";
 
 export default function ServerIndexFriendList() {
   const { channelCreate } = useChannelCreate();
@@ -114,7 +114,7 @@ export default function ServerIndexFriendList() {
                 "flex w-full items-center gap-4 rounded px-4 py-2 hover:bg-customDark_5"
               }
             >
-              <AvatarIcon avatar={user.avatarImageSmall} size={12} />
+              <IconComponent icon={user.avatarImageSmall} size={12} />
               <div>
                 <div>{user.username}</div>
 

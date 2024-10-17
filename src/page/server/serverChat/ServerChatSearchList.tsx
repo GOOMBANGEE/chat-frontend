@@ -1,5 +1,5 @@
 import { useChatStore } from "../../../store/ChatStore.tsx";
-import AvatarIcon from "../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../component/IconComponent.tsx";
 import ImageAttachment from "../../../component/ImageAttachment.tsx";
 import { ImageInfo } from "../../../../index";
 
@@ -47,7 +47,7 @@ export default function ServerChatSearchList() {
               "flex w-full gap-x-2 rounded bg-customDark_3 px-2 py-1 text-start"
             }
           >
-            <AvatarIcon avatar={chat.avatarImageSmall} size={8} />
+            <IconComponent icon={chat.avatarImageSmall} size={8} />
             <div className={"flex w-full flex-col"}>
               <div className={"mb-1 flex items-center gap-x-2"}>
                 <div className={"font-semibold"}>{chat.username}</div>

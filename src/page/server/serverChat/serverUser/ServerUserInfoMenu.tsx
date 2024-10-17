@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import useChannelCreate from "../../../../hook/server/serverChat/channel/useChannelCreate.tsx";
-import AvatarIcon from "../../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../../component/IconComponent.tsx";
 
 export default function ServerUserInfoMenu() {
   const { channelCreate } = useChannelCreate();
@@ -165,7 +165,7 @@ export default function ServerUserInfoMenu() {
       }
     >
       <div className={"flex items-center gap-4"}>
-        <AvatarIcon avatar={userState.focusUserAvatar} size={12} />
+        <IconComponent icon={userState.focusUserAvatar} size={12} />
 
         <div className={"text-lg font-semibold"}>{userState.focusUsername}</div>
       </div>

@@ -1,7 +1,7 @@
 import { useUserStore } from "../store/UserStore.tsx";
 import { useEffect, useState } from "react";
 import { ImageInfo, NotificationInfo } from "../../index";
-import AvatarIcon from "./AvatarIcon.tsx";
+import IconComponent from "./IconComponent.tsx";
 import ImageAttachment from "./ImageAttachment.tsx";
 
 export default function NotificationIcon() {
@@ -139,8 +139,8 @@ export default function NotificationIcon() {
                         "mx-4 flex gap-x-4 rounded bg-customDark_4 px-2 py-2"
                       }
                     >
-                      <AvatarIcon
-                        avatar={notification.avatarImageSmall}
+                      <IconComponent
+                        icon={notification.avatarImageSmall}
                         size={12}
                       />
 

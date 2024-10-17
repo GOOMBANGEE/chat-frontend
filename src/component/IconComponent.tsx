@@ -1,19 +1,19 @@
 import { useEnvStore } from "../store/EnvStore.tsx";
 
 interface Props {
-  avatar: string | undefined | null;
+  icon: string | undefined | null;
   size: number;
 }
 
-export default function AvatarIcon(props: Readonly<Props>) {
+export default function IconComponent(props: Readonly<Props>) {
   const { envState } = useEnvStore();
 
   return (
     <>
-      {props.avatar ? (
+      {props.icon ? (
         <img
           className={`h-${props.size} w-${props.size} rounded-full`}
-          src={envState.baseUrl + props.avatar}
+          src={envState.baseUrl + props.icon}
         />
       ) : (
         <div

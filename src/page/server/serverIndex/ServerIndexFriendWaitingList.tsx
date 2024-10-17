@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import useFriendRequestAccept from "../../../hook/user/useFriendRequestAccept.tsx";
 import useFriendRequestReject from "../../../hook/user/useFriendRequestReject.tsx";
 import { UserInfo } from "../../../../index";
-import AvatarIcon from "../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../component/IconComponent.tsx";
 
 export default function ServerIndexFriendWaitingList() {
   const { friendRequestAccept } = useFriendRequestAccept();
@@ -102,7 +102,7 @@ export default function ServerIndexFriendWaitingList() {
                   "flex w-full items-center gap-4 rounded px-4 py-2 hover:bg-customDark_5"
                 }
               >
-                <AvatarIcon avatar={user.avatarImageSmall} size={12} />
+                <IconComponent icon={user.avatarImageSmall} size={12} />
 
                 <div>{user.username}</div>
                 <div className={"ml-auto flex gap-x-2"}>

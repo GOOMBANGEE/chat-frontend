@@ -4,7 +4,7 @@ import { useChannelStore } from "../../../store/ChannelStore.tsx";
 import { useEffect, useState } from "react";
 import { ChannelInfo } from "../../../../index";
 import NotificationIcon from "../../../component/NotificationIcon.tsx";
-import AvatarIcon from "../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../component/IconComponent.tsx";
 
 export default function ServerChatHeader() {
   const { serverState, setServerState } = useServerStore();
@@ -83,7 +83,7 @@ export default function ServerChatHeader() {
         // dm
         <div className={"w-full"}>
           <div className={"my-3 flex w-full items-center py-0.5"}>
-            <AvatarIcon avatar={channelInfo?.avatarImageSmall} size={8} />
+            <IconComponent icon={channelInfo?.avatarImageSmall} size={8} />
 
             <div className={"ml-4"}>{channelInfo?.username}</div>
           </div>

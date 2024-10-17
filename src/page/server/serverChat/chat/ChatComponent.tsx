@@ -5,7 +5,7 @@ import { useUserStore } from "../../../../store/UserStore.tsx";
 import useChatEdit from "../../../../hook/server/serverChat/useChatEdit.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
-import AvatarIcon from "../../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../../component/IconComponent.tsx";
 import ImageAttachment from "../../../../component/ImageAttachment.tsx";
 
 interface Props {
@@ -163,7 +163,7 @@ export default forwardRef(function ChatComponent(
     if (chatState.chatEdit && chatState.id === props.chat.id) {
       return (
         <div className={"flex w-full items-start rounded py-2 pl-4"}>
-          <AvatarIcon avatar={props.chat.avatarImageSmall} size={12} />
+          <IconComponent icon={props.chat.avatarImageSmall} size={12} />
 
           <div className={"ml-1 flex w-full flex-col bg-customDark_1 px-3"}>
             <div className={"mb-0.5 flex items-end"}>
@@ -222,7 +222,7 @@ export default forwardRef(function ChatComponent(
         style={{ minHeight: props.chat.attachment ? "auto" : "none" }}
         className={"flex w-full rounded px-4 py-2 hover:bg-customDark_1"}
       >
-        <AvatarIcon avatar={props.chat.avatarImageSmall} size={12} />
+        <IconComponent icon={props.chat.avatarImageSmall} size={12} />
         <div
           onContextMenu={(e) => handleContextMenu(e)}
           className={

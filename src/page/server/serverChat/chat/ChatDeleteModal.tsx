@@ -4,7 +4,7 @@ import useChatDelete from "../../../../hook/server/serverChat/useChatDelete.tsx"
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
 import { Chat, ChatInfoList, ImageInfo } from "../../../../../index";
 import ImageAttachment from "../../../../component/ImageAttachment.tsx";
-import AvatarIcon from "../../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../../component/IconComponent.tsx";
 
 export default function ChatDeleteModal() {
   const { chatDelete } = useChatDelete();
@@ -117,8 +117,8 @@ export default function ChatDeleteModal() {
               style={{ boxShadow: "0 0 1px 2px rgba(0, 0, 0, 0.2)" }}
               className={"mb-8 flex w-full gap-x-4 rounded px-4 py-2"}
             >
-              <AvatarIcon
-                avatar={chatState.focusUserAvatarImageSmall}
+              <IconComponent
+                icon={chatState.focusUserAvatarImageSmall}
                 size={12}
               />
 

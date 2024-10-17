@@ -1,7 +1,7 @@
 import { ChannelInfo } from "../../../../index";
 import { useChannelStore } from "../../../store/ChannelStore.tsx";
 import { useNavigate } from "react-router-dom";
-import AvatarIcon from "../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../component/IconComponent.tsx";
 
 export default function ServerIndexDMList() {
   const { directMessageChannelListState } = useChannelStore();
@@ -25,7 +25,7 @@ export default function ServerIndexDMList() {
               "flex items-center gap-4 rounded px-4 py-2 hover:bg-customDark_5"
             }
           >
-            <AvatarIcon avatar={channelInfo.avatarImageSmall} size={10} />
+            <IconComponent icon={channelInfo.avatarImageSmall} size={10} />
 
             <div className={"font-semibold"}>{channelInfo.username}</div>
           </button>

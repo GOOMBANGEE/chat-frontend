@@ -1,6 +1,6 @@
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useState } from "react";
-import AvatarIcon from "../../component/AvatarIcon.tsx";
+import IconComponent from "../../component/IconComponent.tsx";
 
 export default function UserInfoMenu() {
   const { userState, setUserState } = useUserStore();
@@ -13,7 +13,7 @@ export default function UserInfoMenu() {
       }
     >
       <div className={"ml-2 mr-2 flex w-10 justify-center"}>
-        <AvatarIcon avatar={userState.avatar} size={10} />
+        <IconComponent icon={userState.avatar} size={10} />
       </div>
       <div className={"text-sm font-semibold"}>{userState.username}</div>
       <button

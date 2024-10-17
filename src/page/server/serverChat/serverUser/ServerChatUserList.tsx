@@ -3,7 +3,7 @@ import { useUserStore } from "../../../../store/UserStore.tsx";
 import { UserInfo } from "../../../../../index";
 import React, { useEffect, useState } from "react";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
-import AvatarIcon from "../../../../component/AvatarIcon.tsx";
+import IconComponent from "../../../../component/IconComponent.tsx";
 
 export default function ServerChatUserList() {
   const { serverUserListState } = useServerStore();
@@ -73,7 +73,7 @@ export default function ServerChatUserList() {
                 "flex w-full items-center gap-x-2 rounded px-2 py-2 hover:bg-customDark_5"
               }
             >
-              <AvatarIcon avatar={userInfo.avatarImageSmall} size={10} />
+              <IconComponent icon={userInfo.avatarImageSmall} size={10} />
 
               <div>{userInfo.username}</div>
             </button>
@@ -94,7 +94,7 @@ export default function ServerChatUserList() {
                 "flex w-full items-center gap-x-2 rounded px-2 py-2 hover:bg-customDark_5"
               }
             >
-              <AvatarIcon avatar={userInfo.avatarImageSmall} size={10} />
+              <IconComponent icon={userInfo.avatarImageSmall} size={10} />
 
               <div>{userInfo.username}</div>
             </button>
