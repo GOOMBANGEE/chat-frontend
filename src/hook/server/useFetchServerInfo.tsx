@@ -20,6 +20,7 @@ export default function useFetchServerInfo() {
       devLog(componentName, "setServerState");
       setServerState({
         name: response.data.name,
+        icon: response.data.icon,
         inviteUsername: response.data.username,
         userCount: response.data.userCount,
         fetchServerInfo: true,

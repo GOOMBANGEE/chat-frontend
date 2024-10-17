@@ -17,9 +17,9 @@ export default function ServerAddModal() {
     }
   };
   useEffect(() => {
-    document.addEventListener("mouseup", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mouseup", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [serverAddState, setServerAddState]);
 

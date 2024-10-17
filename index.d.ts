@@ -1,6 +1,7 @@
 export interface ServerInfo {
   id: number;
   name: string;
+  icon: string;
 }
 
 export interface CategoryInfo {

@@ -14,6 +14,7 @@ interface ServerStore {
 interface ServerState {
   id: number | undefined;
   name: string | undefined;
+  icon: string | undefined;
 
   // server invite modal
   inviteModalOpen: boolean;
@@ -32,6 +33,7 @@ interface ServerState {
   // server setting
   settingModalOpen: boolean;
   settingDefault: boolean;
+  newServerIcon: string | undefined;
   newServerName: string | undefined;
   settingRole: boolean;
   settingUser: boolean;
@@ -66,6 +68,7 @@ interface ServerState {
 const initialServerState: ServerState = {
   id: undefined,
   name: undefined,
+  icon: undefined,
 
   inviteModalOpen: false,
   inviteLink: undefined,
@@ -81,6 +84,7 @@ const initialServerState: ServerState = {
 
   settingModalOpen: false,
   settingDefault: false,
+  newServerIcon: undefined,
   newServerName: undefined,
   settingRole: false,
   settingUser: false,

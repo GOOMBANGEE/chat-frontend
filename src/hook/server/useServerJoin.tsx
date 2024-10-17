@@ -22,6 +22,7 @@ export default function useServerJoin() {
       const newServer = {
         id: response.data.id,
         name: response.data.name,
+        icon: response.data.icon,
       };
       const newServerList = [...serverListState, newServer];
 

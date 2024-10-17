@@ -30,7 +30,12 @@ export default function ServerChatDropdown() {
   };
 
   const handleClickSettingButton = () => {
-    setServerState({ settingModalOpen: true, settingDefault: true });
+    setServerChatDropdownState({ open: false });
+    setServerState({
+      icon: serverState.icon,
+      settingModalOpen: true,
+      settingDefault: true,
+    });
   };
 
   const handleClickLeaveButton = async () => {

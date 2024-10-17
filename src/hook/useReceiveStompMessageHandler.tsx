@@ -269,7 +269,7 @@ export default function useReceiveStompMessageHandler() {
 
     // 서버이름변경
     // 해당하는 서버 id찾아서 server의 name변경
-    if (message.messageType === "SERVER_UPDATE") {
+    if (message.messageType === "SERVER_UPDATE_NAME") {
       const parsedMessage = JSON.parse(message.message);
       newServerList = serverListState.map((server: ServerInfo) => {
         if (server.id === message.serverId) {
@@ -277,7 +277,28 @@ export default function useReceiveStompMessageHandler() {
         }
         return server;
       });
-      devLog(componentName, "SERVER_INFO setServerListState newServerList");
+      devLog(
+        componentName,
+        "SERVER_UPDATE_NAME setServerListState newServerList",
+      );
+      setServerListState(newServerList);
+      return;
+    }
+
+    // 서버아이콘변경
+    // 해당하는 서버 id찾아서 server의 icon변경
+    if (message.messageType === "SERVER_UPDATE_ICON") {
+      const parsedMessage = JSON.parse(message.message);
+      newServerList = serverListState.map((server: ServerInfo) => {
+        if (server.id === message.serverId) {
+          return { ...server, icon: parsedMessage.icon };
+        }
+        return server;
+      });
+      devLog(
+        componentName,
+        "SERVER_UPDATE_ICON setServerListState newServerList",
+      );
       setServerListState(newServerList);
       return;
     }

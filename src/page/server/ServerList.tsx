@@ -5,12 +5,14 @@ import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import useFetchNotification from "../../hook/user/useFetchNotification.tsx";
+import { useEnvStore } from "../../store/EnvStore.tsx";
 
 export default function ServerList() {
   const { serverState, setServerState, serverListState } = useServerStore();
   const { setServerAddState } = useServerAddStore();
   const { setChannelState, channelListState } = useChannelStore();
   const { userState } = useUserStore();
+  const { envState } = useEnvStore();
 
   const navigate = useNavigate();
   const { fetchNotification } = useFetchNotification();
@@ -28,9 +30,9 @@ export default function ServerList() {
     setServerState({
       id: server.id,
       name: server.name,
+      icon: server.icon,
       serverUserList: false,
-    });
-    setServerState({
+
       isHover: false,
       hoverServerId: undefined,
       hoverServerName: undefined,
@@ -92,7 +94,7 @@ export default function ServerList() {
               })
             }
             className={
-              "group flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-customDark_3 transition duration-100 hover:rounded-2xl hover:bg-indigo-500"
+              "group flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-customDark_3 transition duration-100 hover:rounded-2xl hover:bg-indigo-500"
             }
           >
             <svg
@@ -138,30 +140,56 @@ export default function ServerList() {
         {/* server icon */}
         {serverListState.map((server: ServerInfo) => (
           <div key={server.id}>
-            <button
-              onMouseOver={(e) =>
-                setServerState({
-                  isHover: true,
-                  hoverServerId: server.id,
-                  hoverServerName: server.name,
-                  hoverButtonY: e.currentTarget.getBoundingClientRect().top,
-                })
-              }
-              onMouseLeave={() =>
-                setServerState({
-                  isHover: false,
-                  hoverServerId: undefined,
-                  hoverServerName: undefined,
-                  hoverButtonY: undefined,
-                })
-              }
-              onClick={() => handleClickServerIcon(server)}
-              className={
-                "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-customDark_3 transition duration-100 hover:rounded-2xl hover:bg-indigo-500"
-              }
-            >
-              {server.id}
-            </button>
+            {server.icon ? (
+              <button
+                onMouseOver={(e) =>
+                  setServerState({
+                    isHover: true,
+                    hoverServerId: server.id,
+                    hoverServerName: server.name,
+                    hoverButtonY: e.currentTarget.getBoundingClientRect().top,
+                  })
+                }
+                onMouseLeave={() =>
+                  setServerState({
+                    isHover: false,
+                    hoverServerId: undefined,
+                    hoverServerName: undefined,
+                    hoverButtonY: undefined,
+                  })
+                }
+                onClick={() => handleClickServerIcon(server)}
+                className={`group flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-x-hidden bg-customDark_3 transition duration-100 ${server.id === serverState.id ? "rounded-2xl" : "rounded-full hover:rounded-2xl"}`}
+              >
+                <img
+                  src={envState.baseUrl + server.icon}
+                  className={`h-14 w-14 ${server.id === serverState.id ? "rounded-2xl" : "rounded-full group-hover:rounded-2xl"}`}
+                />
+              </button>
+            ) : (
+              <button
+                onMouseOver={(e) =>
+                  setServerState({
+                    isHover: true,
+                    hoverServerId: server.id,
+                    hoverServerName: server.name,
+                    hoverButtonY: e.currentTarget.getBoundingClientRect().top,
+                  })
+                }
+                onMouseLeave={() =>
+                  setServerState({
+                    isHover: false,
+                    hoverServerId: undefined,
+                    hoverServerName: undefined,
+                    hoverButtonY: undefined,
+                  })
+                }
+                onClick={() => handleClickServerIcon(server)}
+                className={`flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-x-hidden transition duration-100 ${server.id === serverState.id ? "rounded-2xl bg-indigo-500" : "rounded-full bg-customDark_3 hover:rounded-2xl hover:bg-indigo-500"}`}
+              >
+                {server.name[0]}
+              </button>
+            )}
             {serverState.isHover && server.id === serverState.hoverServerId ? (
               <div
                 style={{
@@ -195,7 +223,7 @@ export default function ServerList() {
               })
             }
             className={
-              "group flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-customDark_3 transition duration-100 hover:rounded-2xl hover:bg-green-600"
+              "group flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-customDark_3 transition duration-100 hover:rounded-2xl hover:bg-green-600"
             }
           >
             <svg

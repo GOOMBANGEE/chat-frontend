@@ -7,6 +7,7 @@ import Loading from "../../component/Loading.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchServerList from "../../hook/server/useFetchServerList.tsx";
+import { useEnvStore } from "../../store/EnvStore.tsx";
 
 export default function Invite() {
   const { fetchServerInfo } = useFetchServerInfo();
@@ -15,6 +16,7 @@ export default function Invite() {
 
   const { serverState, setServerState } = useServerStore();
   const { userState } = useUserStore();
+  const { envState } = useEnvStore();
   const { code } = useParams();
   const navigate = useNavigate();
 
@@ -64,8 +66,30 @@ export default function Invite() {
               >
                 <div className={"mb-4 text-center"}>
                   <div>{serverState.inviteUsername} 님이 초대함:</div>
-                  <div>서버명 : {serverState.name}</div>
-                  <div>멤버 : {serverState.userCount}명</div>
+                  <div className={"relative flex items-center"}>
+                    {serverState.icon ? (
+                      <img
+                        style={{ left: "-64px" }}
+                        src={envState.baseUrl + serverState.icon}
+                        className={
+                          "absolute top-0 flex h-14 w-14 items-center justify-center rounded-full"
+                        }
+                      />
+                    ) : (
+                      <div
+                        style={{ left: "-64px" }}
+                        className={
+                          "absolute top-0 flex h-14 w-14 items-center justify-center rounded-full bg-customDark_5"
+                        }
+                      >
+                        {serverState.name ? serverState.name[0] : null}
+                      </div>
+                    )}
+                    <div className={"flex flex-col"}>
+                      <div>서버명 : {serverState.name}</div>
+                      <div>멤버 : {serverState.userCount}명</div>
+                    </div>
+                  </div>
                 </div>
 
                 <button

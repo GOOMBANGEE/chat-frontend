@@ -8,6 +8,7 @@ interface ServerAddStore {
 
 interface ServerAddState {
   name: string | undefined;
+  icon: string | undefined;
   code: string | undefined;
   open: boolean;
   join: boolean;
@@ -17,6 +18,7 @@ interface ServerAddState {
 
 const initialServerAddState: ServerAddState = {
   name: undefined,
+  icon: undefined,
   code: undefined,
   open: false,
   join: false,

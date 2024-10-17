@@ -26,6 +26,8 @@ export default function ServerSetting() {
           className={"absolute right-20 top-10 z-10 ml-auto"}
           onClick={() => {
             setServerState({
+              newServerName: undefined,
+              newServerIcon: undefined,
               settingModalOpen: false,
               settingDefault: false,
               settingRole: false,
