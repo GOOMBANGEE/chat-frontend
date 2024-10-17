@@ -1,10 +1,10 @@
 import { useChatStore } from "../../../store/ChatStore.tsx";
-import { useEnvStore } from "../../../store/EnvStore.tsx";
 import AvatarIcon from "../../../component/AvatarIcon.tsx";
+import ImageAttachment from "../../../component/ImageAttachment.tsx";
+import { ImageInfo } from "../../../../index";
 
 export default function ServerChatSearchList() {
   const { chatSearchListState } = useChatStore();
-  const { envState } = useEnvStore();
 
   return (
     <div
@@ -34,6 +34,12 @@ export default function ServerChatSearchList() {
           formattedTime = `${year}.${month}.${day}. ${period} ${hour}:${minute}`;
         }
 
+        const imageInfo: ImageInfo = {
+          link: chat.attachment,
+          width: chat.attachmentWidth,
+          height: chat.attachmentHeight,
+        };
+
         return (
           <div
             key={chat.id}
@@ -49,20 +55,10 @@ export default function ServerChatSearchList() {
                   <div className={"text-xs text-gray-400"}>{formattedTime}</div>
                 )}
               </div>
-              {chat.attachment ? (
-                <div
-                  style={{
-                    maxWidth: "calc(100% - 50px)",
-                    width: chat.attachmentWidth,
-                  }}
-                  className={`${chat.attachmentWidth ? "bg-customDark_2" : ""}rounded`}
-                >
-                  <img
-                    className="rounded"
-                    src={envState.baseUrl + chat.attachment}
-                  />
-                </div>
-              ) : null}
+              <ImageAttachment
+                image={imageInfo}
+                maxWidth={"calc(100% - 50px)"}
+              />
 
               <div
                 style={{ maxWidth: "calc(100% - 50px)" }}

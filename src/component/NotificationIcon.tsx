@@ -1,12 +1,11 @@
 import { useUserStore } from "../store/UserStore.tsx";
 import { useEffect, useState } from "react";
-import { NotificationInfo } from "../../index";
-import { useEnvStore } from "../store/EnvStore.tsx";
+import { ImageInfo, NotificationInfo } from "../../index";
 import AvatarIcon from "./AvatarIcon.tsx";
+import ImageAttachment from "./ImageAttachment.tsx";
 
 export default function NotificationIcon() {
   const { userNotificationListState } = useUserStore();
-  const { envState } = useEnvStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isDM, setIsDM] = useState(false);
   const [isMention, setIsMention] = useState(false);
@@ -124,6 +123,14 @@ export default function NotificationIcon() {
                 const hour = Number(createTimeToString?.slice(11, 13));
                 const minute = createTimeToString?.slice(14, 16);
 
+                const imageInfo: ImageInfo = {
+                  link: notification.chatAttachment
+                    ? notification.chatAttachment
+                    : undefined,
+                  width: undefined,
+                  height: undefined,
+                };
+
                 return (
                   <div key={notification.chatId} className={"flex flex-col"}>
                     <div>{notification.channelName}</div>
@@ -161,12 +168,10 @@ export default function NotificationIcon() {
                             </span>
                           ) : null}
                         </div>
-                        {notification.chatAttachment ? (
-                          <img
-                            src={envState.baseUrl + notification.chatAttachment}
-                            className={"rounded"}
-                          />
-                        ) : null}
+                        <ImageAttachment
+                          image={imageInfo}
+                          maxWidth={undefined}
+                        />
                       </div>
                     </div>
                   </div>

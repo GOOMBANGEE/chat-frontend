@@ -1,12 +1,12 @@
-import { Chat, ChatInfoList } from "../../../../../index";
+import { Chat, ChatInfoList, ImageInfo } from "../../../../../index";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
 import React, { ForwardedRef, forwardRef, useEffect, useRef } from "react";
 import { useUserStore } from "../../../../store/UserStore.tsx";
 import useChatEdit from "../../../../hook/server/serverChat/useChatEdit.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import { useChannelStore } from "../../../../store/ChannelStore.tsx";
-import { useEnvStore } from "../../../../store/EnvStore.tsx";
 import AvatarIcon from "../../../../component/AvatarIcon.tsx";
+import ImageAttachment from "../../../../component/ImageAttachment.tsx";
 
 interface Props {
   chat: Chat;
@@ -24,7 +24,6 @@ export default forwardRef(function ChatComponent(
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
   const { userState } = useUserStore();
-  const { envState } = useEnvStore();
 
   // 시간 편집
   const createTimeToString = props.chat.createTime?.toLocaleString();
@@ -127,6 +126,12 @@ export default forwardRef(function ChatComponent(
   };
 
   const renderPage = () => {
+    const imageInfo: ImageInfo = {
+      link: props.chat.attachment,
+      width: props.chat.attachmentWidth,
+      height: props.chat.attachmentHeight,
+    };
+
     const renderTimestamp = () =>
       props.chat.createTime ? (
         <div className="text-xs text-gray-400">
@@ -134,25 +139,6 @@ export default forwardRef(function ChatComponent(
           {hour > 12 ? hour - 12 : hour}:{minute}
         </div>
       ) : null;
-
-    const renderAttachment = () => {
-      if (!props.chat.attachment) return null;
-
-      return (
-        <div
-          style={{
-            maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100% - 70px)" : ""}`,
-            width: props.chat.attachmentWidth,
-          }}
-          className={"rounded bg-customDark_2"}
-        >
-          <img
-            className="rounded"
-            src={envState.baseUrl + props.chat.attachment}
-          />
-        </div>
-      );
-    };
 
     // 입장 메시지
     if (props.chat.enter) {
@@ -219,7 +205,10 @@ export default forwardRef(function ChatComponent(
                   </button>
                 </div>
               </div>
-              {renderAttachment()}
+              <ImageAttachment
+                image={imageInfo}
+                maxWidth={`${serverState.serverUserList || serverState.searchList ? "calc(100% - 70px)" : ""}`}
+              />
             </div>
           </div>
         </div>
@@ -266,7 +255,10 @@ export default forwardRef(function ChatComponent(
               </div>
             </div>
           </div>
-          {renderAttachment()}
+          <ImageAttachment
+            image={imageInfo}
+            maxWidth={`${serverState.serverUserList || serverState.searchList ? "calc(100% - 70px)" : ""}`}
+          />
         </div>
       </div>
     );

@@ -90,3 +90,9 @@ export interface StompChatMessage {
   attachmentWidth?: number;
   attachmentHeight?: number;
 }
+
+export interface ImageInfo {
+  link: string | undefined;
+  width: number | undefined;
+  height: number | undefined;
+}
