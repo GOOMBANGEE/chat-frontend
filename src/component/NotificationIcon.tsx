@@ -95,7 +95,7 @@ export default function NotificationIcon() {
             left: "-350px",
           }}
           className={
-            "custom-scrollbar absolute top-10 z-10 flex w-96 flex-col gap-y-4 overflow-y-auto rounded border-2 border-customDark_4 bg-customDark_0 py-4 text-customText"
+            "custom-scrollbar absolute top-10 z-10 flex w-96 flex-col gap-y-4 overflow-y-auto rounded border-2 border-customDark_4 bg-customDark_0 py-4 font-light text-customText"
           }
         >
           <div className={"flex"}>
@@ -137,25 +137,30 @@ export default function NotificationIcon() {
                         size={12}
                       />
 
-                      <div className={"flex flex-col"}>
+                      <div
+                        style={{ maxWidth: "calc(100% - 70px)" }}
+                        className={"flex w-full flex-col"}
+                      >
                         <div className={"mb-2 flex items-center font-semibold"}>
                           {notification.username}
-                          <div className="ml-2 text-xs text-gray-400">
+                          <div className="ml-2 text-xs font-light text-gray-400">
                             {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
                             {hour > 12 ? hour - 12 : hour}:{minute}
-                            {notification.chatCreateTime !==
-                            notification.chatUpdateTime ? (
-                              <span
-                                className={
-                                  "ml-1 align-baseline text-xs text-gray-400"
-                                }
-                              >
-                                (수정됨)
-                              </span>
-                            ) : null}
                           </div>
                         </div>
-                        <div>{notification.chatMessage}</div>
+                        <div className={"break-words"}>
+                          {notification.chatMessage}
+                          {notification.chatCreateTime !==
+                          notification.chatUpdateTime ? (
+                            <span
+                              className={
+                                "ml-1 align-baseline text-xs text-gray-400"
+                              }
+                            >
+                              (수정됨)
+                            </span>
+                          ) : null}
+                        </div>
                         {notification.chatAttachment ? (
                           <img
                             src={envState.baseUrl + notification.chatAttachment}

@@ -311,7 +311,7 @@ export default function ServerChat() {
           {/* chat component*/}
           <div
             style={{
-              maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 580px)" : "calc(100vw - 320px)"}`,
+              maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100% - 380px)" : "100%"}`,
               maxHeight: "calc(100vh - 70px)",
             }}
             className={"relative flex h-full w-full flex-col"}

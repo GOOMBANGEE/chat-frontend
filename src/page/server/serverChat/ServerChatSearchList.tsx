@@ -38,7 +38,7 @@ export default function ServerChatSearchList() {
           <div
             key={chat.id}
             className={
-              "flex gap-x-2 rounded bg-customDark_3 px-2 py-1 text-start"
+              "flex w-full gap-x-2 rounded bg-customDark_3 px-2 py-1 text-start"
             }
           >
             <AvatarIcon avatar={chat.avatarImageSmall} size={8} />
@@ -54,9 +54,8 @@ export default function ServerChatSearchList() {
                   style={{
                     maxWidth: "calc(100% - 50px)",
                     width: chat.attachmentWidth,
-                    // height: chat.attachmentHeight,
                   }}
-                  className="rounded bg-customDark_2"
+                  className={`${chat.attachmentWidth ? "bg-customDark_2" : ""}rounded`}
                 >
                   <img
                     className="rounded"
@@ -65,7 +64,17 @@ export default function ServerChatSearchList() {
                 </div>
               ) : null}
 
-              <div>{chat.message}</div>
+              <div
+                style={{ maxWidth: "calc(100% - 50px)" }}
+                className={"break-words"}
+              >
+                {chat.message}
+                {chat.createTime !== chat.updateTime ? (
+                  <span className={"ml-1 align-baseline text-xs text-gray-400"}>
+                    (수정됨)
+                  </span>
+                ) : null}
+              </div>
             </div>
           </div>
         );

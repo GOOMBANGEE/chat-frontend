@@ -141,11 +141,10 @@ export default forwardRef(function ChatComponent(
       return (
         <div
           style={{
-            maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 700px)" : ""}`,
+            maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100% - 70px)" : ""}`,
             width: props.chat.attachmentWidth,
-            height: props.chat.attachmentHeight,
           }}
-          className="rounded bg-customDark_2"
+          className={"rounded bg-customDark_2"}
         >
           <img
             className="rounded"
@@ -251,7 +250,7 @@ export default forwardRef(function ChatComponent(
               <div className={"mb-1 flex w-full"}>
                 <div
                   style={{
-                    maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 700px)" : "calc(100vw - 480px)"}`,
+                    maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 900px)" : "calc(100vw - 480px)"}`,
                   }}
                   className={`${props.chat.error ? "text-red-600" : ""} mr-2 break-words`}
                 >
