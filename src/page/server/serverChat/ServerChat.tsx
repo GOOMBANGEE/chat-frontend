@@ -286,10 +286,7 @@ export default function ServerChat() {
   }, []);
 
   return (
-    <div
-      style={{ maxHeight: "100vh" }}
-      className={"relative flex h-full w-full"}
-    >
+    <div className={"relative flex h-full w-full"}>
       {serverState.id ? (
         <div className={"relative flex w-60 flex-col gap-0 bg-customDark_2"}>
           <ServerChatDropdown />
@@ -304,7 +301,7 @@ export default function ServerChat() {
       )}
 
       <div
-        style={{ maxWidth: "calc(100vw - 320px )" }}
+        style={{ maxWidth: "calc(100vw - 320px)" }}
         className={"flex h-full w-full flex-col"}
       >
         <ServerChatHeader />
@@ -314,7 +311,7 @@ export default function ServerChat() {
           {/* chat component*/}
           <div
             style={{
-              maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 550px)" : "calc(100vw - 320px)"}`,
+              maxWidth: `${serverState.serverUserList || serverState.searchList ? "calc(100vw - 580px)" : "calc(100vw - 320px)"}`,
               maxHeight: "calc(100vh - 70px)",
             }}
             className={"relative flex h-full w-full flex-col"}

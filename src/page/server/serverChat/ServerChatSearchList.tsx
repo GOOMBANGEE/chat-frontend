@@ -1,12 +1,18 @@
 import { useChatStore } from "../../../store/ChatStore.tsx";
+import { useEnvStore } from "../../../store/EnvStore.tsx";
+import AvatarIcon from "../../../component/AvatarIcon.tsx";
 
 export default function ServerChatSearchList() {
   const { chatSearchListState } = useChatStore();
+  const { envState } = useEnvStore();
 
   return (
     <div
+      style={{
+        maxHeight: "calc(100vh - 70px)",
+      }}
       className={
-        "flex h-full w-96 flex-col gap-y-2 bg-customDark_1 px-4 py-6 text-customText"
+        "custom-scrollbar flex h-full w-96 flex-col gap-y-2 overflow-x-hidden overflow-y-scroll rounded bg-customDark_1 px-2 py-2 text-customText"
       }
     >
       <div className={"text-xs text-gray-400"}>결과</div>
@@ -32,16 +38,35 @@ export default function ServerChatSearchList() {
           <div
             key={chat.id}
             className={
-              "flex flex-col rounded bg-customDark_3 px-2 py-1 text-start"
+              "flex gap-x-2 rounded bg-customDark_3 px-2 py-1 text-start"
             }
           >
-            <div className={"flex items-end"}>
-              <div className={"mr-2 font-semibold"}>{chat.username}</div>
-              {formattedTime && (
-                <div className={"text-xs text-gray-400"}>{formattedTime}</div>
-              )}
+            <AvatarIcon avatar={chat.avatarImageSmall} size={8} />
+            <div className={"flex w-full flex-col"}>
+              <div className={"mb-1 flex items-center gap-x-2"}>
+                <div className={"font-semibold"}>{chat.username}</div>
+                {formattedTime && (
+                  <div className={"text-xs text-gray-400"}>{formattedTime}</div>
+                )}
+              </div>
+              {chat.attachment ? (
+                <div
+                  style={{
+                    maxWidth: "calc(100% - 50px)",
+                    width: chat.attachmentWidth,
+                    // height: chat.attachmentHeight,
+                  }}
+                  className="rounded bg-customDark_2"
+                >
+                  <img
+                    className="rounded"
+                    src={envState.baseUrl + chat.attachment}
+                  />
+                </div>
+              ) : null}
+
+              <div>{chat.message}</div>
             </div>
-            <div>{chat.message}</div>
           </div>
         );
       })}

@@ -1,9 +1,9 @@
 import { useEnvStore } from "../../../store/EnvStore.tsx";
-import { useParams } from "react-router-dom";
 import { useServerStore } from "../../../store/ServerStore.tsx";
 import { useChatStore } from "../../../store/ChatStore.tsx";
 import axios from "axios";
 import devLog from "../../../devLog.ts";
+import { useChannelStore } from "../../../store/ChannelStore.tsx";
 
 interface Props {
   searchDefault?: string;
@@ -14,8 +14,8 @@ interface Props {
 export default function useChatSearch() {
   const { setChatSearchListState } = useChatStore();
   const { setServerState } = useServerStore();
+  const { channelState } = useChannelStore();
   const { envState } = useEnvStore();
-  const { serverId } = useParams();
   const componentName = "useChatSearch";
 
   const chatSearch = async (props: Props) => {
@@ -27,11 +27,14 @@ export default function useChatSearch() {
       const message = props.searchMessage?.slice(messagePrefix.length);
 
       const chatUrl = envState.chatUrl;
-      const response = await axios.post(`${chatUrl}/${serverId}/search`, {
-        keyword: keyword,
-        username: username,
-        message: message,
-      });
+      const response = await axios.post(
+        `${chatUrl}/${channelState.id}/search`,
+        {
+          keyword: keyword,
+          username: username,
+          message: message,
+        },
+      );
 
       devLog(componentName, "setServerState searchOptionMenu false");
       setServerState({ searchOptionMenu: false, searchList: true });
