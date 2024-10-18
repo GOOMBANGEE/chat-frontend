@@ -8,16 +8,23 @@ interface Props {
 export default function IconComponent(props: Readonly<Props>) {
   const { envState } = useEnvStore();
 
+  const size: { [key: string]: string } = {
+    8: "h-8 w-8",
+    10: "h-10 w-10",
+    12: "h-12 w-12",
+    14: "h-14 w-14",
+  };
+
   return (
     <>
       {props.icon ? (
         <img
-          className={`h-${props.size} w-${props.size} rounded-full`}
+          className={`${size[props.size]} rounded-full`}
           src={envState.baseUrl + props.icon}
         />
       ) : (
         <div
-          className={`flex h-${props.size} w-${props.size} items-center justify-center rounded-full bg-customDark_5`}
+          className={`flex ${size[props.size]} items-center justify-center rounded-full bg-customDark_5`}
         >
           <svg
             width="32px"
