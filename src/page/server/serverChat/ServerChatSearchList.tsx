@@ -9,10 +9,12 @@ export default function ServerChatSearchList() {
   return (
     <div
       style={{
+        maxWidth: "500px",
         maxHeight: "calc(100vh - 70px)",
+        width: "30vw",
       }}
       className={
-        "custom-scrollbar flex h-full w-96 flex-col gap-y-2 overflow-x-hidden overflow-y-scroll rounded bg-customDark_1 px-2 py-2 text-customText"
+        "custom-scrollbar flex h-full flex-col gap-y-2 overflow-x-hidden overflow-y-scroll rounded bg-customDark_1 px-2 py-2 text-customText"
       }
     >
       <div className={"text-xs text-gray-400"}>결과</div>
@@ -49,15 +51,21 @@ export default function ServerChatSearchList() {
           >
             <IconComponent icon={chat.avatarImageSmall} size={8} />
             <div className={"flex w-full flex-col"}>
-              <div className={"mb-1 flex items-center gap-x-2"}>
-                <div className={"font-semibold"}>{chat.username}</div>
+              <div
+                style={{ maxWidth: "calc(100% - 40px)" }}
+                className={"mb-1 flex items-center gap-x-2"}
+              >
+                <div className={"truncate font-semibold"}>{chat.username}</div>
                 {formattedTime && (
-                  <div className={"text-xs text-gray-400"}>{formattedTime}</div>
+                  <div className={"truncate text-xs text-gray-400"}>
+                    {formattedTime}
+                  </div>
                 )}
               </div>
               <ImageAttachment
                 image={imageInfo}
-                maxWidth={"calc(100% - 50px)"}
+                maxWidth={"100%"}
+                maxHeight={"350px"}
               />
 
               <div

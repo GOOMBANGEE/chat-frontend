@@ -98,7 +98,10 @@ export default function ChatDeleteModal() {
         }
       >
         <div
-          style={{ width: "450px" }}
+          style={{
+            maxHeight: "calc(100% - 400px)",
+            width: "550px",
+          }}
           className={
             "absolute mx-4 flex flex-col rounded bg-customDark_4 text-center text-customText"
           }
@@ -115,7 +118,7 @@ export default function ChatDeleteModal() {
           <div className={"px-4"}>
             <div
               style={{ boxShadow: "0 0 1px 2px rgba(0, 0, 0, 0.2)" }}
-              className={"mb-8 flex w-full gap-x-4 rounded px-4 py-2"}
+              className={"mb-8 flex h-fit w-full gap-x-4 rounded px-4 py-2"}
             >
               <IconComponent
                 icon={chatState.focusUserAvatarImageSmall}
@@ -134,8 +137,9 @@ export default function ChatDeleteModal() {
                   )}
                 </div>
                 <div
-                  style={{ maxWidth: "calc(100% - 55px)" }}
-                  className={"w-full break-words text-start"}
+                  className={
+                    "custom-scrollbar w-full overflow-y-scroll break-words text-start"
+                  }
                 >
                   <div className={"mb-1"}>
                     {chatState.message}
@@ -147,7 +151,11 @@ export default function ChatDeleteModal() {
                       </span>
                     ) : null}
                   </div>
-                  <ImageAttachment image={imageInfo} maxWidth={undefined} />
+                  <ImageAttachment
+                    image={imageInfo}
+                    maxWidth={"100%"}
+                    maxHeight={"350px"}
+                  />
                 </div>
               </div>
             </div>

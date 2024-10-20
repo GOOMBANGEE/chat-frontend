@@ -21,6 +21,7 @@ export default function IconComponent(props: Readonly<Props>) {
         <img
           className={`${size[props.size]} rounded-full`}
           src={envState.baseUrl + props.icon}
+          loading={"lazy"}
         />
       ) : (
         <div

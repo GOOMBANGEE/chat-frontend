@@ -8,7 +8,7 @@ import IconComponent from "../../../component/IconComponent.tsx";
 
 export default function ServerIndexFriendList() {
   const { channelCreate } = useChannelCreate();
-  const { setChannelState, directMessageChannelListState } = useChannelStore();
+  const { directMessageChannelListState } = useChannelStore();
   const {
     userState,
     setUserState,
@@ -62,7 +62,6 @@ export default function ServerIndexFriendList() {
       });
       if (channelId != undefined) navigate(`/server/dm/${channelId}`);
     } else {
-      setChannelState({ id: channel.id, userDirectMessageId: userId });
       navigate(`/server/dm/${channel.id}`);
     }
   };

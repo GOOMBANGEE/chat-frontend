@@ -150,7 +150,7 @@ export default forwardRef(function ChatComponent(
             "mb-2 flex gap-2 rounded px-4 text-customText hover:bg-customDark_1"
           }
         >
-          <div className={"flex items-end"}>
+          <div className={"flex items-center"}>
             <div className={"font-semibold"}>{props.chat.username}</div>
             <div className={"mr-2"}>님이 입장하였습니다.</div>
             {renderTimestamp()}
@@ -166,7 +166,7 @@ export default forwardRef(function ChatComponent(
           <IconComponent icon={props.chat.avatarImageSmall} size={12} />
 
           <div className={"ml-1 flex w-full flex-col bg-customDark_1 px-3"}>
-            <div className={"mb-0.5 flex items-end"}>
+            <div className={"mb-0.5 flex items-center"}>
               <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
               {renderTimestamp()}
             </div>
@@ -207,7 +207,8 @@ export default forwardRef(function ChatComponent(
               </div>
               <ImageAttachment
                 image={imageInfo}
-                maxWidth={`${serverState.serverUserList || serverState.searchList ? "calc(100% - 70px)" : ""}`}
+                maxWidth={undefined}
+                maxHeight={undefined}
               />
             </div>
           </div>
@@ -222,7 +223,7 @@ export default forwardRef(function ChatComponent(
         style={{ minHeight: props.chat.attachment ? "auto" : "none" }}
         className={"flex w-full rounded px-4 py-2 hover:bg-customDark_1"}
       >
-        <IconComponent icon={props.chat.avatarImageSmall} size={12} />
+        <IconComponent icon={props.chat.avatarImageSmall} size={14} />
         <div
           onContextMenu={(e) => handleContextMenu(e)}
           className={
@@ -230,7 +231,7 @@ export default forwardRef(function ChatComponent(
           }
         >
           <div className={"flex flex-col"}>
-            <div className={"mb-0.5 flex items-end"}>
+            <div className={"mb-0.5 flex items-center"}>
               <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
               {renderTimestamp()}
             </div>
@@ -257,7 +258,8 @@ export default forwardRef(function ChatComponent(
           </div>
           <ImageAttachment
             image={imageInfo}
-            maxWidth={`${serverState.serverUserList || serverState.searchList ? "calc(100% - 70px)" : ""}`}
+            maxWidth={undefined}
+            maxHeight={undefined}
           />
         </div>
       </div>

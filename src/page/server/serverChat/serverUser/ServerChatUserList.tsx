@@ -56,7 +56,7 @@ export default function ServerChatUserList() {
   return (
     <div
       className={
-        "flex h-full w-96 flex-col bg-customDark_1 px-4 py-6 text-customText"
+        "flex h-full w-80 flex-col bg-customDark_1 px-4 py-6 text-customText"
       }
     >
       {onlineUser && onlineUser.length !== 0 ? (
@@ -75,7 +75,7 @@ export default function ServerChatUserList() {
             >
               <IconComponent icon={userInfo.avatarImageSmall} size={10} />
 
-              <div>{userInfo.username}</div>
+              <div className={"truncate"}>{userInfo.username}</div>
             </button>
           ))}
         </div>

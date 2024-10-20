@@ -90,11 +90,13 @@ export default function NotificationIcon() {
       {isOpen ? (
         <div
           style={{
+            maxWidth: "600px",
             maxHeight: "calc(100vh - 200px)",
-            left: "-350px",
+            width: "30vw",
+            right: "0px",
           }}
           className={
-            "custom-scrollbar absolute top-10 z-10 flex w-96 flex-col gap-y-4 overflow-y-auto rounded border-2 border-customDark_4 bg-customDark_0 py-4 font-light text-customText"
+            "custom-scrollbar absolute top-10 z-10 flex flex-col gap-y-4 overflow-y-auto rounded border-2 border-customDark_4 bg-customDark_0 py-4 font-light text-customText"
           }
         >
           <div className={"flex"}>
@@ -114,15 +116,22 @@ export default function NotificationIcon() {
           {isDM ? (
             <>
               {directMessageListState?.map((notification: NotificationInfo) => {
-                // 시간 편집
-                const createTimeToString =
-                  notification.chatCreateTime?.toLocaleString();
-                const year = createTimeToString?.slice(0, 4);
-                const month = createTimeToString?.slice(5, 7);
-                const day = createTimeToString?.slice(8, 10);
-                const hour = Number(createTimeToString?.slice(11, 13));
-                const minute = createTimeToString?.slice(14, 16);
+                // 채팅 시간 변환
+                let formattedTime = "";
+                if (notification.chatCreateTime) {
+                  const createTimeToString =
+                    notification.chatCreateTime.toLocaleString();
+                  const year = createTimeToString.slice(0, 4);
+                  const month = createTimeToString.slice(5, 7);
+                  const day = createTimeToString.slice(8, 10);
+                  let hour = Number(createTimeToString.slice(11, 13));
+                  const minute = createTimeToString.slice(14, 16);
+                  const period = hour < 12 ? "오전" : "오후";
 
+                  if (hour > 12) hour -= 12; // 12시간제로 변환
+
+                  formattedTime = `${year}.${month}.${day}. ${period} ${hour}:${minute}`;
+                }
                 const imageInfo: ImageInfo = {
                   link: notification.chatAttachment
                     ? notification.chatAttachment
@@ -149,10 +158,11 @@ export default function NotificationIcon() {
                         className={"flex w-full flex-col"}
                       >
                         <div className={"mb-2 flex items-center font-semibold"}>
-                          {notification.username}
-                          <div className="ml-2 text-xs font-light text-gray-400">
-                            {year}.{month}.{day}. {hour > 12 ? "오후" : "오전"}{" "}
-                            {hour > 12 ? hour - 12 : hour}:{minute}
+                          <div className={"truncate"}>
+                            {notification.username}
+                          </div>
+                          <div className="ml-2 truncate text-xs font-light text-gray-400">
+                            {formattedTime}
                           </div>
                         </div>
                         <div className={"break-words"}>
@@ -170,7 +180,8 @@ export default function NotificationIcon() {
                         </div>
                         <ImageAttachment
                           image={imageInfo}
-                          maxWidth={undefined}
+                          maxWidth={"100%"}
+                          maxHeight={"350px"}
                         />
                       </div>
                     </div>

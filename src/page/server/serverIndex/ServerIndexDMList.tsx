@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import IconComponent from "../../../component/IconComponent.tsx";
 
 export default function ServerIndexDMList() {
-  const { directMessageChannelListState } = useChannelStore();
+  const { channelState, directMessageChannelListState } = useChannelStore();
 
   const navigate = useNavigate();
 
@@ -13,7 +13,10 @@ export default function ServerIndexDMList() {
   };
 
   return (
-    <div className={"relative flex flex-col text-customText"}>
+    <div
+      style={{ width: "240px" }}
+      className={"relative flex flex-col text-customText"}
+    >
       <div className={"mt-1 flex h-14 w-full items-center shadow-md"}></div>
 
       {directMessageChannelListState.map((channelInfo: ChannelInfo) => {
@@ -21,13 +24,13 @@ export default function ServerIndexDMList() {
           <button
             key={channelInfo.id}
             onClick={() => handleDmChannelClick(channelInfo.id)}
-            className={
-              "flex items-center gap-4 rounded px-4 py-2 hover:bg-customDark_5"
-            }
+            className={`mx-1 my-0.5 flex items-center gap-4 rounded px-4 py-2 ${channelState.id === channelInfo.id ? "bg-customDark_5" : "hover:bg-customDark_5"}`}
           >
             <IconComponent icon={channelInfo.avatarImageSmall} size={10} />
 
-            <div className={"font-semibold"}>{channelInfo.username}</div>
+            <div className={"text-start font-semibold"}>
+              {channelInfo.username}
+            </div>
           </button>
         );
       })}

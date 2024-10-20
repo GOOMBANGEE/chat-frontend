@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 interface Props {
   image: ImageInfo;
   maxWidth: string | undefined;
+  maxHeight: string | undefined;
 }
 
 export default function ImageAttachment(props: Readonly<Props>) {
@@ -14,7 +15,6 @@ export default function ImageAttachment(props: Readonly<Props>) {
   const [originalImage, setOriginalImage] = useState<string>();
 
   const handleClick = () => {
-    console.log(props.image.link);
     if (props.image.width && props.image.height) {
       const originalImage = props.image.link?.split("&width=")[0];
       const extension = props.image.link?.split(".")[1];
@@ -47,17 +47,33 @@ export default function ImageAttachment(props: Readonly<Props>) {
   }, [isOpen]);
 
   return (
-    <>
+    <div>
       {props.image.link ? (
         <button
           onClick={handleClick}
           style={{
-            maxWidth: props.maxWidth ? props.maxWidth : "",
-            width: props.image.width,
+            maxWidth: `${props.maxWidth ? props.maxWidth : "100%"}`,
+            maxHeight: `${props.maxHeight ? props.maxHeight : "450px"}`,
           }}
-          className={`${props.image.width ? "bg-customDark_2" : ""} rounded`}
+          className={"relative h-full w-full rounded"}
         >
-          <img className="rounded" src={envState.baseUrl + props.image.link} />
+          <div
+            style={{
+              maxWidth: `${props.maxWidth ? props.maxWidth : "100%"}`,
+              maxHeight: `${props.maxHeight ? props.maxHeight : "450px"}`,
+              zIndex: "-10",
+            }}
+            className={"absolute h-full w-full bg-customDark_2"}
+          />
+          <img
+            style={{
+              maxWidth: `${props.maxWidth ? props.maxWidth : "100%"}`,
+              maxHeight: `${props.maxHeight ? props.maxHeight : "450px"}`,
+            }}
+            className={"h-full rounded"}
+            src={envState.baseUrl + props.image.link}
+            loading={"lazy"}
+          />
         </button>
       ) : null}
       {isOpen ? (
@@ -65,13 +81,21 @@ export default function ImageAttachment(props: Readonly<Props>) {
           <div className={`fixed inset-0 bg-customDark_5 opacity-70`}></div>
 
           <div
+            style={{
+              maxWidth: "80vw",
+              maxHeight: "40vw",
+            }}
             className={
               "image-attachment-modal absolute z-50 items-center justify-center"
             }
           >
             <img
+              style={{
+                maxWidth: "80vw",
+                maxHeight: "40vw",
+              }}
               src={envState.baseUrl + props.image.link}
-              className={"rounded opacity-100"}
+              className={"rounded"}
             />
             <button
               onClick={handleClickViewOriginal}
@@ -82,6 +106,6 @@ export default function ImageAttachment(props: Readonly<Props>) {
           </div>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }

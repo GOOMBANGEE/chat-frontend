@@ -164,6 +164,7 @@ export default function ServerList() {
                 <img
                   src={envState.baseUrl + server.icon}
                   className={`h-14 w-14 ${server.id === serverState.id ? "rounded-2xl" : "rounded-full group-hover:rounded-2xl"}`}
+                  loading={"lazy"}
                 />
               </button>
             ) : (

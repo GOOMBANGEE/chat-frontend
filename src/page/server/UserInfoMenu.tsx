@@ -15,7 +15,9 @@ export default function UserInfoMenu() {
       <div className={"ml-2 mr-2 flex w-10 justify-center"}>
         <IconComponent icon={userState.avatar} size={10} />
       </div>
-      <div className={"text-sm font-semibold"}>{userState.username}</div>
+      <div className={"truncate text-sm font-semibold"}>
+        {userState.username}
+      </div>
       <button
         onClick={() =>
           setUserState({ userSettingOpen: true, userSettingAccount: true })

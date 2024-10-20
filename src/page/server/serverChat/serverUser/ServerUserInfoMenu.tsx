@@ -171,7 +171,8 @@ export default function ServerUserInfoMenu() {
       </div>
       <div className={"relative flex w-full"}>
         <div
-          className={`${chatState.chatMessage ? "hidden" : "absolute"} pointer-events-none left-4 top-2 z-10 px-0.5 text-gray-500`}
+          style={{ maxWidth: "200px" }}
+          className={`${chatState.chatMessage ? "hidden" : "absolute"} pointer-events-none left-4 top-2 z-10 truncate px-0.5 text-gray-500`}
         >
           {`${userState.focusUsername}님에게 메시지 보내기`}
         </div>
