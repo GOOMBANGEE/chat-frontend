@@ -46,9 +46,11 @@ export default function Login() {
     }
 
     const refreshToken = await login();
-    if (await refreshAccessToken(refreshToken)) {
-      navigate(serverUrl);
-      return;
+    if (refreshToken) {
+      if (await refreshAccessToken(refreshToken)) {
+        navigate(serverUrl);
+        return;
+      }
     }
     setUserState({
       loginErrorMessage: "유효하지 않은 이메일 또는 비밀번호입니다.",

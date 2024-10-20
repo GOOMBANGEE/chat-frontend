@@ -19,6 +19,11 @@ export default function useRegisterTokenCheck() {
       setUserState({
         email: response.data.email,
       });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        devLog(componentName, "setGlobalState");
+        setGlobalState({ pageInvalid: true });
+      }
     } finally {
       devLog(componentName, "setGlobalState");
       setGlobalState({

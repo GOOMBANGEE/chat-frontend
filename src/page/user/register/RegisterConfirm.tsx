@@ -17,7 +17,7 @@ export default function RegisterConfirm() {
 
   const handleConfirmButton = async () => {
     if (await registerConfirm()) {
-      navigate(loginUrl);
+      navigate(loginUrl, { replace: true });
     }
   };
 

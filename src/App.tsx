@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import { useGlobalStore } from "./store/GlobalStore.tsx";
 import useFetchProfile from "./hook/useFetchProfile.tsx";
@@ -29,10 +29,8 @@ export default function App() {
   const { userState } = useUserStore();
   const { serverState } = useServerStore();
   const { channelState } = useChannelStore();
-  const { globalState } = useGlobalStore();
   const { tokenState } = useTokenStore();
-
-  const navigate = useNavigate();
+  const { globalState, setGlobalState } = useGlobalStore();
 
   const routePathList = [
     "/",
@@ -50,7 +48,7 @@ export default function App() {
   const refreshToken = getCookie(tokenState.refreshTokenKey);
   const fetchAccessToken = async () => {
     if (!(await refreshAccessToken(refreshToken))) {
-      navigate("/", { replace: true });
+      setGlobalState({ fetchProfile: true });
     }
   };
   useEffect(() => {

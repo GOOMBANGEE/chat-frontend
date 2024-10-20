@@ -26,8 +26,11 @@ import devLog from "../../devLog.ts";
 import useStompSubscribe from "../../hook/useStompSubscribe.tsx";
 import { useChatStore } from "../../store/ChatStore.tsx";
 import useFetchNotification from "../../hook/user/useFetchNotification.tsx";
+import { getCookie } from "../../Cookie.tsx";
+import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
 
 export default function Server() {
+  const { refreshAccessToken } = useRefreshAccessToken();
   const { stompSubscribe } = useStompSubscribe();
   const { receiveStompMessageHandler } = useReceiveStompMessageHandler();
   const { fetchServerList } = useFetchServerList();
@@ -46,11 +49,22 @@ export default function Server() {
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
   const { tokenState } = useTokenStore();
-  const { globalState } = useGlobalStore();
+  const { globalState, setGlobalState } = useGlobalStore();
 
   const componentName = "Server";
   const rootPath = "/server";
   const routePathList = ["/", "/:serverId/:channelId", "/dm/:channelId"];
+
+  // accessToken 가져오기
+  const refreshToken = getCookie(tokenState.refreshTokenKey);
+  const fetchAccessToken = async () => {
+    if (!(await refreshAccessToken(refreshToken))) {
+      setGlobalState({ fetchProfile: true });
+    }
+  };
+  useEffect(() => {
+    fetchAccessToken();
+  }, []);
 
   // 로그인해서 userState.username 변경된 경우
   useEffect(() => {
@@ -112,6 +126,15 @@ export default function Server() {
       receiveStompMessageHandler(stompState.chatMessage);
   }, [stompState.chatMessage]);
 
+  // 최초접속시 subscribe user
+  useEffect(() => {
+    if (userState.username && stompState.client?.active) {
+      // subscribe user
+      const userSubscriptionUrl = `/sub/user/${userState.id}`;
+      stompSubscribe(userSubscriptionUrl);
+    }
+  }, [userState.username, stompState.client?.active]);
+
   // 새로고침, 경로변경시 -> server, channel 상태 저장 , stomp sub
   useEffect(() => {
     let serverId;
@@ -124,9 +147,6 @@ export default function Server() {
     }
 
     checkPath({ rootPath, routePathList });
-    // subscribe user
-    const userSubscriptionUrl = `/sub/user/${userState.id}`;
-    stompSubscribe(userSubscriptionUrl);
 
     if (userState.username && channelId) {
       // subscribe server

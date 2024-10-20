@@ -45,13 +45,8 @@ export default function useRefreshAccessToken() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // refreshToken이 만료되거나 잘못된 경우 쿠키 삭제하여 로그인 유도
-        if (
-          error.response &&
-          error.response.data.id === "VALID:TOKEN_INVALID"
-        ) {
-          devLog(componentName, "deleteCookie");
-          deleteCookie(tokenState.refreshTokenKey);
-        }
+        devLog(componentName, "deleteCookie");
+        deleteCookie(tokenState.refreshTokenKey);
         return false;
       }
     } finally {
