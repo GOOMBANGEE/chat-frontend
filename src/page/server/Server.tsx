@@ -94,6 +94,10 @@ export default function Server() {
 
   // 초기 stomp 연결
   const initializeStompClient = () => {
+    const heartbeat = {
+      incoming: 20000,
+      outgoing: 20000,
+    };
     if (!stompState.client) {
       const stompUrl = envState.stompUrl;
       const newStompClient = new Client({
@@ -105,13 +109,14 @@ export default function Server() {
         onStompError: (frame) => {
           console.error("Stomp Error: " + frame.body);
         },
+        heartbeatIncoming: heartbeat.incoming,
+        heartbeatOutgoing: heartbeat.outgoing,
       });
       newStompClient.activate();
     }
   };
   useEffect(() => {
-    initializeStompClient();
-
+    if (userState.username) initializeStompClient();
     return () => {
       if (stompState.client) {
         stompState.client.deactivate();
@@ -119,7 +124,7 @@ export default function Server() {
         setStompState({ client: undefined });
       }
     };
-  }, [tokenState.accessToken]);
+  }, [userState.username, tokenState.accessToken]);
   // stomp 메시지 수신
   useEffect(() => {
     if (stompState.chatMessage)
@@ -187,7 +192,13 @@ export default function Server() {
         stompSubscribe(channelSubscriptionUrl);
       }
     }
-  }, [serverListState, channelListState, location.pathname]);
+  }, [
+    userState.username,
+    stompState.client?.active,
+    serverListState,
+    channelListState,
+    location.pathname,
+  ]);
 
   const renderPage = () => {
     if (globalState.pageInvalid) {
