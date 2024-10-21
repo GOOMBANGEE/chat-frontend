@@ -13,7 +13,7 @@ export default function useServerCreate() {
   const { serverAddState, resetServerAddState } = useServerAddStore();
   const { setServerState, serverListState, setServerListState } =
     useServerStore();
-  const { setCategoryListState } = useCategoryStore();
+  const { categoryListState, setCategoryListState } = useCategoryStore();
   const { channelListState, setChannelState, setChannelListState } =
     useChannelStore();
   const { userState } = useUserStore();
@@ -55,7 +55,7 @@ export default function useServerCreate() {
         displayOrder: response.data.categoryDisplayOrder,
         serverId: response.data.id,
       };
-      const newCategoryList = [newCategory];
+      const newCategoryList = [...categoryListState, newCategory];
       devLog(componentName, "setCategoryListState newCategoryList");
       setCategoryListState(newCategoryList);
 

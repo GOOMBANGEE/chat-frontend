@@ -10,7 +10,7 @@ import { useEnvStore } from "../../store/EnvStore.tsx";
 export default function ServerList() {
   const { serverState, setServerState, serverListState } = useServerStore();
   const { setServerAddState } = useServerAddStore();
-  const { setChannelState, channelListState } = useChannelStore();
+  const { channelListState } = useChannelStore();
   const { userState } = useUserStore();
   const { envState } = useEnvStore();
 
@@ -50,8 +50,6 @@ export default function ServerList() {
 
     // displayOrder가 가장 작은 채널로 이동
     const firstChannel = sortedChannels[0];
-    setChannelState({ id: firstChannel.id, name: firstChannel.name });
-
     navigate(`/server/${server.id}/${firstChannel.id}`);
   };
 
