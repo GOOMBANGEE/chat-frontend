@@ -8,10 +8,20 @@ import useChannelCreate from "../../../../hook/server/serverChat/channel/useChan
 export default function ChannelCreateModal() {
   const { channelCreate } = useChannelCreate();
   const { serverState } = useServerStore();
-  const { categoryState } = useCategoryStore();
-  const { channelState, setChannelState, resetChannelState } =
-    useChannelStore();
+  const { categoryState, setCategoryState } = useCategoryStore();
+  const { channelState, setChannelState } = useChannelStore();
   const navigate = useNavigate();
+
+  const handleClickCloseButton = () => {
+    setCategoryState({
+      id: undefined,
+      name: undefined,
+      isHover: false,
+      hoverCategoryId: undefined,
+      hoverButtonY: undefined,
+    });
+    setChannelState({ createModalOpen: false });
+  };
 
   // modal 바깥쪽 클릭시 modal close
   useEffect(() => {
@@ -20,7 +30,7 @@ export default function ChannelCreateModal() {
         channelState.createModalOpen &&
         !(e.target as HTMLElement).closest(".channel-create-modal")
       ) {
-        resetChannelState();
+        handleClickCloseButton();
       }
     };
     document.addEventListener("mouseup", handleClickOutside);
@@ -61,9 +71,7 @@ export default function ChannelCreateModal() {
         >
           <button
             className={"absolute right-4 top-4 z-10 ml-auto"}
-            onClick={() => {
-              resetChannelState();
-            }}
+            onClick={handleClickCloseButton}
           >
             <svg
               width="24px"

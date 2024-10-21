@@ -1,5 +1,5 @@
 import { useUserStore } from "../../../store/UserStore.tsx";
-import { ChangeEvent, useEffect, useRef } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef } from "react";
 import { debounce } from "lodash";
 import useUsernameCheck from "../../../hook/user/register/useUsernameCheck.tsx";
 import useChangeUsername from "../../../hook/user/userSetting/useChangeUsername.tsx";
@@ -13,9 +13,12 @@ export default function UserSettingProfile() {
   // 버튼클릭시 input 클릭하는 효과
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const debouncedUsernameCheck = debounce((username: string) => {
-    usernameCheck(username);
-  }, 1000);
+  const debouncedUsernameCheck = useCallback(
+    debounce((username: string) => {
+      usernameCheck(username);
+    }, 1000),
+    [],
+  );
 
   // 버튼클릭시 input 클릭하는 효과
   const handleClickFileInputButton = () => {
