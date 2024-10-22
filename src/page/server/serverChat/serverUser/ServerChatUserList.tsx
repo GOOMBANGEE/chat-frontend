@@ -15,15 +15,14 @@ export default function ServerChatUserList() {
 
   const handleClick = (e: React.MouseEvent, userInfo: UserInfo) => {
     e.preventDefault();
-    if (userInfo.id !== userState.id)
-      setUserState({
-        userInfoMenu: true,
-        focusUserId: userInfo.id,
-        focusUsername: userInfo.username,
-        focusUserAvatar: userInfo.avatarImageSmall,
-        menuPositionX: e.clientX,
-        menuPositionY: e.clientY,
-      });
+    setUserState({
+      userInfoMenu: true,
+      focusUserId: userInfo.id,
+      focusUsername: userInfo.username,
+      focusUserAvatar: userInfo.avatarImageSmall,
+      menuPositionX: e.clientX,
+      menuPositionY: e.clientY,
+    });
   };
 
   const handleContextMenu = (e: React.MouseEvent, userInfo: UserInfo) => {
@@ -73,7 +72,11 @@ export default function ServerChatUserList() {
                 "flex w-full items-center gap-x-2 rounded px-2 py-2 hover:bg-customDark_5"
               }
             >
-              <IconComponent icon={userInfo.avatarImageSmall} size={10} />
+              <IconComponent
+                onClick={(e) => handleClick(e, userInfo)}
+                icon={userInfo.avatarImageSmall}
+                size={10}
+              />
 
               <div className={"truncate"}>{userInfo.username}</div>
             </button>
@@ -94,7 +97,11 @@ export default function ServerChatUserList() {
                 "flex w-full items-center gap-x-2 rounded px-2 py-2 hover:bg-customDark_5"
               }
             >
-              <IconComponent icon={userInfo.avatarImageSmall} size={10} />
+              <IconComponent
+                onClick={(e) => handleClick(e, userInfo)}
+                icon={userInfo.avatarImageSmall}
+                size={10}
+              />
 
               <div>{userInfo.username}</div>
             </button>

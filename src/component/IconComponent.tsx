@@ -1,6 +1,7 @@
 import { useEnvStore } from "../store/EnvStore.tsx";
 
 interface Props {
+  onClick?: (e: React.MouseEvent) => void;
   icon: string | undefined | null;
   size: number;
 }
@@ -19,13 +20,15 @@ export default function IconComponent(props: Readonly<Props>) {
     <>
       {props.icon ? (
         <img
-          className={`${size[props.size]} rounded-full`}
+          onClick={props.onClick}
+          className={`${size[props.size]} rounded-full ${props.onClick ? "cursor-pointer" : "cursor-auto"}`}
           src={envState.baseUrl + props.icon}
           loading={"lazy"}
         />
       ) : (
         <div
-          className={`flex ${size[props.size]} items-center justify-center rounded-full bg-customDark_5`}
+          onClick={props.onClick}
+          className={`flex ${size[props.size]} items-center justify-center rounded-full bg-customDark_5 ${props.onClick ? "cursor-pointer" : "cursor-auto"}`}
         >
           <svg
             width="32px"

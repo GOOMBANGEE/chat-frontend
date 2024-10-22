@@ -62,9 +62,14 @@ export default function ChatInput() {
   };
 
   const sendMessage = () => {
-    if (userState.username && (chatState.chatMessage || chatState.attachment)) {
+    if (
+      userState.id &&
+      userState.username &&
+      (chatState.chatMessage || chatState.attachment)
+    ) {
       const chat: Chat = {
         id: Date.now(),
+        userId: userState.id,
         username: userState.username,
         avatarImageSmall: userState.avatar ? userState.avatar : undefined,
         message: chatState.chatMessage,

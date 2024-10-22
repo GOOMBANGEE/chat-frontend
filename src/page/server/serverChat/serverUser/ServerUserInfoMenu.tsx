@@ -9,8 +9,13 @@ import { useCategoryStore } from "../../../../store/CategoryStore.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
 import useChannelCreate from "../../../../hook/server/serverChat/channel/useChannelCreate.tsx";
 import IconComponent from "../../../../component/IconComponent.tsx";
+import useFriendRequest from "../../../../hook/user/useFriendRequest.tsx";
+import useFriendDelete from "../../../../hook/user/useFriendDelete.tsx";
+import { toast } from "react-toastify";
 
 export default function ServerUserInfoMenu() {
+  const { friendRequest } = useFriendRequest();
+  const { friendDelete } = useFriendDelete();
   const { channelCreate } = useChannelCreate();
   const { sendChatMessage } = useSendChatMessage();
 
@@ -20,10 +25,29 @@ export default function ServerUserInfoMenu() {
     useChannelStore();
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
-  const { userState, setUserState } = useUserStore();
+  const { userState, setUserState, userFriendListState } = useUserStore();
   const navigate = useNavigate();
 
   const chatInputRef = useRef<HTMLInputElement>(null);
+
+  const friend = userFriendListState.some(
+    (user) => user.id === userState.focusUserId,
+  );
+
+  const handleClickFriendRequestButton = async () => {
+    if (userState.username === userState.focusUsername) {
+      toast.error("자기 자신에게 신청하는것은 허용되지않습니다");
+      return;
+    }
+
+    await friendRequest();
+    closeMenu();
+  };
+
+  const handleClickFriendDeleteButton = async () => {
+    await friendDelete();
+    closeMenu();
+  };
 
   // send message -> Enter key / Click send button
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -37,9 +61,10 @@ export default function ServerUserInfoMenu() {
   };
 
   const sendMessage = async () => {
-    if (userState.username && chatState.chatMessage) {
+    if (userState.id && userState.username && chatState.chatMessage) {
       const chat: Chat = {
         id: Date.now(),
+        userId: userState.id,
         username: userState.username,
         avatarImageSmall: userState.avatar ? userState.avatar : undefined,
         message: chatState.chatMessage,
@@ -122,6 +147,19 @@ export default function ServerUserInfoMenu() {
     }
   }, [userState.focusUserId]);
 
+  const closeMenu = () => {
+    setUserState({
+      userInfoMenu: false,
+      focusUserId: undefined,
+      focusUsername: undefined,
+      menuPositionX: undefined,
+      menuPositionY: undefined,
+    });
+    setChatState({
+      focusDmInput: false,
+      chatMessage: undefined,
+    });
+  };
   // 바깥쪽 클릭시 close
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -131,17 +169,7 @@ export default function ServerUserInfoMenu() {
           ".server-chat-serverUser-list-user-info-menu",
         )
       ) {
-        setUserState({
-          userInfoMenu: false,
-          focusUserId: undefined,
-          focusUsername: undefined,
-          menuPositionX: undefined,
-          menuPositionY: undefined,
-        });
-        setChatState({
-          focusDmInput: false,
-          chatMessage: undefined,
-        });
+        closeMenu();
       }
     };
 
@@ -161,7 +189,7 @@ export default function ServerUserInfoMenu() {
           : { left: `${userState.menuPositionX}px` }),
       }}
       className={
-        "server-chat-serverUser-list-user-info-menu flex w-80 flex-col gap-6 rounded bg-customDark_0 px-4 py-4 text-customText"
+        "server-chat-serverUser-list-user-info-menu z-10 flex w-80 flex-col gap-4 rounded bg-customDark_0 px-4 py-4 text-customText"
       }
     >
       <div className={"flex items-center gap-4"}>
@@ -169,6 +197,30 @@ export default function ServerUserInfoMenu() {
 
         <div className={"text-lg font-semibold"}>{userState.focusUsername}</div>
       </div>
+      {userState.id !== userState.focusUserId ? (
+        <>
+          {friend ? (
+            <button
+              onClick={() => handleClickFriendDeleteButton()}
+              className={
+                "w-fit rounded bg-red-500 px-2 py-1 text-start text-sm hover:bg-red-600 hover:text-white"
+              }
+            >
+              친구 삭제하기
+            </button>
+          ) : (
+            <button
+              onClick={() => handleClickFriendRequestButton()}
+              className={
+                "w-fit rounded bg-indigo-500 px-2 py-1 text-start text-sm hover:bg-indigo-600 hover:text-white"
+              }
+            >
+              친구 추가하기
+            </button>
+          )}
+        </>
+      ) : null}
+
       <div className={"relative flex w-full"}>
         <div
           style={{ maxWidth: "200px" }}

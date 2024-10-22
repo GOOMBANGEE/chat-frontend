@@ -106,23 +106,25 @@ export default function ServerIndexFriendList() {
             </div>
           </div>
           {displayFriendList.map((user) => (
-            <div
+            <button
+              onClick={() => handleClickDirectMessageButton(user.id)}
               onContextMenu={(e) => handleContextMenu(e, user)}
               key={user.id}
               className={
-                "flex w-full items-center gap-4 rounded px-4 py-2 hover:bg-customDark_5"
+                "flex w-full items-center gap-4 rounded px-4 py-2 text-start hover:bg-customDark_5"
               }
             >
-              <IconComponent icon={user.avatarImageSmall} size={12} />
+              <IconComponent
+                onClick={() => handleClickDirectMessageButton(user.id)}
+                icon={user.avatarImageSmall}
+                size={12}
+              />
               <div>
                 <div>{user.username}</div>
 
                 <div>{user.online ? "온라인" : "오프라인"}</div>
               </div>
-              <button
-                onClick={() => handleClickDirectMessageButton(user.id)}
-                className={"group ml-auto rounded-full bg-customDark_0 p-2"}
-              >
+              <div className={"group ml-auto rounded-full bg-customDark_0 p-2"}>
                 <svg
                   width="22px"
                   height="22px"
@@ -148,8 +150,8 @@ export default function ServerIndexFriendList() {
                     ></path>
                   </g>
                 </svg>
-              </button>
-            </div>
+              </div>
+            </button>
           ))}
         </div>
       );

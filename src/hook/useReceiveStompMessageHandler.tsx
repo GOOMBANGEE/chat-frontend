@@ -61,6 +61,7 @@ export default function useReceiveStompMessageHandler() {
     ) {
       const newChat: Chat = {
         id: message.chatId,
+        userId: message.userId,
         username: message.username,
         avatarImageSmall: message.avatar,
         message: message.message,
@@ -222,6 +223,7 @@ export default function useReceiveStompMessageHandler() {
     ) {
       const newChat: Chat = {
         id: message.chatId,
+        userId: message.userId,
         username: message.username,
         message: message.message,
         enter: true,

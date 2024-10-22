@@ -42,7 +42,6 @@ export default function ServerIndexFriendWaitingList() {
         friendId: friend.id,
         friendUsername: friend.username,
         friendAvatarImageSmall: friend.avatarImageSmall,
-        friendOnline: friend.online,
       });
     }
   };

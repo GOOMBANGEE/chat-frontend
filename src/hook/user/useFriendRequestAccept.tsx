@@ -8,8 +8,7 @@ import { UserInfo } from "../../../index";
 interface Props {
   friendId: number;
   friendUsername: string;
-  friendAvatarImageSmall: string;
-  friendOnline: boolean;
+  friendAvatarImageSmall: string | undefined;
 }
 
 export default function useFriendRequestAccept() {
@@ -38,7 +37,6 @@ export default function useFriendRequestAccept() {
         id: props.friendId,
         username: props.friendUsername,
         avatarImageSmall: props.friendAvatarImageSmall,
-        online: props.friendOnline,
       };
 
       const newFriendList = [...userFriendListState, newFriend];

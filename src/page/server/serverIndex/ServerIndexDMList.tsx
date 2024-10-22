@@ -26,7 +26,11 @@ export default function ServerIndexDMList() {
             onClick={() => handleDmChannelClick(channelInfo.id)}
             className={`mx-1 my-0.5 flex items-center gap-4 rounded px-4 py-2 ${channelState.id === channelInfo.id ? "bg-customDark_5" : "hover:bg-customDark_5"}`}
           >
-            <IconComponent icon={channelInfo.avatarImageSmall} size={10} />
+            <IconComponent
+              onClick={() => handleDmChannelClick(channelInfo.id)}
+              icon={channelInfo.avatarImageSmall}
+              size={10}
+            />
 
             <div className={"text-start font-semibold"}>
               {channelInfo.username}

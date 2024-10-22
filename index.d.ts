@@ -31,6 +31,7 @@ export interface ChatInfoList {
 
 export interface Chat {
   id: number;
+  userId: number;
   username: string;
   avatarImageSmall?: string;
   message?: string;
@@ -49,8 +50,8 @@ export interface Chat {
 export interface UserInfo {
   id: number;
   username: string;
-  avatarImageSmall: string;
-  online: boolean;
+  avatarImageSmall: string | undefined;
+  online?: boolean;
 }
 
 export interface NotificationInfoList {

@@ -1,4 +1,4 @@
-import { Chat, ChatInfoList, ImageInfo } from "../../../../../index";
+import { Chat, ChatInfoList, ImageInfo, UserInfo } from "../../../../../index";
 import { useChatStore } from "../../../../store/ChatStore.tsx";
 import React, { ForwardedRef, forwardRef, useEffect, useRef } from "react";
 import { useUserStore } from "../../../../store/UserStore.tsx";
@@ -23,7 +23,7 @@ export default forwardRef(function ChatComponent(
   const { channelState } = useChannelStore();
   const { chatState, setChatState, chatListState, setChatListState } =
     useChatStore();
-  const { userState } = useUserStore();
+  const { userState, setUserState } = useUserStore();
 
   // 시간 편집
   const createTimeToString = props.chat.createTime?.toLocaleString();
@@ -86,9 +86,15 @@ export default forwardRef(function ChatComponent(
   };
 
   const handleClickSaveButton = () => {
-    if (userState.username && chatState.id && chatState.chatMessage) {
+    if (
+      chatState.id &&
+      chatState.chatMessage &&
+      userState.id &&
+      userState.username
+    ) {
       const chat: Chat = {
         id: chatState.id,
+        userId: userState.id,
         username: userState.username,
         avatarImageSmall: userState.avatar ? userState.avatar : undefined,
         message: chatState.chatMessage,
@@ -125,6 +131,18 @@ export default forwardRef(function ChatComponent(
     setChatState({ chatEdit: false });
   };
 
+  const handleClickUser = (e: React.MouseEvent, userInfo: UserInfo) => {
+    e.preventDefault();
+    setUserState({
+      userInfoMenu: true,
+      focusUserId: userInfo.id,
+      focusUsername: userInfo.username,
+      focusUserAvatar: userInfo.avatarImageSmall,
+      menuPositionX: e.clientX + 360,
+      menuPositionY: e.clientY - 100,
+    });
+  };
+
   const renderPage = () => {
     const imageInfo: ImageInfo = {
       link: props.chat.attachment,
@@ -139,6 +157,14 @@ export default forwardRef(function ChatComponent(
           {hour > 12 ? hour - 12 : hour}:{minute}
         </div>
       ) : null;
+
+    const userInfo: UserInfo = {
+      id: props.chat.userId,
+      username: props.chat.username,
+      avatarImageSmall: props.chat.avatarImageSmall
+        ? props.chat.avatarImageSmall
+        : undefined,
+    };
 
     // 입장 메시지
     if (props.chat.enter) {
@@ -223,7 +249,11 @@ export default forwardRef(function ChatComponent(
         style={{ minHeight: props.chat.attachment ? "auto" : "none" }}
         className={"flex w-full rounded px-4 py-2 hover:bg-customDark_1"}
       >
-        <IconComponent icon={props.chat.avatarImageSmall} size={14} />
+        <IconComponent
+          onClick={(e) => handleClickUser(e, userInfo)}
+          icon={props.chat.avatarImageSmall}
+          size={12}
+        />
         <div
           onContextMenu={(e) => handleContextMenu(e)}
           className={
@@ -232,7 +262,14 @@ export default forwardRef(function ChatComponent(
         >
           <div className={"flex flex-col"}>
             <div className={"mb-0.5 flex items-center"}>
-              <div className={"mr-2 font-semibold"}>{props.chat.username}</div>
+              <div
+                onClick={(e) => handleClickUser(e, userInfo)}
+                className={
+                  "mr-2 font-semibold hover:cursor-pointer hover:underline"
+                }
+              >
+                {props.chat.username}
+              </div>
               {renderTimestamp()}
             </div>
 

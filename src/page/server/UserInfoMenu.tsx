@@ -18,6 +18,7 @@ export default function UserInfoMenu() {
       <div className={"truncate text-sm font-semibold"}>
         {userState.username}
       </div>
+
       <button
         onClick={() =>
           setUserState({ userSettingOpen: true, userSettingAccount: true })
