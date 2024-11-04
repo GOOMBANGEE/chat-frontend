@@ -247,7 +247,9 @@ export default forwardRef(function ChatComponent(
       <div
         ref={ref}
         style={{ minHeight: props.chat.attachment ? "auto" : "none" }}
-        className={"flex w-full rounded px-4 py-2 hover:bg-customDark_1"}
+        className={
+          "flex w-full select-text rounded px-4 py-2 hover:bg-customDark_1"
+        }
       >
         <IconComponent
           onClick={(e) => handleClickUser(e, userInfo)}

@@ -21,14 +21,14 @@ export default function IconComponent(props: Readonly<Props>) {
       {props.icon ? (
         <img
           onClick={props.onClick}
-          className={`${size[props.size]} rounded-full ${props.onClick ? "cursor-pointer" : "cursor-auto"}`}
+          className={`${size[props.size]} select-none rounded-full ${props.onClick ? "cursor-pointer" : "cursor-auto"}`}
           src={envState.baseUrl + props.icon}
           loading={"lazy"}
         />
       ) : (
         <div
           onClick={props.onClick}
-          className={`flex ${size[props.size]} items-center justify-center rounded-full bg-customDark_5 ${props.onClick ? "cursor-pointer" : "cursor-auto"}`}
+          className={`flex ${size[props.size]} select-none items-center justify-center rounded-full bg-customDark_5 ${props.onClick ? "cursor-pointer" : "cursor-auto"}`}
         >
           <svg
             width="32px"
