@@ -14,6 +14,7 @@ export default function RegisterConfirm() {
 
   const navigate = useNavigate();
   const loginUrl = "/";
+  const serverUrl = "/server";
 
   const handleConfirmButton = async () => {
     if (await registerConfirm()) {
@@ -24,6 +25,13 @@ export default function RegisterConfirm() {
   useEffect(() => {
     void registerTokenCheck();
   }, []);
+
+  // 로그인 상태라면 server로 리다이렉트
+  useEffect(() => {
+    if (userState.login) {
+      navigate(serverUrl);
+    }
+  }, [userState.login]);
 
   return (
     <>
