@@ -1,14 +1,16 @@
 import { useServerStore } from "../../store/ServerStore.tsx";
-import { ServerInfo } from "../../../index";
+import { ChannelInfo, ServerInfo } from "../../../index";
 import { useNavigate } from "react-router-dom";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
 import { useChannelStore } from "../../store/ChannelStore.tsx";
 import useFetchNotification from "../../hook/user/useFetchNotification.tsx";
 import { useEnvStore } from "../../store/EnvStore.tsx";
+import { useEffect } from "react";
 
 export default function ServerList() {
-  const { serverState, setServerState, serverListState } = useServerStore();
+  const { serverState, setServerState, serverListState, setServerListState } =
+    useServerStore();
   const { setServerAddState } = useServerAddStore();
   const { channelListState } = useChannelStore();
   const { userState } = useUserStore();
@@ -64,15 +66,40 @@ export default function ServerList() {
     });
   };
 
+  useEffect(() => {
+    // 읽지않은 메시지가 있는 채널
+    const channelWithUnreadMessage = channelListState.filter(
+      (channel: ChannelInfo) => {
+        return (
+          channel.lastMessageId !== undefined &&
+          channel.lastMessageId !== channel.lastReadMessageId
+        );
+      },
+    );
+
+    // 읽지않은 메시지가 있는 서버
+    const serverList = serverListState.map((server: ServerInfo) => {
+      // 읽지않은 메시지가 있는 채널에 해당하는 서버 찾기
+      const hasUnreadMessage = channelWithUnreadMessage.some(
+        (channel: ChannelInfo) => channel.serverId === server.id,
+      );
+      return {
+        ...server,
+        newMessage: hasUnreadMessage,
+      };
+    });
+    setServerListState(serverList);
+  }, [channelListState]);
+
   return (
     <div
       className={
-        "flex h-full max-h-full w-20 flex-col items-center justify-center gap-2 bg-customDark_0 px-1 py-2 text-customText"
+        "flex h-full max-h-full w-20 flex-col items-center justify-center gap-2 bg-customDark_0 py-2 pr-1 text-customText"
       }
     >
       <div
         className={
-          "custom-scrollbar mx-auto flex h-full max-h-full flex-col items-center gap-2 overflow-y-auto px-1 py-2"
+          "custom-scrollbar mx-auto flex h-full max-h-full flex-col items-center gap-2 overflow-y-auto py-2 pl-2"
         }
       >
         {/* dm, server index button */}
@@ -137,7 +164,37 @@ export default function ServerList() {
 
         {/* server icon */}
         {serverListState.map((server: ServerInfo) => (
-          <div key={server.id}>
+          <div key={server.id} className={""}>
+            <div className={"relative"}>
+              {server.newMessage ? (
+                <svg
+                  style={{ left: "-16px" }}
+                  className={"absolute top-4"}
+                  width="20px"
+                  height="20px"
+                  viewBox="-2 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      className={"fill-white stroke-white"}
+                      d="M9 7.9313V16.0686C9 16.6744 9 16.9773 9.1198 17.1175C9.22374 17.2393 9.37967 17.3038 9.53923 17.2913C9.72312 17.2768 9.93731 17.0626 10.3657 16.6342L14.4343 12.5656C14.6323 12.3676 14.7313 12.2686 14.7684 12.1544C14.8011 12.054 14.8011 11.9458 14.7684 11.8454C14.7313 11.7313 14.6323 11.6323 14.4343 11.4342L10.3657 7.36561C9.93731 6.93724 9.72312 6.72305 9.53923 6.70858C9.37967 6.69602 9.22374 6.76061 9.1198 6.88231C9 7.02257 9 7.32548 9 7.9313Z"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    ></path>
+                  </g>
+                </svg>
+              ) : null}
+            </div>
+
             {server.icon ? (
               <button
                 onMouseOver={(e) =>

@@ -2,6 +2,7 @@ export interface ServerInfo {
   id: number;
   name: string;
   icon: string;
+  newMessage: boolean;
 }
 
 export interface CategoryInfo {
