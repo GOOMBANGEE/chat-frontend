@@ -6,13 +6,11 @@ import devLog from "../../../devLog.ts";
 import { useChannelStore } from "../../../store/ChannelStore.tsx";
 
 interface Props {
-  searchDefault?: string;
-  searchUser?: string;
-  searchMessage?: string;
+  page?: number;
 }
 
 export default function useChatSearch() {
-  const { setChatSearchListState } = useChatStore();
+  const { chatSearchListState, setChatSearchListState } = useChatStore();
   const { setServerState } = useServerStore();
   const { channelState } = useChannelStore();
   const { envState } = useEnvStore();
@@ -22,28 +20,32 @@ export default function useChatSearch() {
     try {
       const usernamePrefix = "유저이름:";
       const messagePrefix = "메시지:";
-      const keyword = props.searchDefault;
-      const username = props.searchUser?.slice(usernamePrefix.length);
-      const message = props.searchMessage?.slice(messagePrefix.length);
+      const keyword = chatSearchListState.searchDefault;
+      const username = chatSearchListState.searchUser?.slice(
+        usernamePrefix.length,
+      );
+      const message = chatSearchListState.searchMessage?.slice(
+        messagePrefix.length,
+      );
 
       const chatUrl = envState.chatUrl;
-      const response = await axios.post(
-        `${chatUrl}/${channelState.id}/search`,
-        {
-          keyword: keyword,
-          username: username,
-          message: message,
-        },
-      );
+      const url = props.page
+        ? `${chatUrl}/${channelState.id}/search?page=${props.page}`
+        : `${chatUrl}/${channelState.id}/search`;
+      const response = await axios.post(url, {
+        keyword: keyword,
+        username: username,
+        message: message,
+      });
 
       devLog(componentName, "setServerState searchOptionMenu false");
       setServerState({ searchOptionMenu: false, searchList: true });
 
       devLog(componentName, "setChatSearchListState");
-      setChatSearchListState(response.data.chatInfoDtoList);
+      setChatSearchListState(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setChatSearchListState([]);
+        setChatSearchListState({ chatList: [] });
       }
     }
   };

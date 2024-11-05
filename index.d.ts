@@ -47,6 +47,19 @@ export interface Chat {
   updateTime?: number;
 }
 
+export interface ChatSearchInfo {
+  previous?: number;
+  page?: number;
+  next?: number;
+  total?: number;
+
+  searchDefault?: string;
+  searchUser?: string;
+  searchMessage?: string;
+
+  chatList?: Chat[];
+}
+
 export interface UserInfo {
   id: number;
   username: string;

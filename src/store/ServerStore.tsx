@@ -57,9 +57,6 @@ interface ServerState {
   searchOption: boolean;
   searchOptionUser: boolean;
   searchOptionMessage: boolean;
-  searchDefault: string | undefined;
-  searchUser: string | undefined;
-  searchMessage: string | undefined;
 
   // server category channel context menu
   categoryChannelContextMenu: boolean;
@@ -105,9 +102,6 @@ const initialServerState: ServerState = {
   searchOption: false,
   searchOptionUser: false,
   searchOptionMessage: false,
-  searchDefault: undefined,
-  searchUser: undefined,
-  searchMessage: undefined,
 
   // server category channel context menu
   categoryChannelContextMenu: false,

@@ -1,13 +1,13 @@
 import { create } from "zustand";
-import { Chat, ChatInfoList } from "../../index";
+import { ChatInfoList, ChatSearchInfo } from "../../index";
 
 interface ChatStore {
   chatState: ChatState;
   setChatState: (state: Partial<ChatState>) => void;
   chatListState: ChatInfoList[];
   setChatListState: (state: ChatInfoList[]) => void;
-  chatSearchListState: Chat[];
-  setChatSearchListState: (state: Chat[]) => void;
+  chatSearchListState: ChatSearchInfo;
+  setChatSearchListState: (state: ChatSearchInfo) => void;
   resetChatState: () => void;
   resetChatListState: () => void;
 }
@@ -76,14 +76,21 @@ const initialChatState: ChatState = {
   enter: false,
 };
 
+const initialChatSearchListState: ChatSearchInfo = {
+  chatList: [],
+};
+
 export const useChatStore = create<ChatStore>((set) => ({
   chatState: initialChatState,
   setChatState: (state) =>
     set((prev) => ({ chatState: { ...prev.chatState, ...state } })),
   chatListState: [],
   setChatListState: (state) => set({ chatListState: state }),
-  chatSearchListState: [],
-  setChatSearchListState: (state) => set({ chatSearchListState: state }),
+  chatSearchListState: initialChatSearchListState,
+  setChatSearchListState: (state) =>
+    set((prev) => ({
+      chatSearchListState: { ...prev.chatSearchListState, ...state },
+    })),
   resetChatState: () => set({ chatState: initialChatState }),
   resetChatListState: () => set({ chatListState: [] }),
 }));

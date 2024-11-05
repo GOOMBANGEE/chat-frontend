@@ -1,10 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import useChatSearch from "../../../../hook/server/serverChat/useChatSearch.tsx";
 import { useServerStore } from "../../../../store/ServerStore.tsx";
+import { useChatStore } from "../../../../store/ChatStore.tsx";
 
 export default function ChatSearchbar() {
   const { chatSearch } = useChatSearch();
   const { serverState, setServerState } = useServerStore();
+  const { chatSearchListState, setChatSearchListState } = useChatStore();
 
   const inputRefDefault = useRef<HTMLDivElement>(null);
   const inputRefUser = useRef<HTMLDivElement>(null);
@@ -57,6 +59,8 @@ export default function ChatSearchbar() {
       searchOption: false,
       searchOptionUser: false,
       searchOptionMessage: false,
+    });
+    setChatSearchListState({
       searchDefault: undefined,
       searchUser: undefined,
       searchMessage: undefined,
@@ -79,17 +83,14 @@ export default function ChatSearchbar() {
       document.removeEventListener("mouseup", handleClickOutside);
     };
   }, [serverState, setServerState]);
+
   // search 동작
   const handleKeyEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
 
       setServerState({ serverUserList: false });
-      chatSearch({
-        searchDefault: serverState.searchDefault,
-        searchUser: serverState.searchUser,
-        searchMessage: serverState.searchMessage,
-      });
+      chatSearch({ page: 1 });
     }
   };
 
@@ -104,7 +105,7 @@ export default function ChatSearchbar() {
     }
   };
   useEffect(() => {
-    setServerState({
+    setChatSearchListState({
       searchDefault: inputRefDefault.current?.innerText,
       searchUser: inputRefUser.current?.innerText,
       searchMessage: inputRefMessage.current?.innerText,
@@ -135,7 +136,7 @@ export default function ChatSearchbar() {
       setCursorToEnd(inputRefMessage);
     }
   }, [
-    serverState.searchDefault,
+    chatSearchListState.searchDefault,
     serverState.searchOptionUser,
     serverState.searchOptionMessage,
   ]);
@@ -261,7 +262,7 @@ export default function ChatSearchbar() {
                 onClick={(e) =>
                   refFocus(e, ".search-option-user", inputRefUser)
                 }
-                className={`${serverState.searchMessage ? "" : "w-full"}`}
+                className={`${chatSearchListState.searchMessage ? "" : "w-full"}`}
               >
                 <span
                   ref={inputRefUser}

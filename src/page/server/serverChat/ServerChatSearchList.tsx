@@ -2,6 +2,7 @@ import { useChatStore } from "../../../store/ChatStore.tsx";
 import IconComponent from "../../../component/IconComponent.tsx";
 import ImageAttachment from "../../../component/ImageAttachment.tsx";
 import { ImageInfo } from "../../../../index";
+import PaginationBar from "./PaginationBar.tsx";
 
 export default function ServerChatSearchList() {
   const { chatSearchListState } = useChatStore();
@@ -19,7 +20,7 @@ export default function ServerChatSearchList() {
     >
       <div className={"text-xs text-gray-400"}>결과</div>
       <div className={"border-2 border-customDark_6"}></div>
-      {chatSearchListState.map((chat) => {
+      {chatSearchListState.chatList?.map((chat) => {
         // 채팅 시간 변환
         let formattedTime = "";
         if (chat.createTime) {
@@ -50,7 +51,10 @@ export default function ServerChatSearchList() {
             }
           >
             <IconComponent icon={chat.avatarImageSmall} size={8} />
-            <div className={"flex w-full flex-col"}>
+            <div
+              style={{ maxWidth: "calc(100% - 50px)" }}
+              className={"flex w-full flex-col"}
+            >
               <div
                 style={{ maxWidth: "calc(100% - 40px)" }}
                 className={"mb-1 flex items-center gap-x-2"}
@@ -68,10 +72,9 @@ export default function ServerChatSearchList() {
                 maxHeight={"350px"}
               />
 
-              <div
-                style={{ maxWidth: "calc(100% - 50px)" }}
-                className={"break-words"}
-              >
+              <div className={"break-words"}>
+                <div>{imageInfo.width}</div>
+
                 {chat.message}
                 {chat.createTime !== chat.updateTime ? (
                   <span className={"ml-1 align-baseline text-xs text-gray-400"}>
@@ -83,6 +86,12 @@ export default function ServerChatSearchList() {
           </div>
         );
       })}
+
+      {/* page */}
+      <PaginationBar
+        currentPage={chatSearchListState.page}
+        totalPage={chatSearchListState.total}
+      />
     </div>
   );
 }

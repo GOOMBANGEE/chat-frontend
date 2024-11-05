@@ -298,7 +298,7 @@ export default function ServerChat() {
       ) : (
         <div
           style={{ width: "240px" }}
-          className={"relative h-full bg-customDark_2"}
+          className={"relative flex flex-col gap-0 bg-customDark_2"}
         >
           <ServerIndexDMList />
           <UserInfoMenu />
