@@ -26,24 +26,23 @@ export default function ChatInput() {
   };
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+
+    if (file?.type.startsWith("image")) {
       const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        const image = new Image();
+        image.src = reader.result as string;
 
-      if (file.type.startsWith("image")) {
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          const image = new Image();
-          image.src = reader.result as string;
-
-          image.onload = () => {
-            setChatState({
-              attachmentType: "image",
-              attachment: reader.result as string,
-              attachmentFileName: file.name,
-            });
-          };
+        image.onload = () => {
+          setChatState({
+            attachmentType: "image",
+            attachment: image.src,
+            attachmentFileName: file.name,
+          });
         };
-      }
+      };
+
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -137,43 +136,41 @@ export default function ChatInput() {
   // image paste logic
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
-      const item = e.clipboardData?.items[0];
+      const clipboardItemList = e.clipboardData?.items;
 
-      if (item && item.type === "text/html") {
-        item.getAsString(async (htmlString) => {
-          // html에서 img 추출
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(htmlString, "text/html");
-          const image = htmlDoc.querySelector("img");
-          if (image?.src) {
-            // fetch로 이미지 데이터를 가져와서 blob으로 변환
-            const response = await fetch(image.src);
-            const blob = await response.blob();
+      if (clipboardItemList) {
+        for (const element of clipboardItemList) {
+          const item = element;
 
-            // blob을 file로 변환
-            const file = new File([blob], "pasted-image-from-html", {
-              type: blob.type,
-            });
+          if (item.type.startsWith("image")) {
+            // blob 객체로 이미지 가져오기
+            const blob = item.getAsFile();
+            if (blob) {
+              const reader = new FileReader();
+              reader.readAsDataURL(blob);
+              reader.onload = () => {
+                const image = new Image();
+                image.src = reader.result as string;
 
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-              setChatState({
-                attachmentType: "image",
-                attachment: reader.result as string,
-                attachmentFileName: file.name,
-              });
-            };
+                image.onload = () => {
+                  setChatState({
+                    attachmentType: "image",
+                    attachment: image.src,
+                    attachmentFileName: blob.name,
+                  });
+                };
+              };
+            }
           }
-        });
-      }
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
+        }
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       }
     };
 
     document.addEventListener("paste", handlePaste);
-
     return () => {
       document.removeEventListener("paste", handlePaste);
     };
