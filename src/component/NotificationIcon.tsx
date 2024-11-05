@@ -3,17 +3,21 @@ import { useEffect, useState } from "react";
 import { ImageInfo, NotificationInfo } from "../../index";
 import IconComponent from "./IconComponent.tsx";
 import ImageAttachment from "./ImageAttachment.tsx";
+import { useNavigate } from "react-router-dom";
 
 export default function NotificationIcon() {
   const { userNotificationListState } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const [isDM, setIsDM] = useState(false);
   const [isMention, setIsMention] = useState(false);
+  const [focusChatId, setFocusChatId] = useState<number | undefined>(undefined);
 
   const [directMessageListState, setDirectMessageListState] =
     useState<NotificationInfo[]>();
   const [mentionListState, setMentionListState] =
     useState<NotificationInfo[]>();
+
+  const navigate = useNavigate();
 
   const handleClickNotificationOpen = () => {
     if (isOpen) {
@@ -58,6 +62,13 @@ export default function NotificationIcon() {
       document.removeEventListener("mouseup", handleClickOutside);
     };
   }, [isOpen]);
+
+  const handleClickNavigate = (channelId: number) => {
+    setIsOpen(false);
+    setIsDM(false);
+    setIsMention(false);
+    navigate(`/server/dm/${channelId}`);
+  };
 
   return (
     <div className={"notification-modal relative flex items-center rounded"}>
@@ -141,7 +152,11 @@ export default function NotificationIcon() {
                 };
 
                 return (
-                  <div key={notification.chatId} className={"flex flex-col"}>
+                  <div
+                    onMouseOver={() => setFocusChatId(notification.chatId)}
+                    key={notification.chatId}
+                    className={"flex flex-col"}
+                  >
                     <div>{notification.channelName}</div>
                     <div
                       className={
@@ -157,13 +172,29 @@ export default function NotificationIcon() {
                         style={{ maxWidth: "calc(100% - 70px)" }}
                         className={"flex w-full flex-col"}
                       >
-                        <div className={"mb-2 flex items-center font-semibold"}>
+                        <div
+                          className={
+                            "relative mb-2 flex items-center font-semibold"
+                          }
+                        >
                           <div className={"truncate"}>
                             {notification.username}
                           </div>
                           <div className="ml-2 truncate text-xs font-light text-gray-400">
                             {formattedTime}
                           </div>
+                          {focusChatId === notification.chatId ? (
+                            <button
+                              onClick={() =>
+                                handleClickNavigate(notification.channelId)
+                              }
+                              className={
+                                "absolute right-0 rounded bg-customDark_0 px-1 py-0.5 text-sm text-gray-400"
+                              }
+                            >
+                              이동하기
+                            </button>
+                          ) : null}
                         </div>
                         <div className={"break-words"}>
                           {notification.chatMessage}
