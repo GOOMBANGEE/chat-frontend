@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import devLog from "../devLog.ts";
 import { useChannelStore } from "../store/ChannelStore.tsx";
 import { useCategoryStore } from "../store/CategoryStore.tsx";
+import useSound from "use-sound";
+import beep from "../../public/beep.mp3";
 
 export default function useReceiveStompMessageHandler() {
   const { chatListState, setChatListState } = useChatStore();
@@ -44,6 +46,7 @@ export default function useReceiveStompMessageHandler() {
     setUserNotificationListState,
   } = useUserStore();
   const navigate = useNavigate();
+  const [play] = useSound(beep);
 
   const componentName = "useReceiveStompMessageHandler";
 
@@ -131,13 +134,14 @@ export default function useReceiveStompMessageHandler() {
       }
 
       // dm채널에 들어오는 메시지의 경우 userNotification update
-      const directMessageChannel = channelListState.find(
+      const directMessageChannel = directMessageChannelListState.find(
         (channelInfo) =>
           channelInfo.id === message.channelId &&
           channelInfo.userDirectMessageId,
       );
 
       if (directMessageChannel) {
+        play();
         const newNotification: NotificationInfo = {
           channelId: message.channelId,
           channelName: null,

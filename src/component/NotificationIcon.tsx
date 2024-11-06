@@ -126,99 +126,101 @@ export default function NotificationIcon() {
           </div>
           {isDM ? (
             <>
-              {directMessageListState?.map((notification: NotificationInfo) => {
-                // 채팅 시간 변환
-                let formattedTime = "";
-                if (notification.chatCreateTime) {
-                  const createTimeToString =
-                    notification.chatCreateTime.toLocaleString();
-                  const year = createTimeToString.slice(0, 4);
-                  const month = createTimeToString.slice(5, 7);
-                  const day = createTimeToString.slice(8, 10);
-                  let hour = Number(createTimeToString.slice(11, 13));
-                  const minute = createTimeToString.slice(14, 16);
-                  const period = hour < 12 ? "오전" : "오후";
+              {directMessageListState
+                ?.slice(0, 10)
+                .map((notification: NotificationInfo) => {
+                  // 채팅 시간 변환
+                  let formattedTime = "";
+                  if (notification.chatCreateTime) {
+                    const createTimeToString =
+                      notification.chatCreateTime.toLocaleString();
+                    const year = createTimeToString.slice(0, 4);
+                    const month = createTimeToString.slice(5, 7);
+                    const day = createTimeToString.slice(8, 10);
+                    let hour = Number(createTimeToString.slice(11, 13));
+                    const minute = createTimeToString.slice(14, 16);
+                    const period = hour < 12 ? "오전" : "오후";
 
-                  if (hour > 12) hour -= 12; // 12시간제로 변환
+                    if (hour > 12) hour -= 12; // 12시간제로 변환
 
-                  formattedTime = `${year}.${month}.${day}. ${period} ${hour}:${minute}`;
-                }
-                const imageInfo: ImageInfo = {
-                  link: notification.chatAttachment
-                    ? notification.chatAttachment
-                    : undefined,
-                  width: undefined,
-                  height: undefined,
-                };
+                    formattedTime = `${year}.${month}.${day}. ${period} ${hour}:${minute}`;
+                  }
+                  const imageInfo: ImageInfo = {
+                    link: notification.chatAttachment
+                      ? notification.chatAttachment
+                      : undefined,
+                    width: undefined,
+                    height: undefined,
+                  };
 
-                return (
-                  <div
-                    onMouseOver={() => setFocusChatId(notification.chatId)}
-                    key={notification.chatId}
-                    className={"flex flex-col"}
-                  >
-                    <div>{notification.channelName}</div>
+                  return (
                     <div
-                      className={
-                        "mx-4 flex gap-x-4 rounded bg-customDark_4 px-2 py-2"
-                      }
+                      onMouseOver={() => setFocusChatId(notification.chatId)}
+                      key={notification.chatId}
+                      className={"flex flex-col"}
                     >
-                      <IconComponent
-                        icon={notification.avatarImageSmall}
-                        size={12}
-                      />
-
+                      <div>{notification.channelName}</div>
                       <div
-                        style={{ maxWidth: "calc(100% - 70px)" }}
-                        className={"flex w-full flex-col"}
+                        className={
+                          "mx-4 flex gap-x-4 rounded bg-customDark_4 px-2 py-2"
+                        }
                       >
-                        <div
-                          className={
-                            "relative mb-2 flex items-center font-semibold"
-                          }
-                        >
-                          <div className={"truncate"}>
-                            {notification.username}
-                          </div>
-                          <div className="ml-2 truncate text-xs font-light text-gray-400">
-                            {formattedTime}
-                          </div>
-                          {focusChatId === notification.chatId ? (
-                            <button
-                              onClick={() =>
-                                handleClickNavigate(notification.channelId)
-                              }
-                              className={
-                                "absolute right-0 rounded bg-customDark_0 px-1 py-0.5 text-sm text-gray-400"
-                              }
-                            >
-                              이동하기
-                            </button>
-                          ) : null}
-                        </div>
-                        <div className={"break-words"}>
-                          {notification.chatMessage}
-                          {notification.chatCreateTime !==
-                          notification.chatUpdateTime ? (
-                            <span
-                              className={
-                                "ml-1 align-baseline text-xs text-gray-400"
-                              }
-                            >
-                              (수정됨)
-                            </span>
-                          ) : null}
-                        </div>
-                        <ImageAttachment
-                          image={imageInfo}
-                          maxWidth={"100%"}
-                          maxHeight={"350px"}
+                        <IconComponent
+                          icon={notification.avatarImageSmall}
+                          size={12}
                         />
+
+                        <div
+                          style={{ maxWidth: "calc(100% - 70px)" }}
+                          className={"flex w-full flex-col"}
+                        >
+                          <div
+                            className={
+                              "relative mb-2 flex items-center font-semibold"
+                            }
+                          >
+                            <div className={"truncate"}>
+                              {notification.username}
+                            </div>
+                            <div className="ml-2 truncate text-xs font-light text-gray-400">
+                              {formattedTime}
+                            </div>
+                            {focusChatId === notification.chatId ? (
+                              <button
+                                onClick={() =>
+                                  handleClickNavigate(notification.channelId)
+                                }
+                                className={
+                                  "absolute right-0 rounded bg-customDark_0 px-1 py-0.5 text-sm text-gray-400"
+                                }
+                              >
+                                이동하기
+                              </button>
+                            ) : null}
+                          </div>
+                          <div className={"break-words"}>
+                            {notification.chatMessage}
+                            {notification.chatCreateTime !==
+                            notification.chatUpdateTime ? (
+                              <span
+                                className={
+                                  "ml-1 align-baseline text-xs text-gray-400"
+                                }
+                              >
+                                (수정됨)
+                              </span>
+                            ) : null}
+                          </div>
+                          <ImageAttachment
+                            image={imageInfo}
+                            maxWidth={"100%"}
+                            maxHeight={"350px"}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </>
           ) : null}
 
