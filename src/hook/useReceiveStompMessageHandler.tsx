@@ -35,6 +35,7 @@ export default function useReceiveStompMessageHandler() {
     setChannelListState,
     directMessageChannelListState,
     setDirectMessageChannelListState,
+    setNotificationChannelListState,
   } = useChannelStore();
   const {
     userState,
@@ -158,9 +159,22 @@ export default function useReceiveStompMessageHandler() {
           newNotification,
           ...userNotificationListState.notificationDirectMessageInfoDtoList,
         ];
+
         setUserNotificationListState({
           notificationDirectMessageInfoDtoList: newNotificationDirectMessage,
         });
+
+        if (newNotificationDirectMessage) {
+          const unreadChannel = directMessageChannelListState.filter(
+            (channel) => {
+              if (channel.count !== 0) {
+                return channel;
+              }
+            },
+          );
+          devLog(componentName, "CHAT_SEND setNotificationChannelListState");
+          setNotificationChannelListState(unreadChannel);
+        }
       }
 
       devLog(componentName, "CHAT_SEND setChatListState newChatList");

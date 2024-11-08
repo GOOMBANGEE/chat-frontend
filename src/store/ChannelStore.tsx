@@ -8,6 +8,8 @@ interface ChannelStore {
   setChannelListState: (state: ChannelInfo[]) => void;
   directMessageChannelListState: ChannelInfo[];
   setDirectMessageChannelListState: (state: ChannelInfo[]) => void;
+  notificationChannelListState: ChannelInfo[];
+  setNotificationChannelListState: (state: ChannelInfo[]) => void;
   channelUserListState: UserInfo[];
   setChannelUserListState: (state: UserInfo[]) => void;
   resetChannelState: () => void;
@@ -54,6 +56,12 @@ interface ChannelState {
   settingDefault: boolean;
   settingAuth: boolean;
   newName: string | undefined;
+
+  // dm channel notification
+  isHover: boolean;
+  hoverId: number | undefined;
+  hoverName: string | undefined;
+  hoverButtonY: number | undefined;
 }
 
 const initialChannelState: ChannelState = {
@@ -97,6 +105,12 @@ const initialChannelState: ChannelState = {
   settingDefault: false,
   settingAuth: false,
   newName: undefined,
+
+  // dm channel notification
+  isHover: false,
+  hoverId: undefined,
+  hoverName: undefined,
+  hoverButtonY: undefined,
 };
 
 export const useChannelStore = create<ChannelStore>((set) => ({
@@ -108,6 +122,9 @@ export const useChannelStore = create<ChannelStore>((set) => ({
   directMessageChannelListState: [],
   setDirectMessageChannelListState: (state) =>
     set({ directMessageChannelListState: state }),
+  notificationChannelListState: [],
+  setNotificationChannelListState: (state) =>
+    set({ notificationChannelListState: state }),
   channelUserListState: [],
   setChannelUserListState: (state) => set({ channelUserListState: state }),
   resetChannelState: () => set({ channelState: initialChannelState }),

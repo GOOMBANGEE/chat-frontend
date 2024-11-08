@@ -9,11 +9,23 @@ import { useEnvStore } from "../../store/EnvStore.tsx";
 import { useEffect } from "react";
 
 export default function ServerList() {
-  const { serverState, setServerState, serverListState, setServerListState } =
-    useServerStore();
+  const {
+    serverState,
+    setServerState,
+    serverListState,
+    setServerListState,
+    resetServerState,
+  } = useServerStore();
   const { setServerAddState } = useServerAddStore();
-  const { channelListState } = useChannelStore();
-  const { userState } = useUserStore();
+  const {
+    channelState,
+    setChannelState,
+    channelListState,
+    directMessageChannelListState,
+    notificationChannelListState,
+    setNotificationChannelListState,
+  } = useChannelStore();
+  const { userState, userNotificationListState } = useUserStore();
   const { envState } = useEnvStore();
 
   const navigate = useNavigate();
@@ -25,6 +37,11 @@ export default function ServerList() {
       hoverButtonY: undefined,
     });
     navigate("/server");
+  };
+
+  const handleClickDirectMessageChannelIcon = (channel: ChannelInfo) => {
+    resetServerState();
+    navigate(`/server/dm/${channel.id}`);
   };
 
   const handleClickServerIcon = async (server: ServerInfo) => {
@@ -90,6 +107,17 @@ export default function ServerList() {
     });
     setServerListState(serverList);
   }, [channelListState]);
+
+  useEffect(() => {
+    if (userNotificationListState.notificationDirectMessageInfoDtoList) {
+      const unreadChannel = directMessageChannelListState.filter((channel) => {
+        if (channel.count !== 0) {
+          return channel;
+        }
+      });
+      setNotificationChannelListState(unreadChannel);
+    }
+  }, [directMessageChannelListState]);
 
   return (
     <div
@@ -162,9 +190,78 @@ export default function ServerList() {
           ) : null}
         </div>
 
+        {/* count가 있는 dmChannel의 경우 count와 같이 표시 */}
+        {/* dm channel icon */}
+        {userNotificationListState.notificationDirectMessageInfoDtoList.length >
+          0 &&
+          notificationChannelListState?.map((channel: ChannelInfo) => (
+            //  todo 해당되는 channel만 표시 -> 현재는 모든 채널 표시되는 문제있다
+            <div key={channel.username}>
+              <div className={"relative"}>
+                <button
+                  onMouseOver={(e) =>
+                    setChannelState({
+                      isHover: true,
+                      hoverId: channel.id,
+                      hoverName: channel.username,
+                      hoverButtonY: e.currentTarget.getBoundingClientRect().top,
+                    })
+                  }
+                  onMouseLeave={() =>
+                    setChannelState({
+                      isHover: false,
+                      hoverId: undefined,
+                      hoverName: undefined,
+                      hoverButtonY: undefined,
+                    })
+                  }
+                  onClick={() => handleClickDirectMessageChannelIcon(channel)}
+                  className={`group flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-x-hidden rounded-full bg-customDark_3 transition duration-100 hover:rounded-2xl hover:bg-indigo-500 ${channel.avatarImageSmall ? "bg-customDark_3" : ""}`}
+                >
+                  {channel.avatarImageSmall ? (
+                    <img
+                      src={envState.baseUrl + channel.avatarImageSmall}
+                      className={`h-14 w-14 rounded-full group-hover:rounded-2xl`}
+                      loading={"lazy"}
+                    />
+                  ) : (
+                    <div>{channel.username?.[0]}</div>
+                  )}
+                </button>
+                <div
+                  style={{ top: "34px", zIndex: 2 }}
+                  className={
+                    "absolute right-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-customDark_0 bg-red-500 text-xs font-semibold text-customText"
+                  }
+                >
+                  {channel.count}
+                </div>
+              </div>
+
+              {channelState.isHover && channel.id === channelState.hoverId ? (
+                <div
+                  style={{
+                    top: `${channelState.hoverButtonY ? channelState.hoverButtonY + 4 : 0}px`,
+                    left: "86px",
+                  }}
+                  className={
+                    "absolute z-10 w-fit rounded bg-black px-4 py-2 font-semibold"
+                  }
+                >
+                  {channelState.hoverName}
+                </div>
+              ) : null}
+            </div>
+          ))}
+
+        {userNotificationListState.notificationDirectMessageInfoDtoList.length >
+          0 && notificationChannelListState.length > 0 ? (
+          <div className={"w-full border-2 border-customDark_6"}></div>
+        ) : null}
+
         {/* server icon */}
         {serverListState.map((server: ServerInfo) => (
-          <div key={server.id} className={""}>
+          <div key={server.id}>
             <div className={"relative"}>
               {server.newMessage ? (
                 <svg
@@ -194,58 +291,36 @@ export default function ServerList() {
                 </svg>
               ) : null}
             </div>
-
-            {server.icon ? (
-              <button
-                onMouseOver={(e) =>
-                  setServerState({
-                    isHover: true,
-                    hoverServerId: server.id,
-                    hoverServerName: server.name,
-                    hoverButtonY: e.currentTarget.getBoundingClientRect().top,
-                  })
-                }
-                onMouseLeave={() =>
-                  setServerState({
-                    isHover: false,
-                    hoverServerId: undefined,
-                    hoverServerName: undefined,
-                    hoverButtonY: undefined,
-                  })
-                }
-                onClick={() => handleClickServerIcon(server)}
-                className={`group flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-x-hidden bg-customDark_3 transition duration-100 ${server.id === serverState.id ? "rounded-2xl" : "rounded-full hover:rounded-2xl"}`}
-              >
+            <button
+              onMouseOver={(e) =>
+                setServerState({
+                  isHover: true,
+                  hoverServerId: server.id,
+                  hoverServerName: server.name,
+                  hoverButtonY: e.currentTarget.getBoundingClientRect().top,
+                })
+              }
+              onMouseLeave={() =>
+                setServerState({
+                  isHover: false,
+                  hoverServerId: undefined,
+                  hoverServerName: undefined,
+                  hoverButtonY: undefined,
+                })
+              }
+              onClick={() => handleClickServerIcon(server)}
+              className={`group flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-x-hidden transition duration-100 ${server.id === serverState.id ? "rounded-2xl bg-indigo-500" : "rounded-full bg-customDark_3 hover:rounded-2xl hover:bg-indigo-500"} ${server.icon ? "bg-customDark_3" : ""}`}
+            >
+              {server.icon ? (
                 <img
                   src={envState.baseUrl + server.icon}
                   className={`h-14 w-14 ${server.id === serverState.id ? "rounded-2xl" : "rounded-full group-hover:rounded-2xl"}`}
                   loading={"lazy"}
                 />
-              </button>
-            ) : (
-              <button
-                onMouseOver={(e) =>
-                  setServerState({
-                    isHover: true,
-                    hoverServerId: server.id,
-                    hoverServerName: server.name,
-                    hoverButtonY: e.currentTarget.getBoundingClientRect().top,
-                  })
-                }
-                onMouseLeave={() =>
-                  setServerState({
-                    isHover: false,
-                    hoverServerId: undefined,
-                    hoverServerName: undefined,
-                    hoverButtonY: undefined,
-                  })
-                }
-                onClick={() => handleClickServerIcon(server)}
-                className={`flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-x-hidden transition duration-100 ${server.id === serverState.id ? "rounded-2xl bg-indigo-500" : "rounded-full bg-customDark_3 hover:rounded-2xl hover:bg-indigo-500"}`}
-              >
-                {server.name[0]}
-              </button>
-            )}
+              ) : (
+                <div>{server.name[0]}</div>
+              )}
+            </button>
             {serverState.isHover && server.id === serverState.hoverServerId ? (
               <div
                 style={{

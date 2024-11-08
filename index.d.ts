@@ -23,6 +23,9 @@ export interface ChannelInfo {
   userDirectMessageId: number | undefined;
   username: string | undefined;
   avatarImageSmall: string | undefined;
+
+  // dm notification count
+  count?: number;
 }
 
 export interface ChatInfoList {

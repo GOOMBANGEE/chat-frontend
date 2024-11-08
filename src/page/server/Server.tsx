@@ -28,6 +28,7 @@ import { useChatStore } from "../../store/ChatStore.tsx";
 import useFetchNotification from "../../hook/user/useFetchNotification.tsx";
 import { getCookie } from "../../Cookie.tsx";
 import useRefreshAccessToken from "../../hook/useRefreshAccessToken.tsx";
+import { NotificationInfo } from "../../../index";
 
 export default function Server() {
   const { refreshAccessToken } = useRefreshAccessToken();
@@ -41,10 +42,16 @@ export default function Server() {
   const { fetchChatList } = useFetchChatList();
   const { fetchNotification } = useFetchNotification();
 
-  const { userState } = useUserStore();
+  const { userState, userNotificationListState } = useUserStore();
   const { serverAddState } = useServerAddStore();
   const { serverState, setServerState, serverListState } = useServerStore();
-  const { channelState, setChannelState, channelListState } = useChannelStore();
+  const {
+    channelState,
+    setChannelState,
+    channelListState,
+    directMessageChannelListState,
+    setDirectMessageChannelListState,
+  } = useChannelStore();
   const { chatListState } = useChatStore();
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
@@ -198,6 +205,35 @@ export default function Server() {
     serverListState,
     channelListState,
     location.pathname,
+  ]);
+
+  // dmChannelListState.channel.id와 notification으로 들어온 channelId를 비교하여 같은 channel의 경우 count를 추가
+  useEffect(() => {
+    if (
+      userNotificationListState.notificationDirectMessageInfoDtoList &&
+      directMessageChannelListState
+    ) {
+      const channelList = directMessageChannelListState.map((channel) => {
+        const unreadMessageList =
+          userNotificationListState.notificationDirectMessageInfoDtoList.filter(
+            (notification: NotificationInfo) =>
+              notification.channelId === channel.id,
+          );
+        if (unreadMessageList) {
+          return {
+            ...channel,
+            count: unreadMessageList.length,
+          };
+        } else {
+          return channel;
+        }
+      });
+
+      setDirectMessageChannelListState(channelList);
+    }
+  }, [
+    userNotificationListState.notificationDirectMessageInfoDtoList,
+    directMessageChannelListState.length,
   ]);
 
   const renderPage = () => {
