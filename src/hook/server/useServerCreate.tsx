@@ -34,6 +34,7 @@ export default function useServerCreate() {
         id: response.data.id,
         name: response.data.name,
         icon: response.data.icon,
+        newMessage: false,
       };
       const newServerList = [...serverListState, newServer];
       devLog(componentName, "setServerState");

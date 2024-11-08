@@ -3,6 +3,7 @@ import axios, { isAxiosError } from "axios";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useServerStore } from "../../store/ServerStore.tsx";
 import devLog from "../../devLog.ts";
+import { ServerInfo } from "../../../index";
 
 interface Props {
   code: string;
@@ -19,10 +20,11 @@ export default function useServerJoin() {
       const serverUrl = envState.serverUrl;
       const response = await axios.post(`${serverUrl}/${prop.code}/join`);
 
-      const newServer = {
+      const newServer: ServerInfo = {
         id: response.data.id,
         name: response.data.name,
         icon: response.data.icon,
+        newMessage: false,
       };
       const newServerList = [...serverListState, newServer];
 
