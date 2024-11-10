@@ -143,6 +143,11 @@ export default forwardRef(function ChatComponent(
     });
   };
 
+  const handleClickLink = (e: React.MouseEvent, link: string) => {
+    e.preventDefault();
+    window.open(link);
+  };
+
   const renderPage = () => {
     const imageInfo: ImageInfo = {
       link: props.chat.attachment,
@@ -242,6 +247,9 @@ export default forwardRef(function ChatComponent(
       );
     }
 
+    const regex = /(https?:\/\/[^\s]+)/g;
+    const message = props.chat.message?.split(regex);
+
     // 일반 메시지
     return (
       <div
@@ -283,7 +291,19 @@ export default forwardRef(function ChatComponent(
                   }}
                   className={`${props.chat.error ? "text-red-600" : ""} mr-2 break-words`}
                 >
-                  {props.chat.message}
+                  {message?.map((message, index) =>
+                    message.match(regex) ? (
+                      <span
+                        key={index}
+                        onClick={(e) => handleClickLink(e, message)}
+                        className={"cursor-pointer text-blue-500"}
+                      >
+                        {message}
+                      </span>
+                    ) : (
+                      message
+                    ),
+                  )}
                   {props.chat.createTime !== props.chat.updateTime ? (
                     <span
                       className={"ml-1 align-baseline text-xs text-gray-400"}
