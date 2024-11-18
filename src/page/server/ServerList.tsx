@@ -195,7 +195,6 @@ export default function ServerList() {
         {userNotificationListState.notificationDirectMessageInfoDtoList.length >
           0 &&
           notificationChannelListState?.map((channel: ChannelInfo) => (
-            //  todo 해당되는 channel만 표시 -> 현재는 모든 채널 표시되는 문제있다
             <div key={channel.username}>
               <div className={"relative"}>
                 <button
