@@ -1,5 +1,5 @@
 import { useServerStore } from "../../store/ServerStore.tsx";
-import { ChannelInfo, ServerInfo } from "../../../index";
+import { ChannelInfo, NotificationInfo, ServerInfo } from "../../../index";
 import { useNavigate } from "react-router-dom";
 import { useServerAddStore } from "../../store/ServerAddStore.tsx";
 import { useUserStore } from "../../store/UserStore.tsx";
@@ -22,6 +22,7 @@ export default function ServerList() {
     setChannelState,
     channelListState,
     directMessageChannelListState,
+    setDirectMessageChannelListState,
     notificationChannelListState,
     setNotificationChannelListState,
   } = useChannelStore();
@@ -108,6 +109,36 @@ export default function ServerList() {
     setServerListState(serverList);
   }, [channelListState]);
 
+  // dmChannelListState.channel.id와 notification으로 들어온 channelId를 비교하여 같은 channel의 경우 count를 추가
+  useEffect(() => {
+    if (
+      userNotificationListState.notificationDirectMessageInfoDtoList &&
+      directMessageChannelListState
+    ) {
+      const channelList = directMessageChannelListState.map((channel) => {
+        const unreadMessageList =
+          userNotificationListState.notificationDirectMessageInfoDtoList.filter(
+            (notification: NotificationInfo) =>
+              notification.channelId === channel.id,
+          );
+        if (unreadMessageList) {
+          return {
+            ...channel,
+            count: unreadMessageList.length,
+          };
+        } else {
+          return channel;
+        }
+      });
+
+      setDirectMessageChannelListState(channelList);
+    }
+  }, [
+    userNotificationListState.notificationDirectMessageInfoDtoList,
+    channelListState,
+    directMessageChannelListState.length,
+  ]);
+
   useEffect(() => {
     if (userNotificationListState.notificationDirectMessageInfoDtoList) {
       const unreadChannel = directMessageChannelListState.filter((channel) => {
@@ -117,7 +148,10 @@ export default function ServerList() {
       });
       setNotificationChannelListState(unreadChannel);
     }
-  }, [directMessageChannelListState]);
+  }, [
+    userNotificationListState.notificationDirectMessageInfoDtoList,
+    directMessageChannelListState,
+  ]);
 
   return (
     <div
