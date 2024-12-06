@@ -16,8 +16,6 @@ export default function useChannelCreate() {
   const {
     channelState,
     setChannelState,
-    channelListState,
-    setChannelListState,
     directMessageChannelListState,
     setDirectMessageChannelListState,
   } = useChannelStore();
@@ -62,22 +60,6 @@ export default function useChannelCreate() {
           "setDirectMessageChannelListState newChannelList",
         );
         setDirectMessageChannelListState(newChannelList);
-      } else {
-        const newChannel: ChannelInfo = {
-          id: response.data.id,
-          name: undefined,
-          displayOrder: response.data.displayOrder,
-          lastReadMessageId: undefined,
-          lastMessageId: undefined,
-          serverId: response.data.serverId,
-          categoryId: response.data.categoryId,
-          userDirectMessageId: undefined,
-          username: undefined,
-          avatarImageSmall: undefined,
-        };
-        const newChannelList = [...channelListState, newChannel];
-        devLog(componentName, "setChannelListState newChannelList");
-        setChannelListState(newChannelList);
       }
       return response.data.id;
     } catch (error) {

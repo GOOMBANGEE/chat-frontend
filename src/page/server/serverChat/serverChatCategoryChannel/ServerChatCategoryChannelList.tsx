@@ -27,7 +27,7 @@ export default function ServerChatCategoryChannelList() {
       );
       setCategoryList(filteredCategoryList);
     }
-  }, [serverState.id, channelListState]);
+  }, [serverState.id, categoryListState, channelListState]);
 
   return (
     <div
