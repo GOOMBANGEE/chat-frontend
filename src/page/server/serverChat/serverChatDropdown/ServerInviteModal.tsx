@@ -37,6 +37,7 @@ export default function ServerInviteModal() {
 
   return (
     <div
+      style={{ zIndex: 3 }}
       className={
         "fixed left-0 top-0 flex h-full w-full items-center justify-center"
       }
