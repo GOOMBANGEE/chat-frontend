@@ -1,6 +1,6 @@
 import { useGlobalStore } from "../../store/GlobalStore.tsx";
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ServerList from "./ServerList.tsx";
 import ServerIndex from "./serverIndex/ServerIndex.tsx";
 import ServerChat from "./serverChat/ServerChat.tsx";
@@ -57,6 +57,7 @@ export default function Server() {
   const { stompState, setStompState } = useStompStore();
   const { tokenState } = useTokenStore();
   const { globalState, setGlobalState } = useGlobalStore();
+  const navigate = useNavigate();
 
   const componentName = "Server";
   const rootPath = "/server";
@@ -173,30 +174,36 @@ export default function Server() {
       }
 
       // subscribe channel
-      const channel = channelListState.find(
-        (channel) => channel.id === channelId,
-      );
-      if (channel) {
-        devLog(componentName, "setChannelState");
-        setChannelState({
-          id: channel.id,
-          name: channel.name ? channel.name : undefined,
-          displayOrder: channel.displayOrder ? channel.displayOrder : undefined,
-          lastReadMessageId: channel.lastReadMessageId
-            ? channel.lastReadMessageId
-            : undefined,
-          lastMessageId: channel.lastMessageId
-            ? channel.lastMessageId
-            : undefined,
-          serverId: channel.serverId ? channel.serverId : undefined,
-          categoryId: channel.categoryId ? channel.categoryId : undefined,
-          userDirectMessageId: channel.userDirectMessageId
-            ? channel.userDirectMessageId
-            : undefined,
-          newMessage: channel.lastMessageId !== channel.lastReadMessageId,
-        });
-        const channelSubscriptionUrl = `/sub/channel/${channel.id}`;
-        stompSubscribe(channelSubscriptionUrl);
+      if (channelListState.length > 0) {
+        const channel = channelListState.find(
+          (channel) => channel.id === channelId,
+        );
+        if (channel) {
+          devLog(componentName, "setChannelState");
+          setChannelState({
+            id: channel.id,
+            name: channel.name ? channel.name : undefined,
+            displayOrder: channel.displayOrder
+              ? channel.displayOrder
+              : undefined,
+            lastReadMessageId: channel.lastReadMessageId
+              ? channel.lastReadMessageId
+              : undefined,
+            lastMessageId: channel.lastMessageId
+              ? channel.lastMessageId
+              : undefined,
+            serverId: channel.serverId ? channel.serverId : undefined,
+            categoryId: channel.categoryId ? channel.categoryId : undefined,
+            userDirectMessageId: channel.userDirectMessageId
+              ? channel.userDirectMessageId
+              : undefined,
+            newMessage: channel.lastMessageId !== channel.lastReadMessageId,
+          });
+          const channelSubscriptionUrl = `/sub/channel/${channel.id}`;
+          stompSubscribe(channelSubscriptionUrl);
+        } else {
+          navigate("/server");
+        }
       }
     }
   }, [
