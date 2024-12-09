@@ -242,6 +242,7 @@ export default function ChatInput() {
 
       <div className={"relative flex w-full"}>
         <div
+          style={{ zIndex: 1 }}
           className={`${chatState.chatMessage ? "hidden" : "absolute"} pointer-events-none left-12 top-2 z-10 px-0.5 text-gray-500`}
         >
           {`${channelState.name}에 메시지 보내기`}

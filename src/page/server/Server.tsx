@@ -44,7 +44,12 @@ export default function Server() {
   const { userState } = useUserStore();
   const { serverAddState } = useServerAddStore();
   const { serverState, setServerState, serverListState } = useServerStore();
-  const { channelState, setChannelState, channelListState } = useChannelStore();
+  const {
+    channelState,
+    setChannelState,
+    channelListState,
+    directMessageChannelListState,
+  } = useChannelStore();
   const { chatListState } = useChatStore();
   const { envState } = useEnvStore();
   const { stompState, setStompState } = useStompStore();
@@ -171,27 +176,50 @@ export default function Server() {
         const channel = channelListState.find(
           (channel) => channel.id === channelId,
         );
+        const dmChannel = directMessageChannelListState.find(
+          (channel) => channel.id === channelId,
+        );
         if (channel) {
-          devLog(componentName, "setChannelState");
-          setChannelState({
-            id: channel.id,
-            name: channel.name ? channel.name : undefined,
-            displayOrder: channel.displayOrder
-              ? channel.displayOrder
-              : undefined,
-            lastReadMessageId: channel.lastReadMessageId
-              ? channel.lastReadMessageId
-              : undefined,
-            lastMessageId: channel.lastMessageId
-              ? channel.lastMessageId
-              : undefined,
-            serverId: channel.serverId ? channel.serverId : undefined,
-            categoryId: channel.categoryId ? channel.categoryId : undefined,
-            userDirectMessageId: channel.userDirectMessageId
-              ? channel.userDirectMessageId
-              : undefined,
-            newMessage: channel.lastMessageId !== channel.lastReadMessageId,
-          });
+          if (dmChannel) {
+            console.log("test");
+            devLog(componentName, "setChannelState");
+            setChannelState({
+              id: channel.id,
+              name: dmChannel.username ? dmChannel.username : undefined,
+              lastReadMessageId: channel.lastReadMessageId
+                ? channel.lastReadMessageId
+                : undefined,
+              lastMessageId: channel.lastMessageId
+                ? channel.lastMessageId
+                : undefined,
+              userDirectMessageId: channel.userDirectMessageId
+                ? channel.userDirectMessageId
+                : undefined,
+              newMessage: channel.lastMessageId !== channel.lastReadMessageId,
+            });
+          } else {
+            devLog(componentName, "setChannelState");
+            setChannelState({
+              id: channel.id,
+              name: channel.name ? channel.name : undefined,
+              displayOrder: channel.displayOrder
+                ? channel.displayOrder
+                : undefined,
+              lastReadMessageId: channel.lastReadMessageId
+                ? channel.lastReadMessageId
+                : undefined,
+              lastMessageId: channel.lastMessageId
+                ? channel.lastMessageId
+                : undefined,
+              serverId: channel.serverId ? channel.serverId : undefined,
+              categoryId: channel.categoryId ? channel.categoryId : undefined,
+              userDirectMessageId: channel.userDirectMessageId
+                ? channel.userDirectMessageId
+                : undefined,
+              newMessage: channel.lastMessageId !== channel.lastReadMessageId,
+            });
+          }
+
           const channelSubscriptionUrl = `/sub/channel/${channel.id}`;
           stompSubscribe(channelSubscriptionUrl);
         } else {
