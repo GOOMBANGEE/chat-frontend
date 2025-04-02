@@ -9,14 +9,17 @@ Typescript
 React 18.3.1  
 Node.js 20.14
 
-axios  
-react-cookie  
-react-router-dom@6  
-tailwindcss  
-use-sound  
-vite  
-ws  
-zustand  
+| Feature           | Package                                                 |
+|:------------------|:--------------------------------------------------------|
+| Audio             | use-sound                                               |
+| Build Tool        | vite                                                    |  
+| Cookie Management | react-cookie                                            |
+| CSS Framework     | tailwind prettier-plugin-tailwindcss                    |
+| Date Handling     | react-datepicker date-fns </br> @types/react-datepicker |
+| Networking        | axios, ws                                               |
+| Rich Text Editor  | react-quill-new dompurify (Sanitization)                |
+| Routing           | react-router-dom                                        |
+| State Management  | zustand                                                 |
 
 ## Development
 
